@@ -53,7 +53,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		//The following two lines are used to check the movement of the character. Note that the controller is returning a float
 		//The values are getting squared just as a sensitivity thing.
 		float xChange = (float)Math.pow(controller.rightPressed(), 2) - (float)Math.pow(controller.leftPressed(), 2);
-		float yChange = (float)Math.pow(controller.downPressed(), 2) - (float)Math.pow(controller.upPressed(), 2);
+		float yChange = (float)Math.pow(controller.upPressed(), 2) - (float)Math.pow(controller.downPressed(), 2);
 		
 		//Knockback the player if currently in knockback
 		if (knockbackLength > 0) {
