@@ -8,12 +8,12 @@ import com.badlogic.gdx.graphics.GL20;
 
 public class PlayScreen implements Screen{
 
-	private AbyssAdventureGame game;
-	private PlayStage playStage;
+	private AbyssAdventureGame game;					//The game object
+	private PlayStage playStage;						//The level stage (where the map and characters are at)
 	
 	public PlayScreen(AbyssAdventureGame game) {
 		this.game = game;
-		playStage = new PlayStage(game);
+		playStage = new PlayStage(game);		//Creates a play stage
 	}
 	
 	public PlayStage getPlayStage() {
@@ -33,17 +33,18 @@ public class PlayScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0f, 0f, 0f, 1.0f);
+		//Renders the stage
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1.0f);		//Clears the screen to black
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
-		playStage.getViewport().apply();
-		playStage.act();
-		playStage.draw();
+		playStage.getViewport().apply();	//Applies the camera
+		playStage.act();			//Calls the act method for the stage
+		playStage.draw();			//Calls the drawing of the stage
 		
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		playStage.getViewport().update(width, height);
+		playStage.getViewport().update(width, height);		//Changes the viewport to match the new size
 		
 	}
 

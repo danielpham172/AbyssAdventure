@@ -6,14 +6,14 @@ import com.abyad.controls.PlayerController;
 
 public class Player {
 
-	private PlayerController controller;
-	private PlayerCharacter character;
-	private int number;
+	private PlayerController controller;			//The controller the player is using
+	private PlayerCharacter character;				//The player character that this player controls
+	private int number;								//The player number
 	
 	public Player(int num) {
 		number = num;
 		try {
-			controller = new GamepadController();
+			controller = new GamepadController();		//This tries to make the player have the gamepad controller
 		} catch (Exception e) {
 			
 		}
