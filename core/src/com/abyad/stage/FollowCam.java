@@ -5,18 +5,28 @@ import java.util.ArrayList;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+/**
+ * The FollowCam class is a camera for the play stage to always follow the player around
+ *
+ */
 public class FollowCam extends OrthographicCamera{
 
 	public FollowCam() {
 		super();
 	}
 	
+	/**
+	 * This is called within the stage so that the camera continually updates its view
+	 */
 	@Override
 	public void update() {
 		setFollowing();
 		super.update();
 	}
 	
+	/**
+	 * Method used to find where to center the camera. It will center in in between all the players.
+	 */
 	private void setFollowing() {
 		ArrayList<PlayerCharacter> players = PlayerCharacter.getPlayers();
 		float maxX = -Float.MAX_VALUE;

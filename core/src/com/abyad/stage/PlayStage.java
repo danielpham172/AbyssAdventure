@@ -15,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+/**
+ * The PlayStage is derived from the Stage class. This creates the map for the game
+ *
+ */
 public class PlayStage extends Stage{
 
 	private AbyssAdventureGame game;
