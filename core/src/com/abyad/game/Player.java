@@ -11,11 +11,21 @@ public class Player {
 	private PlayerCharacter character;
 	private int number;
 	
-	public Player(int num) {
+	public Player(int num, AbyssAdventureGame game) {
 		number = num;
 		try {
-			//controller = new GamepadController();
-			controller = new KeyboardController();
+			switch (game.controllerType)
+			{
+				case 0:
+					controller = new KeyboardController();
+					break;
+				case 1:
+					controller = new GamepadController();
+					break;
+				default:
+					controller = new KeyboardController();
+					break;
+			}
 		} catch (Exception e) {
 			
 		}
