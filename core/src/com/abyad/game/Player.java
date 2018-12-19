@@ -2,6 +2,7 @@ package com.abyad.game;
 
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.controls.GamepadController;
+import com.abyad.controls.KeyboardController;
 import com.abyad.controls.PlayerController;
 
 public class Player {
@@ -13,7 +14,8 @@ public class Player {
 	public Player(int num) {
 		number = num;
 		try {
-			controller = new GamepadController();
+			//controller = new GamepadController();
+			controller = new KeyboardController();
 		} catch (Exception e) {
 			
 		}
