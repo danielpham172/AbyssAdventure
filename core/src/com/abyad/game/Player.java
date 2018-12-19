@@ -14,22 +14,18 @@ public class Player {
 	public Player(int num, AbyssAdventureGame game) {
 		number = num;
 		try {
-<<<<<<< HEAD
 			switch (game.controllerType)
 			{
 				case 0:
-					controller = new KeyboardController();
+					controller = new KeyboardController();	//This tries to make the player have the keyboard controller
 					break;
 				case 1:
-					controller = new GamepadController();
+					controller = new GamepadController();	//This tries to make the player have the gamepad controller
 					break;
 				default:
 					controller = new KeyboardController();
 					break;
 			}
-=======
-			controller = new GamepadController();		//This tries to make the player have the gamepad controller
->>>>>>> branch 'master' of https://github.com/The-Guild-of-Canada/AbyssAdventure
 		} catch (Exception e) {
 			
 		}
