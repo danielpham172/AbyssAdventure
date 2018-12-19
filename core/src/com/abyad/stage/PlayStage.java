@@ -49,7 +49,7 @@ public class PlayStage extends Stage{
 		super(new ExtendViewport(384, 216));		//Creates the stage with a viewport
 		this.game = game;
 		
-		DungeonGenerator generator = new DungeonGenerator(15, 15, 2, 6, 600);		//Create a generator
+		DungeonGenerator generator = new DungeonGenerator(20, 20, 3, 7, 600);		//Create a generator
 		generator.runDungeonGenerator();		//Generate the dungeon
 		map = generator.getDungeon();			//Set the map
 		map = createBorder(expandMap(map), 1);	//Expand the map and add a border

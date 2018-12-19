@@ -47,6 +47,7 @@ public class DungeonGenerator {
 		connectDungeon();
 		//Standard Clear
 		pruneDeadEnds();
+		fillHoles();
 		//Cellular Automata
 		//cellularAutomataRun();
 		colorMapDungeon = new int[rows][cols];
