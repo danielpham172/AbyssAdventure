@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class AbstractEntity extends Actor{
 
 	private static ArrayList<AbstractEntity> entities = new ArrayList<AbstractEntity>();
-	private int hp;
+	private int hp;			//This is a variable
 	private int maxHP;
 	
 	protected EntitySprite sprite;
