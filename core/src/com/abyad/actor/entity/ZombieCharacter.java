@@ -14,66 +14,81 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class ZombieCharacter extends HumanoidEntity{
 	
-	private Vector2 knockbackVelocity = new Vector2();
-	private int knockbackLength = 0;
+	private Vector2 knockbackVelocity = new Vector2();		//Knockback velocity
+	private int knockbackLength = 0;						//How long the zombie is getting knocked back
+
+	private String task = "WANDER";							//The current thing the zombie is doing (like CHASE or WANDER)
+	private int timeSinceTask = 0;							//How long they have doing this task
 	
-	private String task = "WANDER";
-	private int timeSinceTask = 0;
-	
-	private Vector2 wanderDirection = new Vector2(1, 1);
+	private Vector2 wanderDirection = new Vector2(1, 0);	//The direction the zombie is wandering in
 	
 	public ZombieCharacter() {
 		super();
 		
-		sprite = new EntitySprite(Assets.manager.get(Assets.zombie));
+		sprite = new EntitySprite(Assets.manager.get(Assets.zombie));	//Gotta set the zombie sprite
 
-		wanderDirection.setLength(1);
-		wanderDirection.rotate((float)(Math.random() * 360));
+		wanderDirection.rotate((float)(Math.random() * 360));		//Randomly set a direction for the zombie to wander
 		updateHitbox();
 	}
 	
+	/**
+	 * This is where all the AI of zombie is
+	 */
 	@Override
 	public void act(float delta) {
 		super.act(delta);
 		if (knockbackLength <= 0) {
-			PlayerCharacter player = getNearestPlayerInRange(80);
+			//If zombie is not getting knocked back
+			PlayerCharacter player = getNearestPlayerInRange(80);		//Find the nearest player in range if any
 			if (player != null) {
-				setTask("CHASE");
+				setTask("CHASE");		//Set the task to chase player has been found
 			}
 			else {
-				setTask("WANDER");
+				setTask("WANDER");		//Wander if no player was found
 			}
 			
 			if (task.equals("CHASE")) {
+				//If chasing, have the velocity point towards the player then set the speed by using the length
 				getVelocity().set(player.getCenterX() - getCenterX(), player.getCenterY() - getCenterY());
 				getVelocity().setLength(0.3f);
+				//Also set the wander direction to be the same so they don't just randomly splay off
 				wanderDirection.setAngle(getVelocity().angle());
 				move(getVelocity());
-				setState("MOVE", 0.3f/2.0f);
-				if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);
+				setState("MOVE", 0.3f/2.0f);		//Sets the state for animation. The fraction is the slow down the animation to match the speed
+				if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
 				checkCollisions();
 			}
 			else if (task.equals("WANDER")){
+				//If wandering, just move in the same direction as the wander with a length change
 				getVelocity().set(wanderDirection.x, wanderDirection.y).setLength(0.3f);
 				setState("MOVE", 0.3f/2.0f);
+				if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
 				if (Math.random() * timeSinceTask / 120.0 > 1.0) {
+					//Randomly change the direction slightly after a certain amount of time
 					wanderDirection.rotate((float)(Math.random() * 60) - 30f);
 					timeSinceTask = 0;
 				}
 				checkCollisions();
 				move(getVelocity());
 				if (hitWall) {
+					//If a wall was hit during collision, turn around
 					wanderDirection.rotate(180 + (float)(Math.random() * 180) - 90f);
 					timeSinceTask = 0;
 				}
 			}
 		}
 		else {
+			//Move the zombie by knockback
 			move(knockbackVelocity);
 			knockbackLength--;
 		}
 	}
 	
+	/**
+	 * Method used to find the nearest player in range.
+	 * @param range			The maximum range to player can be in
+	 * @return		null if no players in range, or the nearest player
+	 */
 	public PlayerCharacter getNearestPlayerInRange(float range){
 		ArrayList<PlayerCharacter> players = PlayerCharacter.getPlayers();
 		PlayerCharacter nearest = null;
@@ -89,6 +104,10 @@ public class ZombieCharacter extends HumanoidEntity{
 		return nearest;
 	}
 	
+	/**
+	 * Sets the task of the zombie. Increments timeSinceTask if it was already doing that task
+	 * @param newTask
+	 */
 	public void setTask(String newTask) {
 		if (task.equals(newTask)) {
 			timeSinceTask++;
@@ -105,16 +124,22 @@ public class ZombieCharacter extends HumanoidEntity{
 		super.draw(batch, a);
 	}
 	
+	/**
+	 * Collision checking for bumping into players (for damage) and other entities (for shifting)
+	 */
 	public void checkCollisions() {
 		ArrayList<AbstractEntity> entities = getEntities();
 		for (AbstractEntity entity : entities) {
 			ArrayList<Rectangle> otherHitbox = entity.getHitbox();
-			if (!isSameTeam(entity) && isColliding(otherHitbox)) {
+			if (!isSameTeam(entity) && isOverlapping(hitboxes, otherHitbox)) {
+				//If the other entity was a player (or non-ally to the zombie) and is in collision, deal damage to it
 				Vector2 knockback = new Vector2(entity.getCenterX() - getCenterX(), entity.getCenterY() - getCenterY());
 				knockback.setLength(4.0f);
 				entity.takeDamage(this, 0, knockback, 8);
 			}
-			else if (isSameTeam(entity) && isColliding(otherHitbox)) {
+			else if (isSameTeam(entity) && isOverlapping(hitboxes, otherHitbox)) {
+				//If it is on the same team and colliding, do a small collision to shift it out of each other
+				//This is mostly for anti-clumping together
 				Vector2 smallCollision = new Vector2(entity.getCenterX() - getCenterX(), entity.getCenterY() - getCenterY());
 				smallCollision.setLength(Math.min(0.2f / smallCollision.len(), 0.1f));
 				entity.move(smallCollision);
@@ -123,15 +148,11 @@ public class ZombieCharacter extends HumanoidEntity{
 		}
 	}
 	
-	public boolean isColliding(ArrayList<Rectangle> others) {
-		for (Rectangle other : others) {
-			for (Rectangle hitbox : hitboxes) {
-				if (other.overlaps(hitbox)) return true;
-			}
-		}
-		return false;
-	}
-	
+	/**
+	 * Unoptimized drawing of hitboxes for debugging. Do not use unless you want to have a lot of trouble with closing the application
+	 * @param batch
+	 * @param a
+	 */
 	public void drawHitbox(Batch batch, float a) {
 		for (Rectangle hitbox : hitboxes) {
 			Pixmap pixmap = new Pixmap((int)hitbox.getWidth(), (int)hitbox.getHeight(), Format.RGBA8888 );
@@ -149,6 +170,9 @@ public class ZombieCharacter extends HumanoidEntity{
 		return "MONSTERS";
 	}
 	
+	/**
+	 * Overriden method so that invuln and knockback is applied.
+	 */
 	@Override
 	public void takeDamage(Actor source, int damage, Vector2 knockback, int kbLength) {
 		if (!isInvuln()) {

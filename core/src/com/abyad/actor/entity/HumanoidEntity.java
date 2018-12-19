@@ -10,11 +10,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class HumanoidEntity extends AbstractEntity{
 
-	protected ArrayList<Rectangle> hitboxes;
-	protected ArrayList<Rectangle> tempHitboxes;
-	protected boolean hitWall;
-	private static int SPRITE_LENGTH = 16;
-	protected Rectangle viewbox = new Rectangle(0, 0, SPRITE_LENGTH, SPRITE_LENGTH);
+	protected ArrayList<Rectangle> hitboxes;				//The list of hitboxes for a humanoid. A list because we might need to use multiple rectangles
+	protected ArrayList<Rectangle> tempHitboxes;			//Same as above, used to check future hitboxes without having to create a new rectangle everytime
+	protected boolean hitWall;				//Boolean to check if the character hit a wall or not when trying to move
+	private static int SPRITE_LENGTH = 16;	//The length and height of the sprite
+	protected Rectangle viewbox = new Rectangle(0, 0, SPRITE_LENGTH, SPRITE_LENGTH);		//The viewbox used to check whether to draw the sprite or not
 	
 	public HumanoidEntity() {
 		super();
@@ -27,39 +27,48 @@ public abstract class HumanoidEntity extends AbstractEntity{
 		updateHitbox();
 	}
 	
+	/**
+	 * Fancy move method for wall collision detection. Currently would fail if add objects that have non-tile collision boxes
+	 */
 	@Override
 	public void move(float x, float y) {
 		float newX = getX() + x;
 		float newY = getY() + y;
 		hitWall = false;
 		PlayStage stage = (PlayStage)getStage();
-		ArrayList<Rectangle> walls = stage.getSurroundingWallBoxes(newX, newY, 1);
-		ArrayList<Rectangle> newCollisionBox = getCollideBox(newX, newY);
-		if (!isColliding(walls, newCollisionBox)) {
-			super.move(x, y);
+		ArrayList<Rectangle> walls = stage.getSurroundingWallBoxes(newX, newY, 1);		//Gets surrounding wall tiles as rectangle collisions
+		ArrayList<Rectangle> newCollisionBox = getCollideBox(newX, newY);			//Creates own collision box for future
+		if (!isOverlapping(walls, newCollisionBox)) {
+			super.move(x, y);		//Move if open
 		}
 		else {
-			Vector2 alignment = getAlignmentChange(newCollisionBox);
+			Vector2 alignment = getAlignmentChange(newCollisionBox);		//Get alignment changes to go against a wall (stay in tile)
 			hitWall = true;
 			ArrayList<Rectangle> wallsX = stage.getSurroundingWallBoxes(newX, getY(), 1);
 			ArrayList<Rectangle> newCollisionBoxX = getCollideBox(newX, getY());
-			if (!isColliding(wallsX, newCollisionBoxX)) {
-				super.move(x, y - alignment.y);
+			if (!isOverlapping(wallsX, newCollisionBoxX)) {
+				super.move(x, y - alignment.y);		//Move x-wise if possible
 			}
 			else {
 				ArrayList<Rectangle> wallsY = stage.getSurroundingWallBoxes(getX(), newY, 1);
 				ArrayList<Rectangle> newCollisionBoxY = getCollideBox(getX(), newY);
-				if (!isColliding(wallsY, newCollisionBoxY)) {
-					super.move(x - alignment.x, y);
+				if (!isOverlapping(wallsY, newCollisionBoxY)) {
+					super.move(x - alignment.x, y);	//Move y-wise if possible
 				}
 				else {
-					super.move(x - alignment.x, y - alignment.y);
+					super.move(x - alignment.x, y - alignment.y);		//Fit inside tile only
 				}
 			}
 		}
 	}
 	
-	private boolean isColliding(ArrayList<Rectangle> first, ArrayList<Rectangle> second) {
+	/**
+	 * Collision method for checking overlapping rectangles in list. Could probably be used as a Utility function
+	 * @param first		First list of rectangles
+	 * @param second	Second list of rectangles
+	 * @return		Whether at least one rectangle overlaps
+	 */
+	protected boolean isOverlapping(ArrayList<Rectangle> first, ArrayList<Rectangle> second) {
 		for (Rectangle f : first) {
 			for (Rectangle s : second) {
 				if (f.overlaps(s)) return true;
@@ -68,6 +77,11 @@ public abstract class HumanoidEntity extends AbstractEntity{
 		return false;
 	}
 	
+	/**
+	 * Creates alignment change to fit into current tile
+	 * @param newCollisionBox		Hitboxes that may be outside of the tile
+	 * @return		Alignment changes needed
+	 */
 	private Vector2 getAlignmentChange(ArrayList<Rectangle> newCollisionBox) {
 		float tileLength = AbstractTile.TILE_SIZE * AbstractTile.TILE_SCALE;
 		Rectangle currentTile = new Rectangle((int)(getX() / tileLength) * tileLength, (int)(getY() / tileLength) * tileLength,
@@ -87,17 +101,17 @@ public abstract class HumanoidEntity extends AbstractEntity{
 	
 	@Override
 	public float getCenterX() {
-		return getX() - getOriginX() + 8.0f;
+		return getX() - getOriginX() + 8.0f;		//Center of the hitbox
 	}
 	
 	@Override
 	public float getCenterY() {
-		return getY() - getOriginY() + 5.0f;
+		return getY() - getOriginY() + 5.0f;		//Center of the hitbox
 	}
 	
 	@Override
 	public void updateHitbox() {
-		int direction = (int)((getVelocity().angle() + 45) / 90) % 4;
+		int direction = (int)((getVelocity().angle() + 45) / 90) % 4;	//Unused, but may be necessary if direction changes hitbox
 		int xCorrection = 0;
 		int yCorrection = 0;
 		hitboxes.get(0).set(getX() - getOriginX() + 3 + xCorrection, getY() - getOriginY() + yCorrection, 10, 10);
@@ -106,7 +120,7 @@ public abstract class HumanoidEntity extends AbstractEntity{
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		updateHitbox();
+		updateHitbox();		//Overriding so changing position updates the hitbox also
 	}
 	
 	@Override
