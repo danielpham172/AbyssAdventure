@@ -2,6 +2,7 @@ package com.abyad.actor.entity;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.sprite.EntitySprite;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -37,50 +38,52 @@ public class ZombieCharacter extends HumanoidEntity{
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		if (knockbackLength <= 0) {
-			//If zombie is not getting knocked back
-			PlayerCharacter player = getNearestPlayerInRange(80);		//Find the nearest player in range if any
-			if (player != null) {
-				setTask("CHASE");		//Set the task to chase player has been found
+		if (!markForRemoval) {
+			if (knockbackLength <= 0) {
+				//If zombie is not getting knocked back
+				PlayerCharacter player = getNearestPlayerInRange(80);		//Find the nearest player in range if any
+				if (player != null) {
+					setTask("CHASE");		//Set the task to chase player has been found
+				}
+				else {
+					setTask("WANDER");		//Wander if no player was found
+				}
+				
+				if (task.equals("CHASE")) {
+					//If chasing, have the velocity point towards the player then set the speed by using the length
+					getVelocity().set(player.getCenterX() - getCenterX(), player.getCenterY() - getCenterY());
+					getVelocity().setLength(0.3f);
+					//Also set the wander direction to be the same so they don't just randomly splay off
+					wanderDirection.setAngle(getVelocity().angle());
+					move(getVelocity());
+					setState("MOVE", 0.3f/2.0f);		//Sets the state for animation. The fraction is the slow down the animation to match the speed
+					if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
+					checkCollisions();
+				}
+				else if (task.equals("WANDER")){
+					//If wandering, just move in the same direction as the wander with a length change
+					getVelocity().set(wanderDirection.x, wanderDirection.y).setLength(0.3f);
+					setState("MOVE", 0.3f/2.0f);
+					if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
+					if (Math.random() * timeSinceTask / 120.0 > 1.0) {
+						//Randomly change the direction slightly after a certain amount of time
+						wanderDirection.rotate((float)(Math.random() * 60) - 30f);
+						timeSinceTask = 0;
+					}
+					checkCollisions();
+					move(getVelocity());
+					if (hitWall) {
+						//If a wall was hit during collision, turn around
+						wanderDirection.rotate(180 + (float)(Math.random() * 180) - 90f);
+						timeSinceTask = 0;
+					}
+				}
 			}
 			else {
-				setTask("WANDER");		//Wander if no player was found
+				//Move the zombie by knockback
+				move(knockbackVelocity);
+				knockbackLength--;
 			}
-			
-			if (task.equals("CHASE")) {
-				//If chasing, have the velocity point towards the player then set the speed by using the length
-				getVelocity().set(player.getCenterX() - getCenterX(), player.getCenterY() - getCenterY());
-				getVelocity().setLength(0.3f);
-				//Also set the wander direction to be the same so they don't just randomly splay off
-				wanderDirection.setAngle(getVelocity().angle());
-				move(getVelocity());
-				setState("MOVE", 0.3f/2.0f);		//Sets the state for animation. The fraction is the slow down the animation to match the speed
-				if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
-				checkCollisions();
-			}
-			else if (task.equals("WANDER")){
-				//If wandering, just move in the same direction as the wander with a length change
-				getVelocity().set(wanderDirection.x, wanderDirection.y).setLength(0.3f);
-				setState("MOVE", 0.3f/2.0f);
-				if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
-				if (Math.random() * timeSinceTask / 120.0 > 1.0) {
-					//Randomly change the direction slightly after a certain amount of time
-					wanderDirection.rotate((float)(Math.random() * 60) - 30f);
-					timeSinceTask = 0;
-				}
-				checkCollisions();
-				move(getVelocity());
-				if (hitWall) {
-					//If a wall was hit during collision, turn around
-					wanderDirection.rotate(180 + (float)(Math.random() * 180) - 90f);
-					timeSinceTask = 0;
-				}
-			}
-		}
-		else {
-			//Move the zombie by knockback
-			move(knockbackVelocity);
-			knockbackLength--;
 		}
 	}
 	
@@ -178,7 +181,15 @@ public class ZombieCharacter extends HumanoidEntity{
 		if (!isInvuln()) {
 			knockbackVelocity = knockback.cpy();
 			knockbackLength = kbLength;
-			invulnLength = 40;
+			hp -= damage;
+			if (isDead()) {
+				DeathAnimation deathAnimation = new DeathAnimation(getCenterX(), getCenterY());
+				getStage().addActor(deathAnimation);
+				markForRemoval = true;
+			}
+			else {
+				invulnLength = 40;
+			}
 		}
 	}
 

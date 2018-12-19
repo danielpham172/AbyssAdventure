@@ -3,6 +3,7 @@ package com.abyad.stage;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
@@ -32,6 +33,8 @@ public class PlayStage extends Stage{
 		public int compare(Actor o1, Actor o2) {
 			if (o2 instanceof FloorTile) return 1;
 			if (o1 instanceof FloorTile) return -1;
+			if (o2 instanceof DeathAnimation) return -1;
+			if (o1 instanceof DeathAnimation) return 1;
 			if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
 			if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) return 1;
 			else return (int)(o2.getY() - o1.getY());

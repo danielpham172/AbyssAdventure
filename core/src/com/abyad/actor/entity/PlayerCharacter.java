@@ -49,54 +49,56 @@ public class PlayerCharacter extends HumanoidEntity{
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		PlayerController controller = player.getController();
-		//The following two lines are used to check the movement of the character. Note that the controller is returning a float
-		//The values are getting squared just as a sensitivity thing.
-		float xChange = (float)Math.pow(controller.rightPressed(), 2) - (float)Math.pow(controller.leftPressed(), 2);
-		float yChange = (float)Math.pow(controller.upPressed(), 2) - (float)Math.pow(controller.downPressed(), 2);
-		
-		//Knockback the player if currently in knockback
-		if (knockbackLength > 0) {
-			move(knockbackVelocity);
-			knockbackLength--;
-		}
-		else if (!attacking) {
-			//If not in an attack animation
-			if (controller.attackPressed() && !attackHeld) {
-				//This checks to see if the player is attacking
-				attacking = true;
-				if (state.equals("IDLE")) {
-					//If the player was in idle, give a small forward movement. May remove or lower this.
-					velocity.setAngle(((int)(velocity.angle() + 45) / 90) * 90.0f);
-					velocity.setLength(1.5f);
-				}
-				setState("ATTACK - " + weapon);	//Set the state to attacking
+		if (!markForRemoval) {
+			PlayerController controller = player.getController();
+			//The following two lines are used to check the movement of the character. Note that the controller is returning a float
+			//The values are getting squared just as a sensitivity thing.
+			float xChange = (float)Math.pow(controller.rightPressed(), 2) - (float)Math.pow(controller.leftPressed(), 2);
+			float yChange = (float)Math.pow(controller.upPressed(), 2) - (float)Math.pow(controller.downPressed(), 2);
+			
+			//Knockback the player if currently in knockback
+			if (knockbackLength > 0) {
+				move(knockbackVelocity);
+				knockbackLength--;
 			}
-			else if (xChange == 0 && yChange == 0) {
-				//No movement? the character is idling
-				setState("IDLE");
+			else if (!attacking) {
+				//If not in an attack animation
+				if (controller.attackPressed() && !attackHeld) {
+					//This checks to see if the player is attacking
+					attacking = true;
+					if (state.equals("IDLE")) {
+						//If the player was in idle, give a small forward movement. May remove or lower this.
+						velocity.setAngle(((int)(velocity.angle() + 45) / 90) * 90.0f);
+						velocity.setLength(1.5f);
+					}
+					setState("ATTACK - " + weapon);	//Set the state to attacking
+				}
+				else if (xChange == 0 && yChange == 0) {
+					//No movement? the character is idling
+					setState("IDLE");
+				}
+				else {
+					//This happens if the character is moving, scale the change to match velocity
+					velocity.x = xChange * 2.5f;
+					velocity.y = yChange * 2.5f;
+					if (velocity.len() > 2.5f) velocity.setLength(2.5f);	//Sometimes the velocity is over the actual max speed, so set it back
+					setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
+					move(velocity);
+				}
 			}
 			else {
-				//This happens if the character is moving, scale the change to match velocity
-				velocity.x = xChange * 2.5f;
-				velocity.y = yChange * 2.5f;
-				if (velocity.len() > 2.5f) velocity.setLength(2.5f);	//Sometimes the velocity is over the actual max speed, so set it back
-				setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
-				move(velocity);
+				//Sets the state into attacking
+				setState("ATTACK - " + weapon);
+				if (weapon.equals("SWORD")) {
+					//This is if the player is using a sword
+					velocity.setLength(velocity.len() / 1.08f);
+					move(velocity);
+					checkCollisions();		//Checks to see if the attack is hitting
+					if (framesSinceLast >= 30) attacking = false;		//Ends the attack after a certain amount of frames
+				}
 			}
+			attackHeld = controller.attackPressed();
 		}
-		else {
-			//Sets the state into attacking
-			setState("ATTACK - " + weapon);
-			if (weapon.equals("SWORD")) {
-				//This is if the player is using a sword
-				velocity.setLength(velocity.len() / 1.08f);
-				move(velocity);
-				checkCollisions();		//Checks to see if the attack is hitting
-				if (framesSinceLast >= 30) attacking = false;		//Ends the attack after a certain amount of frames
-			}
-		}
-		attackHeld = controller.attackPressed();
 	}
 	
 	/**
@@ -166,6 +168,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		if (!isInvuln()) {
 			knockbackVelocity = knockback.cpy();
 			knockbackLength = kbLength;
+			hp -= damage;
 			invulnLength = 40;
 		}
 	}

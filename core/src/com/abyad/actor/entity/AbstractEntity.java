@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class AbstractEntity extends Actor{
 
 	private static ArrayList<AbstractEntity> entities = new ArrayList<AbstractEntity>();	//All entities in a list that are created
-	private int hp;						//HP variable
-	private int maxHP;					//Max HP variable
+	protected int hp;						//HP variable
+	protected int maxHP;					//Max HP variable
 
 	protected EntitySprite sprite;		//The sprite of the entity, used to get the correct sprite at right times
 	protected Vector2 velocity;			//The velocity (speed and direction) the entity is going in
@@ -22,6 +22,7 @@ public abstract class AbstractEntity extends Actor{
 	protected String state;				//String used to figure out what the entity is doing (ie. Walking or Idle)
 	protected int framesSinceLast;		//The amount of frames that have passed since it changed state (used for animation)
 	protected float frameFraction;		//The amount of partial frames that have passed, mainly used for walking slowly and such
+	protected boolean markForRemoval;
 	
 	/**
 	 * Initiates an AbstractEntity. Most important is that it adds it to the array list
@@ -42,7 +43,10 @@ public abstract class AbstractEntity extends Actor{
 	 */
 	@Override
 	public void act(float delta) {
-		if (invulnLength > 0) {
+		if (markForRemoval) {
+			remove();
+		}
+		else if (invulnLength > 0) {
 			invulnLength--;
 		}
 	}
@@ -76,6 +80,17 @@ public abstract class AbstractEntity extends Actor{
 		return new Vector2(getCenterX(), getCenterY());
 	}
 	
+	public int getHP() {
+		return hp;
+	}
+	
+	public int getMaxHP() {
+		return maxHP;
+	}
+	
+	public boolean isDead() {
+		return hp <= 0;
+	}
 	/**
 	 * Sets the state of the entity. If the state is the same, increments the frameSinceLast by 1.
 	 * @param newState		The state to change into
