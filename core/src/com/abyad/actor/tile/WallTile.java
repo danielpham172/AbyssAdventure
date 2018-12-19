@@ -6,8 +6,13 @@ import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+/**
+ * The WallTile class is derived from the AbstractTile class. Used to draw the various walls of the map.
+ *
+ */
 public class WallTile extends AbstractTile{
 
+	//List of the different wall textures
 	private static LinkedHashMap<String, TextureRegion> wallTextures = new LinkedHashMap<String, TextureRegion>();
 	
 	static {
@@ -27,13 +32,25 @@ public class WallTile extends AbstractTile{
 		wallTextures.put("CORNER_FRONT-L", wallTiles[10]);
 	}
 	
-	private boolean isFrontWall = false;
+	private boolean isFrontWall = false;	//Used to check if it's one of those
 	
+	/**
+	 * Constructs a WallTile with the given row and col. The surroundings is a 3x3 int array of the map around the tile to be made
+	 * so the current texture is used.
+	 * @param row				The row of the tile
+	 * @param col				The column of the tile
+	 * @param surroundings		The surroundings around the tiles to help select the right
+	 */
 	public WallTile(int row, int col, int[][] surroundings) {
 		super(wallTextures.get(setCorrectWall(surroundings)), row, col);
 		setRotation(setCorrectRotation(surroundings));
 	}
 	
+	/**
+	 * Selects the texture to use for the wall tile given the surroundings
+	 * @param s			The surrounding tiles as an int array
+	 * @return		A String to tell what texture to use
+	 */
 	private static String setCorrectWall(int[][] s) {
 		if (s[0][1] == 0) {			//Open below
 			String use = "FRONT";
@@ -70,6 +87,11 @@ public class WallTile extends AbstractTile{
 		return "NONE";
 	}
 	
+	/**
+	 * Sets the rotation of the tile to get the sprite matching
+	 * @param s			The surroundings
+	 * @return
+	 */
 	private int setCorrectRotation(int[][] s) {
 		if (s[0][1] == 0) {	
 			isFrontWall = true;
@@ -89,6 +111,10 @@ public class WallTile extends AbstractTile{
 		else return 0;
 	}
 	
+	/**
+	 * Tells if the wall tile is a "front wall" (the full faced wall tiles).
+	 * @return
+	 */
 	public boolean isFrontWall() {
 		return isFrontWall;
 	}
