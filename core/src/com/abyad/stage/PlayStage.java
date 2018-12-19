@@ -28,18 +28,7 @@ public class PlayStage extends Stage{
 	private ArrayList<FloorTile> floorTiles;		//The floor tiles
 	
 	//Comparator object to organize the actors
-	private static Comparator<Actor> comparator = new Comparator<Actor>() {
-		@Override
-		public int compare(Actor o1, Actor o2) {
-			if (o2 instanceof FloorTile) return 1;
-			if (o1 instanceof FloorTile) return -1;
-			if (o2 instanceof DeathAnimation) return -1;
-			if (o1 instanceof DeathAnimation) return 1;
-			if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
-			if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) return 1;
-			else return (int)(o2.getY() - o1.getY());
-		}
-	};
+	private static ActorComparator comparator = new ActorComparator();
 	
 	/**
 	 * Constructor to create the stage
@@ -251,4 +240,19 @@ public class PlayStage extends Stage{
 		}
 		super.dispose();
 	}
+}
+
+class ActorComparator implements Comparator<Actor>{
+
+	@Override
+	public int compare(Actor o1, Actor o2) {
+		if (o2 instanceof FloorTile) return 1;
+		if (o1 instanceof FloorTile) return -1;
+		if (o2 instanceof DeathAnimation) return -1;
+		if (o1 instanceof DeathAnimation) return 1;
+		if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
+		if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) return 1;
+		else return (int)(o2.getY() - o1.getY());
+	}
+	
 }
