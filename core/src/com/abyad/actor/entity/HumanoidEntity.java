@@ -47,19 +47,72 @@ public abstract class HumanoidEntity extends AbstractEntity{
 			ArrayList<Rectangle> wallsX = stage.getSurroundingWallBoxes(newX, getY(), 1);
 			ArrayList<Rectangle> newCollisionBoxX = getCollideBox(newX, getY());
 			if (!isOverlapping(wallsX, newCollisionBoxX)) {
-				super.move(x, y - alignment.y);		//Move x-wise if possible
+				float minimumYChange = returnMinimumYChange(wallsX, newCollisionBoxX, y);
+				super.move(x, minimumYChange);		//Move x-wise if possible
 			}
 			else {
 				ArrayList<Rectangle> wallsY = stage.getSurroundingWallBoxes(getX(), newY, 1);
 				ArrayList<Rectangle> newCollisionBoxY = getCollideBox(getX(), newY);
 				if (!isOverlapping(wallsY, newCollisionBoxY)) {
-					super.move(x - alignment.x, y);	//Move y-wise if possible
+					float minimumXChange = returnMinimumXChange(wallsY, newCollisionBoxY, x);
+					super.move(minimumXChange, y);	//Move y-wise if possible
 				}
 				else {
-					super.move(x - alignment.x, y - alignment.y);		//Fit inside tile only
+					float minimumXChange = returnMinimumXChange(walls, getCollideBox(), x);
+					float minimumYChange = returnMinimumYChange(walls, getCollideBox(), y);
+					super.move(minimumXChange, minimumYChange);
+					//super.move(x - alignment.x, y - alignment.y);		//Fit inside tile only
 				}
 			}
 		}
+	}
+	
+	private float returnMinimumXChange(ArrayList<Rectangle> walls, ArrayList<Rectangle> collisionBox, float initialX) {
+		float bottomY = collisionBox.get(0).getY();
+		float topY = collisionBox.get(0).getY() + collisionBox.get(0).getHeight();
+		float xCollision = collisionBox.get(0).getX();
+		float width = collisionBox.get(0).getWidth();
+		
+		float minimumXChange = initialX;
+		
+		for (Rectangle box : walls) {
+			if (bottomY < box.getY() + box.getHeight() && topY > box.getY()) {
+				if (initialX < 0 && box.getX() < xCollision) {
+					float xChange = (box.getX() + box.getWidth()) - xCollision;
+					if (xChange > minimumXChange) minimumXChange = xChange;
+				}
+				else if (initialX > 0 && box.getX() > xCollision) {
+					float xChange = box.getX() - (xCollision + width);
+					if (xChange < minimumXChange) minimumXChange = xChange;
+				}
+			}
+		}
+		
+		return minimumXChange;
+	}
+	
+	private float returnMinimumYChange(ArrayList<Rectangle> walls, ArrayList<Rectangle> collisionBox, float initialY) {
+		float leftX = collisionBox.get(0).getX();
+		float rightX = collisionBox.get(0).getX() + collisionBox.get(0).getWidth();
+		float yCollision = collisionBox.get(0).getY();
+		float height = collisionBox.get(0).getHeight();
+		
+		float minimumYChange = initialY;
+		
+		for (Rectangle box : walls) {
+			if (leftX < box.getX() + box.getWidth() && rightX > box.getX()) {
+				if (initialY < 0 && box.getY() < yCollision) {
+					float yChange = (box.getY() + box.getHeight()) - yCollision;
+					if (yChange > minimumYChange) minimumYChange = yChange;
+				}
+				else if (initialY > 0 && box.getY() > yCollision) {
+					float yChange = box.getY() - (yCollision + height);
+					if (yChange < minimumYChange) minimumYChange = yChange;
+				}
+			}
+		}
+		
+		return minimumYChange;
 	}
 	
 	/**

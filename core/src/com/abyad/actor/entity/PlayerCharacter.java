@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.abyad.controls.PlayerController;
 import com.abyad.game.Player;
+import com.abyad.interfaces.Interactable;
 import com.abyad.sprite.PlayerSprite;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -26,6 +27,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	private boolean attackHeld = false;							//Boolean to check if the attack button is held
 	private boolean attacking;									//Boolean to check if the character is in the middle of attacking
 	private String weapon;										//The weapon being used (as we might have different weapons)
+	
+	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
 	
 	public PlayerCharacter(Player player) {
 		super();
@@ -62,16 +65,32 @@ public class PlayerCharacter extends HumanoidEntity{
 				knockbackLength--;
 			}
 			else if (!attacking) {
+				
+				interactableObjects.clear();
+				for (Interactable interactable : Interactable.interactables) {
+					if (isOverlapping(interactable.getInteractBox(), getCollideBox())) {
+						interactableObjects.add(interactable);
+					}
+				}
+				
 				//If not in an attack animation
 				if (controller.attackPressed() && !attackHeld) {
-					//This checks to see if the player is attacking
-					attacking = true;
-					if (state.equals("IDLE")) {
-						//If the player was in idle, give a small forward movement. May remove or lower this.
-						velocity.setAngle(((int)(velocity.angle() + 45) / 90) * 90.0f);
-						velocity.setLength(1.5f);
+					//This checks to see if the player has pressed the attack button
+					if (interactableObjects.isEmpty()) {
+						//If there is nothing to interact, just attack
+						attacking = true;
+						if (state.equals("IDLE")) {
+							//If the player was in idle, give a small forward movement. May remove or lower this.
+							velocity.setAngle(((int)(velocity.angle() + 45) / 90) * 90.0f);
+							velocity.setLength(1.5f);
+						}
+						setState("ATTACK - " + weapon);	//Set the state to attacking
 					}
-					setState("ATTACK - " + weapon);	//Set the state to attacking
+					else {
+						for (Interactable interactable : interactableObjects) {
+							interactable.interact(this);
+						}
+					}
 				}
 				else if (xChange == 0 && yChange == 0) {
 					//No movement? the character is idling

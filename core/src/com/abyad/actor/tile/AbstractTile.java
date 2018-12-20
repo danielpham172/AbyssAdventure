@@ -1,5 +1,7 @@
 package com.abyad.actor.tile;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -23,9 +25,9 @@ public abstract class AbstractTile extends Actor{
 	public static final float TILE_SCALE = 0.75f;	//How much to scale the texture
 	public static final float TILE_LENGTH = TILE_SIZE * TILE_SCALE;		//The new length of the tile
 	
-	private static Texture box;		//Texture used for debugging hitboxes for the tile
+	public static Texture box;		//Texture used for debugging hitboxes for the tile
 	static {
-		Pixmap pixmap = new Pixmap((int)(TILE_LENGTH), (int)(TILE_LENGTH), Format.RGBA8888 );
+		Pixmap pixmap = new Pixmap(1, 1, Format.RGBA8888 );
 		pixmap.setColor( 1, 0, 0, 0.25f );
 		pixmap.fill();
 		box = new Texture( pixmap );
@@ -92,7 +94,7 @@ public abstract class AbstractTile extends Actor{
 	public void drawHitbox(Batch batch, float a) {
 		Rectangle hitbox = getBox();
 		
-		batch.draw(box, hitbox.getX(), hitbox.getY());
+		batch.draw(box, hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
 	}
 	
 	/**
@@ -104,10 +106,16 @@ public abstract class AbstractTile extends Actor{
 		return new Vector2(getX() + centerOffset, getY() + centerOffset);
 	}
 	/**
-	 * Returns the hitbox of the tile
+	 * Returns the bounding box of the tile
 	 * @return
 	 */
 	public Rectangle getBox() {
 		return hitbox;
 	}
+	
+	/**
+	 * Returns the collision box of the tile (ie. floors return nothing)
+	 * @return
+	 */
+	public abstract ArrayList<Rectangle> getCollisionBox();
 }

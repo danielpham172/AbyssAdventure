@@ -58,16 +58,19 @@ public class PlayStage extends Stage{
 					floorTiles.add(tile);
 					if (isRoomTile(r, c)) {
 						roomTiles.add(tile);
-						
-						if (Math.random() < 0.01) {
-							TreasureChest chest = new TreasureChest(tile);
-							addActor(chest);
-						}
 					}
 				}
 				if (map[r][c] == 1) {
 					createWallTile(r, c);	//Used to see if a wall tile needs to be made
 				}
+			}
+		}
+		
+		for (Rectangle room : rooms) {
+			if (Math.random() < 1) {
+				FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
+				TreasureChest chest = new TreasureChest(center);
+				addActor(chest);
 			}
 		}
 		
@@ -112,10 +115,7 @@ public class PlayStage extends Stage{
 		for (int r = row - range; r <= row + range; r++) {
 			for (int c = col - range; c <= col + range; c++) {
 				if (inBounds(r, c)) {
-					if (isWall(r, c)) {
-						//Rectangle box = new Rectangle(c * tileLength, r * tileLength, tileLength, tileLength);
-						boxes.add(tileMap[r][c].getBox());
-					}
+					boxes.addAll(tileMap[r][c].getCollisionBox());
 				}
 				else{
 					Rectangle box = new Rectangle(c * tileLength, r * tileLength, tileLength, tileLength);
@@ -149,7 +149,8 @@ public class PlayStage extends Stage{
 	 */
 	public boolean isRoomTile(int row, int col) {
 		for (Rectangle room : rooms) {
-			if (room.contains(row, col)) return true;
+			if (row >= room.getX() && row < room.getX() + room.getWidth() &&
+					col >= room.getY() && col < room.getY() + room.getHeight()) return true;
 		}
 		return false;
 	}
