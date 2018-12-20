@@ -1,10 +1,12 @@
 package com.abyad.actor.tile;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * The WallTile class is derived from the AbstractTile class. Used to draw the various walls of the map.
@@ -34,6 +36,7 @@ public class WallTile extends AbstractTile{
 	}
 	
 	private boolean isFrontWall = false;	//Used to check if it's one of those
+	private ArrayList<Rectangle> collisionBox;
 	
 	/**
 	 * Constructs a WallTile with the given row and col. The surroundings is a 3x3 int array of the map around the tile to be made
@@ -45,6 +48,9 @@ public class WallTile extends AbstractTile{
 	public WallTile(int row, int col, int[][] surroundings) {
 		super(wallTextures.get(setCorrectWall(surroundings)), row, col);
 		setRotation(setCorrectRotation(surroundings));
+		
+		collisionBox = new ArrayList<Rectangle>();
+		collisionBox.add(getBox());
 	}
 	
 	/**
@@ -118,5 +124,10 @@ public class WallTile extends AbstractTile{
 	 */
 	public boolean isFrontWall() {
 		return isFrontWall;
+	}
+	
+	@Override
+	public ArrayList<Rectangle> getCollisionBox(){
+		return collisionBox;
 	}
 }

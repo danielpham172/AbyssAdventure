@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * The FloorTile class is derived from the AbstractTile class and is used to draw the floors of the map
@@ -26,6 +27,8 @@ public class FloorTile extends AbstractTile{
 		floorTextures.remove(0);	//This is here since the first texture is actually just a base
 	}
 	
+	private ArrayList<Rectangle> collisionBox = new ArrayList<Rectangle>();
+	
 	/**
 	 * Constructs a FloorTile at a row and column. Randomly selects a texture and rotates it randomly
 	 * @param row		Row of the tile
@@ -33,5 +36,15 @@ public class FloorTile extends AbstractTile{
 	 */
 	public FloorTile(int row, int col) {
 		super(floorTextures.get((int)(Math.random() * floorTextures.size())), row, col, (int)(Math.random() * 4) * 90f);
+	}
+
+	@Override
+	public ArrayList<Rectangle> getCollisionBox() {
+		// TODO Auto-generated method stub
+		return collisionBox;
+	}
+	
+	public void addCollisionBox(Rectangle box) {
+		collisionBox.add(box);
 	}
 }

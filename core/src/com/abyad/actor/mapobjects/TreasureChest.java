@@ -34,6 +34,8 @@ public class TreasureChest extends Actor implements Interactable{
 	private ArrayList<Rectangle> interactBox;
 	private boolean isOpen;
 	
+	private Rectangle hitbox;
+	
 	public TreasureChest(FloorTile floor) {
 		this.floor = floor;
 		
@@ -43,6 +45,10 @@ public class TreasureChest extends Actor implements Interactable{
 		
 		interactBox = new ArrayList<Rectangle>();
 		interactBox.add(new Rectangle(floor.getBox()));
+		
+		hitbox = new Rectangle(floor.getX() + (6 * AbstractTile.TILE_SCALE), floor.getY() + (7 * AbstractTile.TILE_SCALE),
+				20 * AbstractTile.TILE_SCALE, 15 * AbstractTile.TILE_SCALE);
+		floor.addCollisionBox(hitbox);
 		
 		interactables.add(this);
 	}
@@ -63,6 +69,8 @@ public class TreasureChest extends Actor implements Interactable{
 						AbstractTile.TILE_SIZE, AbstractTile.TILE_SIZE, AbstractTile.TILE_SCALE, AbstractTile.TILE_SCALE, getRotation());
 			}
 		}
+		
+		//batch.draw(AbstractTile.box, hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
 	}
 	
 	@Override
@@ -72,7 +80,8 @@ public class TreasureChest extends Actor implements Interactable{
 
 	@Override
 	public void interact(PlayerCharacter source) {
-		
+		isOpen = true;
+		interactBox.clear();
 	}
 
 }
