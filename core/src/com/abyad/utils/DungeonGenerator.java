@@ -53,11 +53,9 @@ public class DungeonGenerator {
 		pruneDeadEnds();
 		fillHoles();
 		verifyRooms();
-		System.out.println(rooms.size());
 		expandMap();
 		createBorder(1);
 		verifyRooms();
-		System.out.println(rooms.size());
 		//Cellular Automata
 		//cellularAutomataRun();
 		colorMapDungeon = new int[rows][cols];
