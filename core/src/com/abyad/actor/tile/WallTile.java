@@ -30,6 +30,7 @@ public class WallTile extends AbstractTile{
 		wallTextures.put("FRONT+R+L", wallTiles[8]);
 		wallTextures.put("CORNER_FRONT-R", wallTiles[9]);
 		wallTextures.put("CORNER_FRONT-L", wallTiles[10]);
+		wallTextures.put("NONE", null);
 	}
 	
 	private boolean isFrontWall = false;	//Used to check if it's one of those

@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
+import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.actor.tile.WallTile;
@@ -25,7 +26,9 @@ public class PlayStage extends Stage{
 	private AbyssAdventureGame game;				//The game object
 	private int[][] map;							//The int array map
 	private AbstractTile[][] tileMap;				//The map of the tiles
+	private ArrayList<Rectangle> rooms;				//The rooms (x = row, y = col)
 	private ArrayList<FloorTile> floorTiles;		//The floor tiles
+	private ArrayList<FloorTile> roomTiles;			//The room tiles
 	
 	//Comparator object to organize the actors
 	private static ActorComparator comparator = new ActorComparator();
@@ -43,6 +46,8 @@ public class PlayStage extends Stage{
 		map = generator.getDungeon();			//Set the map
 		tileMap = new AbstractTile[map.length][map[0].length];
 		floorTiles = new ArrayList<FloorTile>();
+		roomTiles = new ArrayList<FloorTile>();
+		rooms = generator.getRooms();
 		
 		for (int r = 0; r < map.length; r++) {
 			for (int c = 0; c < map[r].length; c++) {
@@ -51,6 +56,14 @@ public class PlayStage extends Stage{
 					addActor(tile);
 					tileMap[r][c] = tile;
 					floorTiles.add(tile);
+					if (isRoomTile(r, c)) {
+						roomTiles.add(tile);
+						
+						if (Math.random() < 0.01) {
+							TreasureChest chest = new TreasureChest(tile);
+							addActor(chest);
+						}
+					}
 				}
 				if (map[r][c] == 1) {
 					createWallTile(r, c);	//Used to see if a wall tile needs to be made
@@ -68,11 +81,9 @@ public class PlayStage extends Stage{
 	 */
 	private void createWallTile(int row, int col) {
 		int[][] surrounding = new int[3][3];
-		boolean needTile = false;
 		for (int r = -1; r <= 1; r++) {
 			for (int c = -1; c <= 1; c++) {
 				if (inBounds(row + r, col + c)) {
-					if (map[row + r][col + c] == 0) needTile = true;
 					surrounding[r + 1][c + 1] = map[row + r][col + c];
 				}
 				else {
@@ -80,12 +91,9 @@ public class PlayStage extends Stage{
 				}
 			}
 		}
-		
-		if (needTile) {
-			WallTile tile = new WallTile(row, col, surrounding);
-			tileMap[row][col] = tile;
-			addActor(tile);
-		}
+		WallTile tile = new WallTile(row, col, surrounding);
+		tileMap[row][col] = tile;
+		addActor(tile);
 	}
 	
 	
@@ -105,8 +113,8 @@ public class PlayStage extends Stage{
 			for (int c = col - range; c <= col + range; c++) {
 				if (inBounds(r, c)) {
 					if (isWall(r, c)) {
-						Rectangle box = new Rectangle(c * tileLength, r * tileLength, tileLength, tileLength);
-						boxes.add(box);
+						//Rectangle box = new Rectangle(c * tileLength, r * tileLength, tileLength, tileLength);
+						boxes.add(tileMap[r][c].getBox());
 					}
 				}
 				else{
@@ -132,8 +140,18 @@ public class PlayStage extends Stage{
 	 * @return
 	 */
 	public Vector2 getRandomOpenPos() {
-		FloorTile randomTile = floorTiles.get((int)(Math.random() * floorTiles.size()));
+		FloorTile randomTile = roomTiles.get((int)(Math.random() * roomTiles.size()));
 		return randomTile.getCenter();
+	}
+	
+	/**
+	 * Checks if given tile is a room tile
+	 */
+	public boolean isRoomTile(int row, int col) {
+		for (Rectangle room : rooms) {
+			if (room.contains(row, col)) return true;
+		}
+		return false;
 	}
 	
 	/**

@@ -68,7 +68,7 @@ public abstract class AbstractTile extends Actor{
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		if (inView()) {
+		if (tex != null && inView()) {
 			batch.draw(tex, getX() - ((TILE_SIZE - TILE_LENGTH) / 2), getY() - ((TILE_SIZE - TILE_LENGTH) / 2), TILE_SIZE / 2, TILE_SIZE / 2,
 					TILE_SIZE, TILE_SIZE, TILE_SCALE, TILE_SCALE, getRotation());
 		}

@@ -19,6 +19,8 @@ public class Assets {
 	public static final AssetDescriptor<Texture> floorTiles = new AssetDescriptor<Texture>("tile/floorTiles.png", Texture.class);
 	public static final AssetDescriptor<Texture> wallTiles = new AssetDescriptor<Texture>("tile/wallTiles.png", Texture.class);
 	
+	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
+	
 	public static void loadAssets() {
 		manager.load(boy1);
 		manager.load(girl1);
@@ -27,6 +29,7 @@ public class Assets {
 		manager.load(sword);
 		manager.load(floorTiles);
 		manager.load(wallTiles);
+		manager.load(treasureChest);
 		manager.finishLoading();
 	}
 	
