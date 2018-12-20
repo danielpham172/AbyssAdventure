@@ -41,7 +41,6 @@ public class PlayStage extends Stage{
 		DungeonGenerator generator = new DungeonGenerator(20, 20, 3, 7, 600);		//Create a generator
 		generator.runDungeonGenerator();		//Generate the dungeon
 		map = generator.getDungeon();			//Set the map
-		map = createBorder(expandMap(map), 1);	//Expand the map and add a border
 		tileMap = new AbstractTile[map.length][map[0].length];
 		floorTiles = new ArrayList<FloorTile>();
 		
@@ -89,68 +88,6 @@ public class PlayStage extends Stage{
 		}
 	}
 	
-	/**
-	 * Method to expand an int array map
-	 * @param map		The int array map to expand
-	 * @return	An expanded map
-	 */
-	private int[][] expandMap (int[][] map){
-		int[][] bigMap = new int[map.length * 3 - 2][map[0].length * 3 - 2];
-		for (int r = 0; r < bigMap.length; r++) {
-			for (int c = 0; c < bigMap.length; c++) {
-				bigMap[r][c] = 1;
-			}
-		}
-		for (int row = 0; row < map.length; row++) {
-			for (int col = 0; col < map[row].length; col++) {
-				bigMap[row * 3][col * 3] = map[row][col];
-				if (map[row][col] == 0) {
-					if (col != 0) {
-						if (map[row][col - 1] == 0) {
-							bigMap[row * 3][col * 3 - 1] = 0;
-							bigMap[row * 3][col * 3 - 2] = 0;
-						}
-					}
-					if (row != 0) {
-						if (map[row - 1][col] == 0) {
-							bigMap[row * 3 - 1][col * 3] = 0;
-							bigMap[row * 3 - 2][col * 3] = 0;
-						}
-					}
-					if (row != 0 && col != 0) {
-						if (map[row][col - 1] == 0 && map[row - 1][col] == 0 && map[row - 1][col - 1] == 0) {
-							bigMap[row * 3 - 1][col * 3 - 1] = 0;
-							bigMap[row * 3 - 1][col * 3 - 2] = 0;
-							bigMap[row * 3 - 2][col * 3 - 1] = 0;
-							bigMap[row * 3 - 2][col * 3 - 2] = 0;
-						}
-					}
-				}
-			}
-		}
-		return bigMap;
-	}
-	
-	/**
-	 * Draws a wall border around a map
-	 * @param map
-	 * @param borderSize
-	 * @return
-	 */
-	private int[][] createBorder(int[][] map, int borderSize){
-		int[][] borderedMap = new int[map.length + (borderSize * 2)][map[0].length + (borderSize * 2)];
-		for (int r = 0; r < borderedMap.length; r++) {
-			for (int c = 0; c < borderedMap[r].length; c++) {
-				if (r < borderSize || r >= borderedMap.length - borderSize || c < borderSize || c >= borderedMap[r].length - borderSize) {
-					borderedMap[r][c] = 1;
-				}
-				else {
-					borderedMap[r][c] = map[r - borderSize][c - borderSize];
-				}
-			}
-		}
-		return borderedMap;
-	}
 	
 	/**
 	 * Returns a list of rectangles around a given coordinate that matches with walls

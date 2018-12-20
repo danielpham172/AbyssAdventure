@@ -1,10 +1,9 @@
 package com.abyad.utils;
-import java.awt.Color;
-import java.awt.Graphics;
+
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import com.badlogic.gdx.math.Rectangle;
+
 
 public class DungeonGenerator {
 
@@ -18,6 +17,7 @@ public class DungeonGenerator {
 	private int density;
 	
 	private ArrayList<Node> connections;
+	private ArrayList<Rectangle> rooms;
 	
 	public DungeonGenerator(int rows, int cols, int minRoomSize, int maxRoomSize, int density) {
 		this.rows = rows;
@@ -39,6 +39,10 @@ public class DungeonGenerator {
 		return dungeon;
 	}
 	
+	public ArrayList<Rectangle> getRooms(){
+		return rooms;
+	}
+	
 	public void runDungeonGenerator() {
 		buildRooms();
 		buildCorridors();
@@ -48,6 +52,12 @@ public class DungeonGenerator {
 		//Standard Clear
 		pruneDeadEnds();
 		fillHoles();
+		verifyRooms();
+		System.out.println(rooms.size());
+		expandMap();
+		createBorder(1);
+		verifyRooms();
+		System.out.println(rooms.size());
 		//Cellular Automata
 		//cellularAutomataRun();
 		colorMapDungeon = new int[rows][cols];
@@ -68,12 +78,15 @@ public class DungeonGenerator {
 	}
 	
 	private void buildRooms() {
+		rooms = new ArrayList<Rectangle>();
 		for (int count = 0; count < density; count++) {
 			int row = (int)(Math.random() * rows);
 			int col = (int)(Math.random() * cols);
 			int length = (int)(Math.pow(Math.random(), /*cols/rows*/ 1) * (maxRoomSize - minRoomSize + 1)) + minRoomSize;
 			int height = (int)(Math.pow(Math.random(), /*rows/cols*/ 1) * (maxRoomSize - minRoomSize + 1)) + minRoomSize;
 			if (canBuild(row, col, length, height)) {
+				Rectangle room = new Rectangle(row, col, length, height);
+				rooms.add(room);
 				openRoom(row, col, length, height);
 			}
 		}
@@ -310,6 +323,97 @@ public class DungeonGenerator {
 					dungeon[node.row][node.col] = 1;
 				}
 			}
+		}
+	}
+	
+	private void verifyRooms() {
+		int index = 0;
+		while (index < rooms.size()) {
+			Rectangle room = rooms.get(index);
+			boolean exists = true;
+			for (int r = (int)(room.getX()); r < room.getX() + room.getWidth(); r++) {
+				for (int c = (int)(room.getY()); c < room.getY() + room.getHeight(); c++) {
+					if (dungeon[r][c] == 1) {
+						exists = false;
+					}
+				}
+			}
+			if (!exists) rooms.remove(index); else index++;
+		}
+	}
+	
+	/**
+	 * Method to expand an int array map
+	 * @return	An expanded map
+	 */
+	private void expandMap(){
+		int[][] bigMap = new int[dungeon.length * 3 - 2][dungeon[0].length * 3 - 2];
+		for (int r = 0; r < bigMap.length; r++) {
+			for (int c = 0; c < bigMap.length; c++) {
+				bigMap[r][c] = 1;
+			}
+		}
+		rows = rows * 3 - 2;
+		cols = cols * 3 - 2;
+		for (int row = 0; row < dungeon.length; row++) {
+			for (int col = 0; col < dungeon[row].length; col++) {
+				bigMap[row * 3][col * 3] = dungeon[row][col];
+				if (dungeon[row][col] == 0) {
+					if (col != 0) {
+						if (dungeon[row][col - 1] == 0) {
+							bigMap[row * 3][col * 3 - 1] = 0;
+							bigMap[row * 3][col * 3 - 2] = 0;
+						}
+					}
+					if (row != 0) {
+						if (dungeon[row - 1][col] == 0) {
+							bigMap[row * 3 - 1][col * 3] = 0;
+							bigMap[row * 3 - 2][col * 3] = 0;
+						}
+					}
+					if (row != 0 && col != 0) {
+						if (dungeon[row][col - 1] == 0 && dungeon[row - 1][col] == 0 && dungeon[row - 1][col - 1] == 0) {
+							bigMap[row * 3 - 1][col * 3 - 1] = 0;
+							bigMap[row * 3 - 1][col * 3 - 2] = 0;
+							bigMap[row * 3 - 2][col * 3 - 1] = 0;
+							bigMap[row * 3 - 2][col * 3 - 2] = 0;
+						}
+					}
+				}
+			}
+		}
+		dungeon = bigMap;
+		
+		for (Rectangle room : rooms) {
+			room.setX((int)(room.getX() * 3));
+			room.setY((int)(room.getY() * 3));
+			room.setWidth((int)(room.getWidth() * 3) - 2);
+			room.setHeight((int)(room.getHeight() * 3) - 2);
+		}
+	}
+	
+	/**
+	 * Draws a wall border around a map
+	 * @param borderSize
+	 * @return
+	 */
+	private void createBorder(int borderSize){
+		int[][] borderedMap = new int[dungeon.length + (borderSize * 2)][dungeon[0].length + (borderSize * 2)];
+		for (int r = 0; r < borderedMap.length; r++) {
+			for (int c = 0; c < borderedMap[r].length; c++) {
+				if (r < borderSize || r >= borderedMap.length - borderSize || c < borderSize || c >= borderedMap[r].length - borderSize) {
+					borderedMap[r][c] = 1;
+				}
+				else {
+					borderedMap[r][c] = dungeon[r - borderSize][c - borderSize];
+				}
+			}
+		}
+		dungeon = borderedMap;
+		
+		for (Rectangle room : rooms) {
+			room.setX(room.getX() + borderSize);
+			room.setY(room.getY() + borderSize);
 		}
 	}
 	
