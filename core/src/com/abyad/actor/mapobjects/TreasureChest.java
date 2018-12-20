@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class TreasureChest extends Actor implements Interactable{
 
-	//private LootItem item;
+	private LootItem item;
 	
 	private static TextureRegion closedChest;
 	private static TextureRegion openChest;
@@ -82,6 +82,12 @@ public class TreasureChest extends Actor implements Interactable{
 	public void interact(PlayerCharacter source) {
 		isOpen = true;
 		interactBox.clear();
+	}
+	
+	@Override
+	public boolean remove() {
+		interactables.remove(this);
+		return super.remove();
 	}
 
 }
