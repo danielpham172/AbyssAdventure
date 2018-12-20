@@ -101,7 +101,34 @@ public class PlayStage extends Stage{
 	
 	
 	/**
-	 * Returns a list of rectangles around a given coordinate that matches with walls
+	 * Returns a list of rectangles around a given coordinate that matches collision boxes
+	 * @param x
+	 * @param y
+	 * @param range
+	 * @return
+	 */
+	public ArrayList<Rectangle> getSurroundingCollisionBoxes(float x, float y, int range){
+		ArrayList<Rectangle> boxes = new ArrayList<Rectangle>();
+		float tileLength = AbstractTile.TILE_LENGTH;
+		int row = (int)(y / tileLength);
+		int col = (int)(x / tileLength);
+		for (int r = row - range; r <= row + range; r++) {
+			for (int c = col - range; c <= col + range; c++) {
+				if (inBounds(r, c)) {
+					boxes.addAll(tileMap[r][c].getCollisionBox());
+				}
+				else{
+					Rectangle box = new Rectangle(c * tileLength, r * tileLength, tileLength, tileLength);
+					boxes.add(box);
+				}
+			}
+		}
+		return boxes;
+	}
+	
+	
+	/**
+	 * Returns a list of rectangles around a given coordinate that matches wall boxes only
 	 * @param x
 	 * @param y
 	 * @param range
@@ -114,7 +141,7 @@ public class PlayStage extends Stage{
 		int col = (int)(x / tileLength);
 		for (int r = row - range; r <= row + range; r++) {
 			for (int c = col - range; c <= col + range; c++) {
-				if (inBounds(r, c)) {
+				if (inBounds(r, c) && map[r][c] == 1) {
 					boxes.addAll(tileMap[r][c].getCollisionBox());
 				}
 				else{
