@@ -44,7 +44,7 @@ public abstract class HumanoidEntity extends AbstractEntity{
 		else {
 			//Vector2 alignment = getAlignmentChange(newCollisionBox);		//Get alignment changes to go against a wall (stay in tile)
 			hitWall = true;
-			ArrayList<Rectangle> wallsX = stage.getSurroundingWallBoxes(newX, getY(), 1);
+			ArrayList<Rectangle> wallsX = stage.getSurroundingCollisionBoxes(newX, getY(), 1);
 			ArrayList<Rectangle> newCollisionBoxX = getCollideBox(newX, getY());
 			if (!isOverlapping(wallsX, newCollisionBoxX)) {
 				float minimumYChange = returnMinimumYChange(wallsX, newCollisionBoxX, y);
@@ -52,7 +52,7 @@ public abstract class HumanoidEntity extends AbstractEntity{
 				//super.move(x, y - alignment.y)
 			}
 			else {
-				ArrayList<Rectangle> wallsY = stage.getSurroundingWallBoxes(getX(), newY, 1);
+				ArrayList<Rectangle> wallsY = stage.getSurroundingCollisionBoxes(getX(), newY, 1);
 				ArrayList<Rectangle> newCollisionBoxY = getCollideBox(getX(), newY);
 				if (!isOverlapping(wallsY, newCollisionBoxY)) {
 					float minimumXChange = returnMinimumXChange(wallsY, newCollisionBoxY, x);
