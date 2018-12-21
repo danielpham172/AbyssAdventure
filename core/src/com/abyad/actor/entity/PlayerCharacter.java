@@ -3,9 +3,12 @@ package com.abyad.actor.entity;
 import java.util.ArrayList;
 
 import com.abyad.controls.PlayerController;
+import com.abyad.data.HitEvent;
 import com.abyad.game.Player;
 import com.abyad.interfaces.Interactable;
-import com.abyad.sprite.PlayerSprite;
+import com.abyad.relic.Relic;
+import com.abyad.sprite.AbstractSpriteSheet;
+import com.abyad.sprite.EntitySprite;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -29,16 +32,17 @@ public class PlayerCharacter extends HumanoidEntity{
 	private String weapon;										//The weapon being used (as we might have different weapons)
 	
 	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
+	private ArrayList<Relic> relics = new ArrayList<Relic>();
 	
 	public PlayerCharacter(Player player) {
 		super();
 		
 		this.player = player;
 		if (player.getNumber() == 1) {
-			sprite = new PlayerSprite(Assets.manager.get(Assets.girl1));
+			sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get("GIRL_1");
 		}
 		else {
-			sprite = new PlayerSprite(Assets.manager.get(Assets.boy1));
+			sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get("BOY_1");
 		}
 		weapon = "SWORD";
 		updateHitbox();
@@ -58,6 +62,14 @@ public class PlayerCharacter extends HumanoidEntity{
 			//The values are getting squared just as a sensitivity thing.
 			float xChange = (float)Math.pow(controller.rightPressed(), 2) - (float)Math.pow(controller.leftPressed(), 2);
 			float yChange = (float)Math.pow(controller.upPressed(), 2) - (float)Math.pow(controller.downPressed(), 2);
+			
+			//Activate relic passives
+			for (Relic relic : relics) {
+				relic.update();
+				if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
+					relic.onPassive(this);
+				}
+			}
 			
 			//Knockback the player if currently in knockback
 			if (knockbackLength > 0) {
@@ -130,9 +142,21 @@ public class PlayerCharacter extends HumanoidEntity{
 			if (!isSameTeam(entity)) {
 				ArrayList<Rectangle> otherHitbox = entity.getHitbox();
 				if (isOverlapping(hurtboxes, otherHitbox)) {
+					//Attacked someone
 					Vector2 knockback = new Vector2(entity.getCenterX() - getCenterX(), entity.getCenterY() - getCenterY());
 					knockback.setLength(4.0f);
-					entity.takeDamage(this, 0, knockback, 8);
+					int kbLength = 8;
+					int damage = 1;
+					HitEvent event = new HitEvent(this, entity, damage, knockback, kbLength);
+					
+					//Activate relic hit effects (modifies the event)
+					for (Relic relic : relics) {
+						if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
+							relic.onHit(this, event, entity);
+						}
+					}
+					
+					entity.takeDamage(event);
 				}
 			}
 		}
@@ -183,11 +207,19 @@ public class PlayerCharacter extends HumanoidEntity{
 	 * Method overriden to set knockback and invuln period for the player. Also to lower hp
 	 */
 	@Override
-	public void takeDamage(Actor source, int damage, Vector2 knockback, int kbLength) {
+	public void takeDamage(HitEvent event) {
 		if (!isInvuln()) {
-			knockbackVelocity = knockback.cpy();
-			knockbackLength = kbLength;
-			hp -= damage;
+			
+			//Activate relic defense effects (modifies the event)
+			for (Relic relic : relics) {
+				if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
+					relic.onDefense(this, event);
+				}
+			}
+			
+			knockbackVelocity = event.getKnockbackVelocity();
+			knockbackLength = event.getKnockbackLength();
+			hp -= event.getDamage();
 			invulnLength = 40;
 		}
 	}
