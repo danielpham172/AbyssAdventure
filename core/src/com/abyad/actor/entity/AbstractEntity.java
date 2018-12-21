@@ -2,6 +2,7 @@ package com.abyad.actor.entity;
 
 import java.util.ArrayList;
 
+import com.abyad.data.HitEvent;
 import com.abyad.sprite.EntitySprite;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -168,7 +169,7 @@ public abstract class AbstractEntity extends Actor{
 	 * @param knockback			The knockback force and direction
 	 * @param kbLength			How long the knockback should last
 	 */
-	public abstract void takeDamage(Actor source, int damage, Vector2 knockback, int kbLength);
+	public abstract void takeDamage(HitEvent event);
 	
 	/**
 	 * The following are methods for getting invuln conditions

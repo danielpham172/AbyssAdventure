@@ -3,6 +3,8 @@ package com.abyad.actor.entity;
 import java.util.ArrayList;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
+import com.abyad.data.HitEvent;
+import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -26,7 +28,7 @@ public class ZombieCharacter extends HumanoidEntity{
 	public ZombieCharacter() {
 		super();
 		
-		sprite = new EntitySprite(Assets.manager.get(Assets.zombie));	//Gotta set the zombie sprite
+		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get("ZOMBIE");	//Gotta set the zombie sprite
 
 		wanderDirection.rotate((float)(Math.random() * 360));		//Randomly set a direction for the zombie to wander
 		updateHitbox();
@@ -138,7 +140,9 @@ public class ZombieCharacter extends HumanoidEntity{
 				//If the other entity was a player (or non-ally to the zombie) and is in collision, deal damage to it
 				Vector2 knockback = new Vector2(entity.getCenterX() - getCenterX(), entity.getCenterY() - getCenterY());
 				knockback.setLength(4.0f);
-				entity.takeDamage(this, 0, knockback, 8);
+				int damage = 1;
+				int knockbackLength = 8;
+				entity.takeDamage(new HitEvent(this, entity, damage, knockback, knockbackLength));
 			}
 			else if (isSameTeam(entity) && isOverlapping(hitboxes, otherHitbox)) {
 				//If it is on the same team and colliding, do a small collision to shift it out of each other
@@ -177,11 +181,11 @@ public class ZombieCharacter extends HumanoidEntity{
 	 * Overriden method so that invuln and knockback is applied.
 	 */
 	@Override
-	public void takeDamage(Actor source, int damage, Vector2 knockback, int kbLength) {
+	public void takeDamage(HitEvent event) {
 		if (!isInvuln()) {
-			knockbackVelocity = knockback.cpy();
-			knockbackLength = kbLength;
-			hp -= damage;
+			knockbackVelocity = event.getKnockbackVelocity();
+			knockbackLength = event.getKnockbackLength();
+			hp -= event.getDamage();
 			if (isDead()) {
 				DeathAnimation deathAnimation = new DeathAnimation(getCenterX(), getCenterY());
 				getStage().addActor(deathAnimation);

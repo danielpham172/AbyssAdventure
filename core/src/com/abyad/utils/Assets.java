@@ -21,6 +21,7 @@ public class Assets {
 	
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
 	
+	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
 	public static void loadAssets() {
 		manager.load(boy1);
 		manager.load(girl1);
@@ -30,6 +31,7 @@ public class Assets {
 		manager.load(floorTiles);
 		manager.load(wallTiles);
 		manager.load(treasureChest);
+		manager.load(buttons);
 		manager.finishLoading();
 	}
 	
