@@ -13,6 +13,8 @@ public class Assets {
 	
 	public static final AssetDescriptor<Texture> zombie = new AssetDescriptor<Texture>("character/zombie/sprite.png", Texture.class);
 	
+	public static final AssetDescriptor<Texture> relics = new AssetDescriptor<Texture>("items/relics.png", Texture.class); 
+	
 	public static final AssetDescriptor<Texture> deathAnim = new AssetDescriptor<Texture>("other/deathSprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	
@@ -26,6 +28,7 @@ public class Assets {
 		manager.load(boy1);
 		manager.load(girl1);
 		manager.load(zombie);
+		manager.load(relics);
 		manager.load(deathAnim);
 		manager.load(sword);
 		manager.load(floorTiles);

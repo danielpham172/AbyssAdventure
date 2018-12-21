@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.abyad.interfaces.Interactable;
 import com.abyad.stage.PlayStage;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -12,12 +14,19 @@ public abstract class LootItem extends Actor implements Interactable{
 	
 
 	private Vector2 velocity;
+	private TextureRegion tex;
+	private boolean isInteractable;
 	
-	public LootItem(float x, float y, Vector2 velocity) {
+	public LootItem(float x, float y, Vector2 velocity, TextureRegion tex) {
 		setX(x);
 		setY(y);
+		setOriginX(tex.getRegionWidth() / 2);
+		setOriginY(tex.getRegionHeight() / 2);
 		this.velocity = velocity;
-		
+		this.tex = tex;
+	}
+	
+	public void spawn() {
 		interactables.add(this);
 	}
 	
@@ -25,9 +34,25 @@ public abstract class LootItem extends Actor implements Interactable{
 	public void act(float delta) {
 		if (velocity.len2() > 0) {
 			move(velocity.x, velocity.y);
-			velocity.scl(0.98f);
-			if (velocity.len() < 1.0f) velocity.setLength(0);
+			velocity.setLength(0.95f * velocity.len());
+			if (velocity.len() < 0.2f) velocity.setLength(0);
 		}
+	}
+	
+	@Override
+	public void draw(Batch batch, float a) {
+		if (isInteractable) {
+			setScale(1.35f);
+		}
+		else {
+			setScale(1.0f);
+		}
+		
+		batch.draw(tex, getX() - getOriginX(), getY() - getOriginY(),
+				getOriginX(), getOriginY(), tex.getRegionWidth(), tex.getRegionHeight(),
+				getScaleX(), getScaleY(), getRotation());
+		
+		isInteractable = false;
 	}
 	
 	public void move(float x, float y) {
@@ -39,6 +64,7 @@ public abstract class LootItem extends Actor implements Interactable{
 		if (!isOverlapping(walls, newCollisionBox)) {
 			setX(getX() + x);
 			setY(getY() + y);
+			updateCollideAndInteractBox();
 		}
 		else {
 			ArrayList<Rectangle> wallsX = stage.getSurroundingWallBoxes(newX, getY(), 1);
@@ -47,6 +73,7 @@ public abstract class LootItem extends Actor implements Interactable{
 				float minimumYChange = returnMinimumYChange(wallsX, newCollisionBoxX, y);
 				setX(getX() + x);
 				setY(getY() + minimumYChange);
+				updateCollideAndInteractBox();
 			}
 			else {
 				ArrayList<Rectangle> wallsY = stage.getSurroundingWallBoxes(getX(), newY, 1);
@@ -55,12 +82,14 @@ public abstract class LootItem extends Actor implements Interactable{
 					float minimumXChange = returnMinimumXChange(wallsY, newCollisionBoxY, x);
 					setX(getX() + minimumXChange);
 					setY(getY() + x);
+					updateCollideAndInteractBox();
 				}
 				else {
 					float minimumXChange = returnMinimumXChange(walls, getCollideBox(), x);
 					float minimumYChange = returnMinimumYChange(walls, getCollideBox(), y);
 					setX(getX() + minimumXChange);
 					setY(getY() + minimumYChange);
+					updateCollideAndInteractBox();
 				}
 			}
 		}
@@ -137,6 +166,11 @@ public abstract class LootItem extends Actor implements Interactable{
 	public abstract void updateCollideAndInteractBox();
 	public abstract ArrayList<Rectangle> getCollideBox();
 	public abstract ArrayList<Rectangle> getCollideBox(float x, float y);
+	
+	@Override
+	public void setCanInteract(boolean flag) {
+		isInteractable = flag;
+	}
 	
 	@Override
 	public boolean remove() {

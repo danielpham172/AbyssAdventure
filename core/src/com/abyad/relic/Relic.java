@@ -33,6 +33,10 @@ public abstract class Relic {
 		return cooldown > 0;
 	}
 	
+	public TextureRegion getTexture() {
+		return tex;
+	}
+	
 	public void update() {
 		if (cooldown > 0) cooldown--;
 	}

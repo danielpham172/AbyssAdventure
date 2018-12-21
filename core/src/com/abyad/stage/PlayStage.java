@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
+import com.abyad.actor.mapobjects.LootItem;
 import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
@@ -141,8 +142,10 @@ public class PlayStage extends Stage{
 		int col = (int)(x / tileLength);
 		for (int r = row - range; r <= row + range; r++) {
 			for (int c = col - range; c <= col + range; c++) {
-				if (inBounds(r, c) && map[r][c] == 1) {
-					boxes.addAll(tileMap[r][c].getCollisionBox());
+				if (inBounds(r, c)) {
+					if (map[r][c] == 1) {
+						boxes.addAll(tileMap[r][c].getCollisionBox());
+					}
 				}
 				else{
 					Rectangle box = new Rectangle(c * tileLength, r * tileLength, tileLength, tileLength);
@@ -231,6 +234,8 @@ class ActorComparator implements Comparator<Actor>{
 	public int compare(Actor o1, Actor o2) {
 		if (o2 instanceof FloorTile) return 1;
 		if (o1 instanceof FloorTile) return -1;
+		if (o2 instanceof LootItem) return 1;
+		if (o1 instanceof LootItem) return -1;
 		if (o2 instanceof DeathAnimation) return -1;
 		if (o1 instanceof DeathAnimation) return 1;
 		if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;

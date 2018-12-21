@@ -9,14 +9,12 @@ import com.abyad.interfaces.Interactable;
 import com.abyad.relic.Relic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
-import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class PlayerCharacter extends HumanoidEntity{
 
@@ -82,6 +80,7 @@ public class PlayerCharacter extends HumanoidEntity{
 				for (Interactable interactable : Interactable.interactables) {
 					if (isOverlapping(interactable.getInteractBox(), getCollideBox())) {
 						interactableObjects.add(interactable);
+						interactable.setCanInteract(true);
 					}
 				}
 				
@@ -160,6 +159,10 @@ public class PlayerCharacter extends HumanoidEntity{
 				}
 			}
 		}
+	}
+	
+	public void pickupRelic(Relic relic) {
+		relics.add(relic);
 	}
 	
 	@Override

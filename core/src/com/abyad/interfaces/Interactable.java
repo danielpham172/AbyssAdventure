@@ -11,4 +11,5 @@ public interface Interactable {
 	
 	public ArrayList<Rectangle> getInteractBox();
 	public void interact(PlayerCharacter source);
+	public void setCanInteract(boolean flag);
 }

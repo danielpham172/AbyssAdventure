@@ -13,6 +13,12 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("ZOMBIE", new EntitySprite(Assets.manager.get(Assets.zombie)));
 		spriteSheets.put("BOY_1", new PlayerSprite(Assets.manager.get(Assets.boy1)));
 		spriteSheets.put("GIRL_1", new PlayerSprite(Assets.manager.get(Assets.girl1)));
+		
+		String[][] buttonNames = { {"A", "B"}, {"X", "Y"} };
+		spriteSheets.put("UI_BUTTONS", new BasicSprite(Assets.manager.get(Assets.buttons), 2, 2, buttonNames));
+		
+		String[][] relicNames = { {"TON_WEIGHT"} };
+		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames.length, relicNames[0].length, relicNames));
 	}
 	
 	public AbstractSpriteSheet() {
