@@ -25,6 +25,8 @@ public class ZombieCharacter extends HumanoidEntity{
 	
 	private Vector2 wanderDirection = new Vector2(1, 0);	//The direction the zombie is wandering in
 	
+	private final float SPEED = 0.3f;
+	
 	public ZombieCharacter() {
 		super();
 		
@@ -54,18 +56,18 @@ public class ZombieCharacter extends HumanoidEntity{
 				if (task.equals("CHASE")) {
 					//If chasing, have the velocity point towards the player then set the speed by using the length
 					getVelocity().set(player.getCenterX() - getCenterX(), player.getCenterY() - getCenterY());
-					getVelocity().setLength(0.3f);
+					getVelocity().setLength(SPEED);
 					//Also set the wander direction to be the same so they don't just randomly splay off
 					wanderDirection.setAngle(getVelocity().angle());
 					move(getVelocity());
-					setState("MOVE", 0.3f/2.0f);		//Sets the state for animation. The fraction is the slow down the animation to match the speed
+					setState("MOVE", SPEED/2.0f);		//Sets the state for animation. The fraction is the slow down the animation to match the speed
 					if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
 					checkCollisions();
 				}
 				else if (task.equals("WANDER")){
 					//If wandering, just move in the same direction as the wander with a length change
 					getVelocity().set(wanderDirection.x, wanderDirection.y).setLength(0.3f);
-					setState("MOVE", 0.3f/2.0f);
+					setState("MOVE", SPEED/2.0f);
 					if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
 					if (Math.random() * timeSinceTask / 120.0 > 1.0) {
 						//Randomly change the direction slightly after a certain amount of time

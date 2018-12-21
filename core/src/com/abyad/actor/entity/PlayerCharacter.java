@@ -32,6 +32,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
 	private ArrayList<Relic> relics = new ArrayList<Relic>();
 	
+	private final float MAX_SPEED = 2.5f;
+	
 	public PlayerCharacter(Player player) {
 		super();
 		
@@ -109,9 +111,9 @@ public class PlayerCharacter extends HumanoidEntity{
 				}
 				else {
 					//This happens if the character is moving, scale the change to match velocity
-					velocity.x = xChange * 2.5f;
-					velocity.y = yChange * 2.5f;
-					if (velocity.len() > 2.5f) velocity.setLength(2.5f);	//Sometimes the velocity is over the actual max speed, so set it back
+					velocity.x = xChange * MAX_SPEED;
+					velocity.y = yChange * MAX_SPEED;
+					if (velocity.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);	//Sometimes the velocity is over the actual max speed, so set it back
 					setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
 					move(velocity);
 				}
