@@ -6,6 +6,7 @@ import java.util.Comparator;
 import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.mapobjects.LootItem;
+import com.abyad.actor.mapobjects.MapItem;
 import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
@@ -234,8 +235,8 @@ class ActorComparator implements Comparator<Actor>{
 	public int compare(Actor o1, Actor o2) {
 		if (o2 instanceof FloorTile) return 1;
 		if (o1 instanceof FloorTile) return -1;
-		if (o2 instanceof LootItem) return 1;
-		if (o1 instanceof LootItem) return -1;
+		if (o2 instanceof MapItem) return 1;
+		if (o1 instanceof MapItem) return -1;
 		if (o2 instanceof DeathAnimation) return -1;
 		if (o1 instanceof DeathAnimation) return 1;
 		if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;

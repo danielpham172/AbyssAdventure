@@ -3,6 +3,7 @@ package com.abyad.actor.entity;
 import java.util.ArrayList;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
+import com.abyad.actor.mapobjects.HeartItem;
 import com.abyad.data.HitEvent;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
@@ -191,12 +192,20 @@ public class ZombieCharacter extends HumanoidEntity{
 			if (isDead()) {
 				DeathAnimation deathAnimation = new DeathAnimation(getCenterX(), getCenterY());
 				getStage().addActor(deathAnimation);
+				dropHeart();
 				markForRemoval = true;
 			}
 			else {
 				invulnLength = 40;
 			}
 		}
+	}
+	
+	public void dropHeart() {
+		Vector2 velocity = new Vector2(1, 1);
+		velocity.setAngle((float)(Math.random() * 360)).setLength((float)(Math.random() * 0.5f) + 1.0f);
+		HeartItem heart = new HeartItem(velocity, getCenterX(), getCenterY());
+		getStage().addActor(heart);
 	}
 
 }

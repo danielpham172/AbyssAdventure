@@ -89,6 +89,10 @@ public abstract class AbstractEntity extends Actor{
 		return maxHP;
 	}
 	
+	public void restoreHealth(int heal) {
+		if (hp + heal <= maxHP) hp += heal; else hp = maxHP;
+	}
+	
 	public boolean isDead() {
 		return hp <= 0;
 	}

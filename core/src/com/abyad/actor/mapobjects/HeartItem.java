@@ -3,61 +3,49 @@ package com.abyad.actor.mapobjects;
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
-import com.abyad.relic.Relic;
+import com.abyad.sprite.AbstractSpriteSheet;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class RelicLoot extends LootItem{
+public class HeartItem extends AutoItem{
 
-	private ArrayList<Rectangle> interactBox;
+	private ArrayList<Rectangle> collideBox;
 	private ArrayList<Rectangle> temporaryCollideBox;
 	
-	private Relic relic;
-	private static Rectangle baseBox = new Rectangle(0, 0, 16, 16);
+	private static Rectangle baseBox = new Rectangle(0, 0, 5, 5);
 	
-	private boolean markForRemoval;
-	
-	public RelicLoot(float x, float y, Vector2 velocity, Relic relic) {
-		super(x, y, velocity, relic.getTexture());
-		this.relic = relic;
+	public HeartItem(Vector2 velocity, float x, float y) {
+		super(AbstractSpriteSheet.spriteSheets.get("PICKUPS").getSprite("HEART"), 80, false);
+		this.velocity = velocity;
+		setX(x);
+		setY(y);
 		
-		interactBox = new ArrayList<Rectangle>();
+		collideBox = new ArrayList<Rectangle>();
 		temporaryCollideBox = new ArrayList<Rectangle>();
 		
 		Rectangle box = new Rectangle(baseBox);
 		Rectangle tempBox = new Rectangle(baseBox);
 		
-		interactBox.add(box);
+		collideBox.add(box);
 		temporaryCollideBox.add(tempBox);
 		
 		updateCollideAndInteractBox();
 	}
-	
-	@Override
-	public void act(float delta) {
-		super.act(delta);
-		if (markForRemoval) remove();
-	}
-	@Override
-	public ArrayList<Rectangle> getInteractBox() {
-		return interactBox;
-	}
 
 	@Override
-	public void interact(PlayerCharacter source) {
-		if (!markForRemoval) source.pickupRelic(relic);
-		markForRemoval = true;
+	public void playerPickup(PlayerCharacter player) {
+		player.restoreHealth(1);
 	}
 
 	@Override
 	public void updateCollideAndInteractBox() {
-		Rectangle box = interactBox.get(0);
+		Rectangle box = collideBox.get(0);
 		box.setPosition(getX() - (box.getWidth() / 2), getY() - (box.getHeight() / 2));
 	}
 
 	@Override
 	public ArrayList<Rectangle> getCollideBox() {
-		return interactBox;
+		return collideBox;
 	}
 
 	@Override
