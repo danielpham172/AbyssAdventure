@@ -81,6 +81,12 @@ public class GamepadController extends PlayerController{
 		return getPressed(attack);
 	}
 	
+	@Override
+	public boolean specialPressed() {
+		KeyControl attack = keyMap.get("SPECIAL");
+		return getPressed(attack);
+	}
+	
 	private boolean getPressed(KeyControl key) {
 		if (key.getKeyType() == 0) {
 			return (controllers.get(index).getButton(key.getKeyCode()));

@@ -2,7 +2,9 @@ package com.abyad.utils;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 
 public class Assets {
 	
@@ -27,6 +29,24 @@ public class Assets {
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
 	
 	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
+	
+	public static Texture redBox;		//Texture used for debugging hitboxes for the tile
+	public static Texture greenBox;		//Texture used for debugging hitboxes for the tile
+	static {
+		Pixmap redPix = new Pixmap(1, 1, Format.RGBA8888 );
+		redPix.setColor( 1, 0, 0, 0.25f );
+		redPix.fill();
+		redBox = new Texture(redPix);
+		redPix.dispose();
+		
+		Pixmap greenPix = new Pixmap(1, 1, Format.RGBA8888 );
+		greenPix.setColor( 0, 1, 0, 0.25f );
+		greenPix.fill();
+		greenBox = new Texture(greenPix);
+		greenPix.dispose();
+	}
+	
+	
 	public static void loadAssets() {
 		manager.load(boy1);
 		manager.load(girl1);

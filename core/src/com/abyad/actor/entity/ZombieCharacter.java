@@ -178,13 +178,7 @@ public class ZombieCharacter extends HumanoidEntity{
 	 */
 	public void drawHitbox(Batch batch, float a) {
 		for (Rectangle hitbox : hitboxes) {
-			Pixmap pixmap = new Pixmap((int)hitbox.getWidth(), (int)hitbox.getHeight(), Format.RGBA8888 );
-			pixmap.setColor( 1, 0, 0, 0.25f );
-			pixmap.fill();
-			Texture box = new Texture( pixmap );
-			pixmap.dispose();
-			
-			batch.draw(box, hitbox.getX(), hitbox.getY());
+			batch.draw(Assets.redBox, hitbox.getX(), hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
 		}
 	}
 	

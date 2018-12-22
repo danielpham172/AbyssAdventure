@@ -37,6 +37,11 @@ public class KeyboardController extends PlayerController{
 		return keyPressedBool("ATTACK");
 	}
 	
+	@Override
+	public boolean specialPressed() {
+		return keyPressedBool("SPECIAL");
+	}
+	
 	private float keyPressed(String k)	{
 		KeyControl key = keyMap.get(k);
 		return (Gdx.input.isKeyPressed(key.getKeyCode())) ? 1.0f : 0;

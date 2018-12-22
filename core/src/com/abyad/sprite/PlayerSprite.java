@@ -11,16 +11,19 @@ import com.badlogic.gdx.math.Vector2;
 public class PlayerSprite extends EntitySprite{
 
 	private static String[] carryingColNames = {"carrying-idle", "carrying-rstep", "carrying-mstep", "carrying-lstep"};
-	private static String[] weaponColNames = {"start", "swing", "follow", "end"};			//The column names for the weapon
-	private static String[] rowNames = {"f", "r", "l", "b"};						//The row names for the weapon
-	private static int[] attackLengths = {6, 10, 14, 24};				//The frame thresholds for the
+	
+	private static String[] weaponColNames = {"start", "swing", "follow", "end", "start-swing", "end-swing"};			//The column names for the weapon
+	private static String[] rowNames = {"f", "r", "l", "b"};															//The row names for the weapon
+	
 	public static LinkedHashMap<String, TextureRegion> swordSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the sword sprites
 	static {
 		//Splicing and adding sword sprites
+		int swordRows = 4;
+		int swordCols = 6;
 		Texture sword = Assets.manager.get(Assets.sword);
-		TextureRegion[][] weaponRegions = TextureRegion.split(sword, sword.getWidth() / 4, sword.getHeight() / 4);
-		for (int r = 0; r < 4; r++) {
-			for (int c = 0; c < 4; c++) {
+		TextureRegion[][] weaponRegions = TextureRegion.split(sword, sword.getWidth() / swordCols, sword.getHeight() / swordRows);
+		for (int r = 0; r < swordRows; r++) {
+			for (int c = 0; c < swordCols; c++) {
 				swordSprites.put("weapon_" + rowNames[r] + "_" + weaponColNames[c], weaponRegions[r][c]);
 			}
 		}
@@ -54,25 +57,11 @@ public class PlayerSprite extends EntitySprite{
 	 */
 	@Override
 	public ArrayList<TextureRegion> getNextFrame(String state, Vector2 direction, int framesSinceLast) {
-		if (state.equals("ATTACK - SWORD")) {
-			ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
-			int frame = 0;
-			String dir = getDirection(direction);
-			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 4) frame = 3;
-			TextureRegion weapon = swordSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
-			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
-			if (isWeaponBehind(dir, frame)) {
-				frames.add(weapon);
-				frames.add(character);
-			}
-			else {
-				frames.add(character);
-				frames.add(weapon);
-			}
-			return frames;
+		if (state.contains("BASIC_ATTACK")) {
+			return getNextFrameBasicAttack(state, direction, framesSinceLast);
+		}
+		else if (state.contains("SPECIAL_ATTACK")) {
+			return getNextFrameSpecialAttack(state, direction, framesSinceLast);
 		}
 		else if (state.equals("CARRYING_IDLE")) {
 			ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
@@ -99,16 +88,85 @@ public class PlayerSprite extends EntitySprite{
 		}
 	}
 	
+	public ArrayList<TextureRegion> getNextFrameBasicAttack(String state, Vector2 direction, int framesSinceLast){
+		ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
+		if (state.contains("SWORD")) {
+			int frame = 0;
+			int[] attackLengths = {6, 10, 14, 24};				//The frame thresholds for the attack
+			String dir = getDirection(direction);
+			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
+				frame++;
+			}
+			if (frame >= 4) frame = 3;
+			TextureRegion weapon = swordSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
+			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
+			if (isWeaponBehind(dir, frame, "SWORD")) {
+				frames.add(weapon);
+				frames.add(character);
+			}
+			else {
+				frames.add(character);
+				frames.add(weapon);
+			}
+		}
+		return frames;
+	}
+	
+	public ArrayList<TextureRegion> getNextFrameSpecialAttack(String state, Vector2 direction, int framesSinceLast){
+		ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
+		if (state.contains("SPIN_SLASH")) {
+			int frame = 0;
+			int[] attackLengths = {4, 10, 16, 22, 28, 34};				//The frame thresholds for the attack
+			while (frame < 6 && framesSinceLast >= attackLengths[frame]) {
+				frame++;
+			}
+			if (frame >= 6) frame = 5;
+			Vector2 newDirection = new Vector2(direction);
+			if (frame != 5) newDirection.rotate(frame * 90f);
+			String dir = getDirection(newDirection);
+			
+			TextureRegion weapon;
+			TextureRegion character;
+			if (frame == 0) {
+				weapon = swordSprites.get("weapon_" + dir + "_start");
+				character = sprites.get("char_" + dir + "_start");
+			}
+			else if (frame == 5) {
+				weapon = swordSprites.get("weapon_" + dir + "_" + weaponColNames[4]);
+				character = sprites.get("char_" + dir + "_swing");
+			}
+			else {
+				weapon = swordSprites.get("weapon_" + dir + "_" + weaponColNames[5]);
+				character = sprites.get("char_" + dir + "_swing");
+			}
+			
+			if (isWeaponBehind(dir, frame, "SPIN_SLASH")) {
+				frames.add(weapon);
+				frames.add(character);
+			}
+			else {
+				frames.add(character);
+				frames.add(weapon);
+			}
+		}
+		return frames;
+	}
+	
 	/**
 	 * Used to see whether to draw the weapon behind or in front
 	 * @param dir
 	 * @param frame
 	 * @return
 	 */
-	private boolean isWeaponBehind (String dir, int frame) {
-		if (dir.equals("b")) return true;
-		else if (dir.equals("r") && frame >= 2) return true;
-		else if (dir.equals("l") && frame <= 1) return true;
-		else return false;
+	private boolean isWeaponBehind (String dir, int frame, String type) {
+		if (type.equals("SWORD")) {
+			if (dir.equals("b")) return true;
+			else if (dir.equals("r") && frame >= 2) return true;
+			else if (dir.equals("l") && frame <= 1) return true;
+		}
+		else if (type.equals("SPIN_SLASH")) {
+			if (dir.equals("b") || dir.equals("l")) return true;
+		}
+		return false;
 	}
 }

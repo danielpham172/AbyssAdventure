@@ -106,6 +106,10 @@ public abstract class AbstractEntity extends Actor{
 	public boolean isDead() {
 		return hp <= 0;
 	}
+	
+	public String getState() {
+		return state;
+	}
 	/**
 	 * Sets the state of the entity. If the state is the same, increments the frameSinceLast by 1.
 	 * @param newState		The state to change into

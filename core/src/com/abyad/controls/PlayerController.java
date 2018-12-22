@@ -11,4 +11,5 @@ public abstract class PlayerController {
 	public abstract float rightPressed();
 	
 	public abstract boolean attackPressed();
+	public abstract boolean specialPressed();
 }
