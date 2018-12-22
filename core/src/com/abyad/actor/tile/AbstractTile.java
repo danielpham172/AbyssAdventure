@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class AbstractTile extends Actor{
 	
 	protected TextureRegion tex;			//The texture of the tile
+	protected ArrayList<TextureRegion> decor;			//Additional decoration on tile to draw
 	private int row;					//What row the tile is in on the map
 	private int col;					//What column the tile is in on the map
 	
@@ -49,6 +50,7 @@ public abstract class AbstractTile extends Actor{
 		hitbox = new Rectangle(col * TILE_LENGTH, row * TILE_LENGTH, TILE_LENGTH, TILE_LENGTH);
 		setX(col * TILE_LENGTH);
 		setY(row * TILE_LENGTH);
+		decor = new ArrayList<TextureRegion>();
 	}
 	
 	/**
@@ -73,6 +75,11 @@ public abstract class AbstractTile extends Actor{
 		if (tex != null && inView()) {
 			batch.draw(tex, getX() - ((TILE_SIZE - TILE_LENGTH) / 2), getY() - ((TILE_SIZE - TILE_LENGTH) / 2), TILE_SIZE / 2, TILE_SIZE / 2,
 					TILE_SIZE, TILE_SIZE, TILE_SCALE, TILE_SCALE, getRotation());
+			
+			for (TextureRegion d : decor) {
+				batch.draw(d, getX() - ((TILE_SIZE - TILE_LENGTH) / 2), getY() - ((TILE_SIZE - TILE_LENGTH) / 2), TILE_SIZE / 2, TILE_SIZE / 2,
+						TILE_SIZE, TILE_SIZE, TILE_SCALE, TILE_SCALE, getRotation());
+			}
 		}
 		//drawHitbox(batch, a);
 	}
