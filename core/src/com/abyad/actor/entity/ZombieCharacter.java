@@ -192,7 +192,7 @@ public class ZombieCharacter extends HumanoidEntity{
 			if (isDead()) {
 				DeathAnimation deathAnimation = new DeathAnimation(getCenterX(), getCenterY());
 				getStage().addActor(deathAnimation);
-				dropHeart();
+				if (Math.random() < 0.05) dropHeart();
 				markForRemoval = true;
 			}
 			else {
@@ -204,7 +204,7 @@ public class ZombieCharacter extends HumanoidEntity{
 	public void dropHeart() {
 		Vector2 velocity = new Vector2(1, 1);
 		velocity.setAngle((float)(Math.random() * 360)).setLength((float)(Math.random() * 0.5f) + 1.0f);
-		HeartItem heart = new HeartItem(velocity, getCenterX(), getCenterY());
+		HeartItem heart = new HeartItem(getCenterX(), getCenterY(), velocity);
 		getStage().addActor(heart);
 	}
 
