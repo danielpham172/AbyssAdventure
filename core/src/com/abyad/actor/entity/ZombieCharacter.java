@@ -3,6 +3,7 @@ package com.abyad.actor.entity;
 import java.util.ArrayList;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
+import com.abyad.actor.mapobjects.items.GoldItem;
 import com.abyad.actor.mapobjects.items.HeartItem;
 import com.abyad.data.HitEvent;
 import com.abyad.sprite.AbstractSpriteSheet;
@@ -193,6 +194,8 @@ public class ZombieCharacter extends HumanoidEntity{
 				DeathAnimation deathAnimation = new DeathAnimation(getCenterX(), getCenterY());
 				getStage().addActor(deathAnimation);
 				if (Math.random() < 0.05) dropHeart();
+				if (Math.random() < 0.25) dropGold();
+				if (Math.random() < 0.25) dropGold();
 				markForRemoval = true;
 			}
 			else {
@@ -202,10 +205,17 @@ public class ZombieCharacter extends HumanoidEntity{
 	}
 	
 	public void dropHeart() {
-		Vector2 velocity = new Vector2(1, 1);
+		Vector2 velocity = new Vector2(1, 0);
 		velocity.setAngle((float)(Math.random() * 360)).setLength((float)(Math.random() * 0.5f) + 1.0f);
 		HeartItem heart = new HeartItem(getCenterX(), getCenterY(), velocity);
 		getStage().addActor(heart);
+	}
+	
+	public void dropGold() {
+		Vector2 velocity = new Vector2(1, 0);
+		velocity.setAngle((float)(Math.random() * 360)).setLength((float)(Math.random() * 0.5f) + 0.5f);
+		GoldItem gold = new GoldItem(getCenterX(), getCenterY(), velocity);
+		getStage().addActor(gold);
 	}
 
 }

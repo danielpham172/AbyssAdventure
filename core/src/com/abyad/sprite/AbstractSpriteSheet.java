@@ -20,7 +20,7 @@ public abstract class AbstractSpriteSheet {
 		String[][] relicNames = { {"TON_WEIGHT"} };
 		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames.length, relicNames[0].length, relicNames));
 		
-		String[][] pickupsNames = { {"HEART"} };
+		String[][] pickupsNames = { {"HEART", "GOLD"} };
 		spriteSheets.put("PICKUPS", new BasicSprite(Assets.manager.get(Assets.pickups), pickupsNames.length, pickupsNames[0].length, pickupsNames));
 		
 		String[][] carryingNames = { {"KEY"} };

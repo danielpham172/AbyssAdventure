@@ -18,12 +18,14 @@ public abstract class AutoItem extends MapItem{
 		super.act(delta);
 		
 		updateCollideAndInteractBox();
-		ArrayList<PlayerCharacter> players = PlayerCharacter.getPlayers();
-		for (PlayerCharacter player : players) {
-			if (isOverlapping(player.getCollideBox(), getCollideBox())) {
-				playerPickup(player);
-				remove();
-				return;
+		if (following) {
+			ArrayList<PlayerCharacter> players = PlayerCharacter.getPlayers();
+			for (PlayerCharacter player : players) {
+				if (isOverlapping(player.getCollideBox(), getCollideBox())) {
+					playerPickup(player);
+					remove();
+					return;
+				}
 			}
 		}
 	}

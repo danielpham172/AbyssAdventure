@@ -3,6 +3,7 @@ package com.abyad.actor.mapobjects;
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.mapobjects.items.GoldItem;
 import com.abyad.actor.mapobjects.items.HeartItem;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
@@ -73,12 +74,20 @@ public class TreasureChest extends Actor implements Interactable{
 			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
 			items.add(new RelicLoot(getX(), getY(), velocity, new TonWeightRelic()));
 		}
-		else {
+		else if (choice == 1){
 			int heartAmount = (int)(Math.random() * 3) + 1;
 			for (int i = 0; i <= heartAmount; i++) {
 				Vector2 velocity = new Vector2(1, 0);
 				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
 				items.add(new HeartItem(getX(), getY(), velocity));
+			}
+		}
+		else{
+			int goldAmount = (int)(Math.random() * 11) + 5;
+			for (int i = 0; i <= goldAmount; i++) {
+				Vector2 velocity = new Vector2(1, 0);
+				velocity.setLength((float)(Math.random() * 2.0f) + 2.0f).setAngle((float)(Math.random() * 360.0f));
+				items.add(new GoldItem(getX(), getY(), velocity));
 			}
 		}
 		//return new KeyItem(getX(), getY(), velocity);
