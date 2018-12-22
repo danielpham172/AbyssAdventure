@@ -52,9 +52,16 @@ public abstract class MapItem extends Actor{
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		batch.draw(tex, getX() - getOriginX(), getY() - getOriginY(),
-				getOriginX(), getOriginY(), tex.getRegionWidth(), tex.getRegionHeight(),
-				getScaleX(), getScaleY(), getRotation());
+		if (inView()) {
+			batch.draw(tex, getX() - getOriginX(), getY() - getOriginY(),
+					getOriginX(), getOriginY(), tex.getRegionWidth(), tex.getRegionHeight(),
+					getScaleX(), getScaleY(), getRotation());
+		}
+	}
+	
+	public boolean inView() {
+		return getStage().getCamera().frustum.boundsInFrustum(getX(), getY(), 0,
+				tex.getRegionWidth() / 2, tex.getRegionHeight() / 2, 0);
 	}
 	
 	
