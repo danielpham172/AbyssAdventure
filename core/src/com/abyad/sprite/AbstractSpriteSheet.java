@@ -14,6 +14,9 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("BOY_1", new PlayerSprite(Assets.manager.get(Assets.boy1)));
 		spriteSheets.put("GIRL_1", new PlayerSprite(Assets.manager.get(Assets.girl1)));
 		
+		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
+		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames.length, chestNames[0].length, chestNames));
+		
 		String[][] buttonNames = { {"A", "B"}, {"X", "Y"} };
 		spriteSheets.put("UI_BUTTONS", new BasicSprite(Assets.manager.get(Assets.buttons), 2, 2, buttonNames));
 		

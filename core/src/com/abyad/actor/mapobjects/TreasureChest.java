@@ -24,27 +24,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class TreasureChest extends Actor implements Interactable{
 
-	private ArrayList<MapItem> items;
+	protected ArrayList<MapItem> items;
 	
-	private static TextureRegion closedChest;
-	private static TextureRegion openChest;
+	private static TextureRegion closedChest = AbstractSpriteSheet.spriteSheets.get("CHEST").getSprite("NORMAL_CLOSED");
+	private static TextureRegion openChest = AbstractSpriteSheet.spriteSheets.get("CHEST").getSprite("NORMAL_OPEN");
 	
-	static {
-		int rows = 1;
-		int cols = 2;
-		Texture tex = Assets.manager.get(Assets.treasureChest);
-		TextureRegion[][] treasureChestRegions = TextureRegion.split(tex, tex.getWidth() / cols, tex.getHeight() / rows);
-		
-		closedChest = treasureChestRegions[0][0];
-		openChest = treasureChestRegions[0][1];
-	}
+	protected FloorTile floor;
+	protected ArrayList<Rectangle> interactBox;
+	protected boolean isOpen;
+	protected boolean isInteractable;
 	
-	private FloorTile floor;
-	private ArrayList<Rectangle> interactBox;
-	private boolean isOpen;
-	private boolean isInteractable;
-	
-	private Rectangle hitbox;
+	protected Rectangle hitbox;
 	
 	public TreasureChest(FloorTile floor) {
 		this.floor = floor;

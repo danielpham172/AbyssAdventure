@@ -7,6 +7,7 @@ import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.entity.ZombieCharacter;
+import com.abyad.actor.mapobjects.RareTreasureChest;
 import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
@@ -35,7 +36,9 @@ public class PlayStage extends Stage{
 	private ArrayList<Rectangle> rooms;				//The rooms (x = row, y = col)
 	private ArrayList<FloorTile> floorTiles;		//The floor tiles
 	private ArrayList<FloorTile> roomTiles;			//The room tiles
-	private ArrayList<TreasureChest> treasure;
+	
+	private ArrayList<TreasureChest> treasure;		//All treasure chests
+	private ArrayList<AbstractEntity> enemies;		//All enemies
 	
 	private boolean readyForNextLevel;
 	
@@ -50,7 +53,7 @@ public class PlayStage extends Stage{
 		super(new ExtendViewport(384, 216));		//Creates the stage with a viewport
 		this.game = game;
 		
-		DungeonGenerator generator = new DungeonGenerator(20, 20, 3, 6, 600);		//Create a generator
+		DungeonGenerator generator = new DungeonGenerator(18, 18, 3, 5, 600);		//Create a generator
 		generator.runDungeonGenerator();		//Generate the dungeon
 		map = generator.getDungeon();			//Set the map
 		tileMap = new AbstractTile[map.length][map[0].length];
@@ -75,14 +78,43 @@ public class PlayStage extends Stage{
 			}
 		}
 		
+		//Generate enemies
+		enemies = new ArrayList<AbstractEntity>();
+		for (int i = 0; i < 30; i++) {
+			Vector2 randomPos = getRandomOpenPos();
+			ZombieCharacter zombie = new ZombieCharacter(randomPos.x, randomPos.y);
+			enemies.add(zombie);
+			addActor(zombie);
+		}
+		
 		//Generating treasure
+		ArrayList<Rectangle> randomRooms = new ArrayList<Rectangle>(rooms);
 		treasure = new ArrayList<TreasureChest>();
-		for (Rectangle room : rooms) {
+		while (!randomRooms.isEmpty()) {
+			Rectangle room = randomRooms.remove((int)(Math.random() * randomRooms.size()));
 			if (Math.random() < 1) {
-				FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
-				TreasureChest chest = new TreasureChest(center);
-				treasure.add(chest);
-				addActor(chest);
+				if (Math.random() < 0.1 && (!enemies.isEmpty() || !treasure.isEmpty())) {
+					//Spawn rare treasure
+					FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
+					RareTreasureChest chest = new RareTreasureChest(center);
+					
+					double chance = (treasure.size() * 10.0) / (enemies.size() + treasure.size() * 10.0);
+					if (Math.random() < chance) {
+						treasure.get((int)(Math.random() * treasure.size())).addItem(new KeyItem(0, 0, new Vector2(1, 1)));
+					}
+					else {
+						enemies.get((int)(Math.random() * enemies.size())).addDeathLoot(new KeyItem(0, 0, new Vector2(1, 1)));
+					}
+					treasure.add(chest);
+					addActor(chest);
+				}
+				else {
+					//Spawn normal treasure
+					FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
+					TreasureChest chest = new TreasureChest(center);
+					treasure.add(chest);
+					addActor(chest);
+				}
 			}
 		}
 		
@@ -106,12 +138,6 @@ public class PlayStage extends Stage{
 				}
 				stairCreated = true;
 			}
-		}
-		
-		//Generate enemies
-		for (int i = 0; i < 30; i++) {
-			Vector2 randomPos = getRandomOpenPos();
-			addActor(new ZombieCharacter(randomPos.x, randomPos.y));
 		}
 		
 		//Spawn in players
