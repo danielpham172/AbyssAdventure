@@ -24,7 +24,7 @@ public class RareTreasureChest extends TreasureChest{
 		super(floor);
 		
 		generateRandomLoot();
-		if (Math.random() < 0.3) generateRandomLoot();
+		if (Math.random() < 0.4) generateRandomLoot();
 		generateRareLoot();
 	}
 	
@@ -36,7 +36,7 @@ public class RareTreasureChest extends TreasureChest{
 	public void generateRareLoot() {
 		int choice = (int)(Math.random() * 2);
 		if (choice == 0){
-			int heartAmount = (int)(Math.random() * 5) + 3;
+			int heartAmount = (int)(Math.random() * 6) + 5;
 			for (int i = 0; i <= heartAmount; i++) {
 				Vector2 velocity = new Vector2(1, 0);
 				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
