@@ -103,11 +103,13 @@ public class ZombieCharacter extends HumanoidEntity{
 		PlayerCharacter nearest = null;
 		float closest = (float)Math.pow((double)range, 2);
 		for (PlayerCharacter player : players) {
-			float distance = (float)Math.pow(player.getCenterX() - getCenterX(), 2) +
-					(float)Math.pow(player.getCenterY() - getCenterY(), 2);
-			if (distance <= closest) {
-				nearest = player;
-				closest = distance;
+			if (!player.isSpawningIn()) {
+				float distance = (float)Math.pow(player.getCenterX() - getCenterX(), 2) +
+						(float)Math.pow(player.getCenterY() - getCenterY(), 2);
+				if (distance <= closest) {
+					nearest = player;
+					closest = distance;
+				}
 			}
 		}
 		return nearest;

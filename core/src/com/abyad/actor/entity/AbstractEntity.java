@@ -25,6 +25,8 @@ public abstract class AbstractEntity extends Actor{
 	protected float frameFraction;		//The amount of partial frames that have passed, mainly used for walking slowly and such
 	protected boolean markForRemoval;
 	
+	protected float height;				//Used to simulate 3D (typically only for drawing)
+	
 	/**
 	 * Initiates an AbstractEntity. Most important is that it adds it to the array list
 	 */
@@ -145,7 +147,7 @@ public abstract class AbstractEntity extends Actor{
 				for (TextureRegion sprite : currentSprites) {
 					int centerX = sprite.getRegionWidth() / 2;
 					int centerY = sprite.getRegionHeight() / 2;
-					batch.draw(sprite, super.getX() - centerX, super.getY() - centerY, centerX,
+					batch.draw(sprite, super.getX() - centerX, super.getY() - centerY + height, centerX,
 						centerX, sprite.getRegionWidth(), sprite.getRegionHeight(), super.getScaleX(), super.getScaleY(), getRotation());
 				}
 			}
@@ -158,6 +160,14 @@ public abstract class AbstractEntity extends Actor{
 	 */
 	public Vector2 getVelocity() {
 		return velocity;
+	}
+	
+	public float getHeight() {
+		return height;
+	}
+	
+	public void setHeight(float height) {
+		this.height = height;
 	}
 	
 	/**

@@ -43,6 +43,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	private final float MAX_SPEED = 2.5f;
 	
+	private int spawnInLength;
+	
 	public PlayerCharacter(Player player, float x, float y) {
 		super(x, y);
 		
@@ -81,8 +83,15 @@ public class PlayerCharacter extends HumanoidEntity{
 				}
 			}
 			
+			if (spawnInLength > 0) {
+				spawnInLength--;
+				height = spawnInLength * 2;
+				velocity.set(1.0f, 0).setAngle(-90f * (int)((spawnInLength / 4) % 5));
+				setState("FALLING");
+				if (spawnInLength == 0) spawnIn();
+			}
 			//Knockback the player if currently in knockback
-			if (knockbackLength > 0) {
+			else if (knockbackLength > 0) {
 				move(knockbackVelocity);
 				knockbackLength--;
 			}
@@ -163,11 +172,27 @@ public class PlayerCharacter extends HumanoidEntity{
 					velocity.setLength(velocity.len() / 1.08f);
 					move(velocity);
 					checkCollisions();		//Checks to see if the attack is hitting
-					if (framesSinceLast >= 30) attacking = false;		//Ends the attack after a certain amount of frames
+					if (framesSinceLast >= 24) attacking = false;		//Ends the attack after a certain amount of frames
 				}
 			}
 			attackHeld = controller.attackPressed();
 		}
+	}
+	
+	public void setSpawnInLength(int length) {
+		spawnInLength = length;
+	}
+	
+	public void spawnIn() {
+		if (!players.contains(this)) players.add(this);
+		if (!getEntities().contains(this)) getEntities().add(this);
+		setState("IDLE");
+		velocity.setToRandomDirection();
+		updateHitbox();
+	}
+	
+	public boolean isSpawningIn() {
+		return spawnInLength > 0;
 	}
 	
 	/**
@@ -353,7 +378,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	public ArrayList<Rectangle> getHurtbox(){
 		ArrayList<Rectangle> hurtboxes = new ArrayList<Rectangle>();
 		if (state.equals("ATTACK - SWORD")) {
-			int[] attackLengths = {10, 14, 18, 30};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
+			int[] attackLengths = {6, 10, 14, 24};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
 			int frame = 0;
 			int dir = (int)((velocity.angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
 			float xOffset = 0;	//Offsets to set the hurtbox

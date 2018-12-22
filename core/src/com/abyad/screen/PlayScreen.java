@@ -47,8 +47,8 @@ public class PlayScreen implements Screen{
 		if (playStage.isReadyForNextLevel()) {
 			playStage.dispose();
 			for (Player player : game.getPlayers()) {
+				player.getCharacter().setSpawnInLength(100);
 				PlayerCharacter.getPlayers().add(player.getCharacter());
-				PlayerCharacter.getEntities().add(player.getCharacter());
 			}
 			floor++;
 			PlayStage nextStage = new PlayStage(game);

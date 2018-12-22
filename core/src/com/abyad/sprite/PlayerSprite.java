@@ -13,7 +13,7 @@ public class PlayerSprite extends EntitySprite{
 	private static String[] carryingColNames = {"carrying-idle", "carrying-rstep", "carrying-mstep", "carrying-lstep"};
 	private static String[] weaponColNames = {"start", "swing", "follow", "end"};			//The column names for the weapon
 	private static String[] rowNames = {"f", "r", "l", "b"};						//The row names for the weapon
-	private static int[] attackLengths = {10, 14, 18, 30};				//The frame thresholds for the
+	private static int[] attackLengths = {6, 10, 14, 24};				//The frame thresholds for the
 	public static LinkedHashMap<String, TextureRegion> swordSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the sword sprites
 	static {
 		//Splicing and adding sword sprites
@@ -86,6 +86,12 @@ public class PlayerSprite extends EntitySprite{
 			int frame = (framesSinceLast / 6) % 4;
 			String[] stepSelect = {"carrying-rstep", "carrying-mstep", "carrying-lstep", "carrying-mstep"};
 			frames.add(getSprite("char_" + dir + "_" + stepSelect[frame]));
+			return frames;
+		}
+		else if (state.equals("FALLING")) {
+			ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
+			String dir = getDirection(direction);
+			frames.add(getSprite("char_" + dir + "_carrying-mstep"));
 			return frames;
 		}
 		else {

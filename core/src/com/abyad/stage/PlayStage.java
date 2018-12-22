@@ -50,7 +50,7 @@ public class PlayStage extends Stage{
 		super(new ExtendViewport(384, 216));		//Creates the stage with a viewport
 		this.game = game;
 		
-		DungeonGenerator generator = new DungeonGenerator(20, 20, 3, 7, 600);		//Create a generator
+		DungeonGenerator generator = new DungeonGenerator(20, 20, 3, 6, 600);		//Create a generator
 		generator.runDungeonGenerator();		//Generate the dungeon
 		map = generator.getDungeon();			//Set the map
 		tileMap = new AbstractTile[map.length][map[0].length];
@@ -278,6 +278,8 @@ class ActorComparator implements Comparator<Actor>{
 
 	@Override
 	public int compare(Actor o1, Actor o2) {
+		if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) return -1;
+		if (o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) return 1;
 		if (o2 instanceof FloorTile) return 1;
 		if (o1 instanceof FloorTile) return -1;
 		if (o2 instanceof StairTile) return 1;
