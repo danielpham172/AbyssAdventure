@@ -35,6 +35,12 @@ public class PlayerCharacter extends HumanoidEntity{
 	private ArrayList<Relic> relics = new ArrayList<Relic>();
 	private CarryingItem heldItem;
 	
+	private int mp;
+	private int partialMP;
+	private int maxMP;
+	
+	private int gold;
+	
 	private final float MAX_SPEED = 2.5f;
 	
 	public PlayerCharacter(Player player, float x, float y) {
@@ -49,7 +55,8 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		weapon = "SWORD";
 		updateHitbox();
-		
+		maxHP = hp = 3;
+		maxMP = mp = 3;
 		players.add(this);
 	}
 	
@@ -228,6 +235,44 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	public void removeHeldItem() {
 		heldItem = null;
+	}
+	
+	public int getMana() {
+		return mp;
+	}
+	
+	public int getPartialMana() {
+		return partialMP;
+	}
+	
+	public int getMaxMana() {
+		return maxMP;
+	}
+	
+	public void addMana(int add) {
+		mp += add;
+		if (mp > maxMP) mp = maxMP;
+	}
+	
+	public void removeMana(int sub) {
+		mp -= sub;
+		if (mp < 0) mp = 0;
+	}
+	
+	public void addPartialMana(int add) {
+		partialMP += add;
+		while (partialMP >= 4) {
+			addMana(1);
+			partialMP -= 4;
+		}
+	}
+	
+	public int getGold() {
+		return gold;
+	}
+	
+	public void modifyGold(int modification) {
+		gold += modification;
 	}
 	
 	@Override
