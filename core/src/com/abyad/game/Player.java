@@ -29,7 +29,7 @@ public class Player {
 		} catch (Exception e) {
 			
 		}
-		character = new PlayerCharacter(this);
+		character = new PlayerCharacter(this, 0, 0);
 	}
 	
 	public PlayerController getController() {

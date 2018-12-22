@@ -37,8 +37,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	private final float MAX_SPEED = 2.5f;
 	
-	public PlayerCharacter(Player player) {
-		super();
+	public PlayerCharacter(Player player, float x, float y) {
+		super(x, y);
 		
 		this.player = player;
 		if (player.getNumber() == 1) {
@@ -92,26 +92,27 @@ public class PlayerCharacter extends HumanoidEntity{
 				//If not in an attack animation
 				if (controller.attackPressed() && !attackHeld) {
 					//This checks to see if the player has pressed the attack button
-					if (interactableObjects.isEmpty() && heldItem == null) {
-						//If there is nothing to interact and not holding an item, just attack
-						attacking = true;
-						if (state.equals("IDLE")) {
-							//If the player was in idle, give a small forward movement. May remove or lower this.
-							velocity.setAngle(((int)(velocity.angle() + 45) / 90) * 90.0f);
-							velocity.setLength(1.5f);
+					//First see if the player can interact with something
+					boolean interactedWithSomething = false;
+					for (Interactable interactable : interactableObjects) {
+						if (interactable.interact(this)) {
+							interactedWithSomething = true;
 						}
-						setState("ATTACK - " + weapon);	//Set the state to attacking
 					}
-					else {
-						//Interact with things around
-						boolean interactedWithSomething = false;
-						for (Interactable interactable : interactableObjects) {
-							if (interactable.interact(this)) {
-								interactedWithSomething = true;
+					//If no interactions happen, then try attacking or dropping item
+					if (!interactedWithSomething) {
+						if (heldItem == null) {
+							//If there is nothing to interact and not holding an item, just attack
+							attacking = true;
+							if (state.equals("IDLE")) {
+								//If the player was in idle, give a small forward movement. May remove or lower this.
+								velocity.setAngle(((int)(velocity.angle() + 45) / 90) * 90.0f);
+								velocity.setLength(1.5f);
 							}
+							setState("ATTACK - " + weapon);	//Set the state to attacking
 						}
-						//If holding an item and interacted with nothing, then drop the item
-						if (heldItem != null && !interactedWithSomething) {
+						else {
+							//Drop item holding
 							dropItemOnGround();
 						}
 					}
@@ -212,6 +213,14 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		getStage().addActor(heldItem);
 		heldItem.spawn();
+		heldItem = null;
+	}
+	
+	public CarryingItem getHeldItem() {
+		return heldItem;
+	}
+	
+	public void removeHeldItem() {
 		heldItem = null;
 	}
 	

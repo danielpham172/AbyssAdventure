@@ -5,11 +5,14 @@ import java.util.Comparator;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
+import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.entity.ZombieCharacter;
 import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.mapobjects.items.LootItem;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
+import com.abyad.actor.tile.StairTile;
 import com.abyad.actor.tile.WallTile;
 import com.abyad.game.AbyssAdventureGame;
 import com.abyad.utils.DungeonGenerator;
@@ -31,6 +34,8 @@ public class PlayStage extends Stage{
 	private ArrayList<Rectangle> rooms;				//The rooms (x = row, y = col)
 	private ArrayList<FloorTile> floorTiles;		//The floor tiles
 	private ArrayList<FloorTile> roomTiles;			//The room tiles
+	
+	private boolean readyForNextLevel;
 	
 	//Comparator object to organize the actors
 	private static ActorComparator comparator = new ActorComparator();
@@ -76,6 +81,37 @@ public class PlayStage extends Stage{
 			}
 		}
 		
+		//Generate stairs
+		boolean stairCreated = false;
+		while (!stairCreated) {
+			Rectangle randomRoom = rooms.get((int)(Math.random() * rooms.size()));
+			int row = (int)(Math.random() * randomRoom.getWidth()) + (int)randomRoom.getX();
+			int col = (int)(Math.random() * randomRoom.getHeight()) + (int)randomRoom.getY();
+			
+			if (tileMap[row][col].getCollisionBox().isEmpty()) {
+				StairTile stairs = new StairTile(row, col, true);
+				tileMap[row][col].remove();
+				floorTiles.remove(tileMap[row][col]);
+				roomTiles.remove(tileMap[row][col]);
+				tileMap[row][col] = stairs;
+				addActor(stairs);
+				stairCreated = true;
+			}
+		}
+		
+		//Generate enemies
+		for (int i = 0; i < 30; i++) {
+			Vector2 randomPos = getRandomOpenPos();
+			addActor(new ZombieCharacter(randomPos.x, randomPos.y));
+		}
+		
+		//Spawn in players
+		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
+			setRandomSpawn(player);
+			player.getVelocity().setLength(0);
+			player.removeHeldItem();
+			addActor(player);
+		}
 		getViewport().setCamera(new FollowCam());
 	}
 	
@@ -206,12 +242,12 @@ public class PlayStage extends Stage{
 		return (row >= 0 && row < map.length && col >= 0 && col < map[0].length);
 	}
 	
-	@Override
-	public void addActor(Actor actor) {
-		if (actor instanceof AbstractEntity) {
-			setRandomSpawn(actor);
-		}
-		super.addActor(actor);
+	public void setReadyForNextLevel(boolean flag) {
+		readyForNextLevel = flag;
+	}
+	
+	public boolean isReadyForNextLevel() {
+		return readyForNextLevel;
 	}
 	
 	@Override
@@ -222,8 +258,8 @@ public class PlayStage extends Stage{
 	
 	@Override
 	public void dispose() {
-		for (Actor actor : getActors()) {
-			actor.remove();
+		while (getActors().size > 0) {
+			getActors().pop().remove();
 		}
 		super.dispose();
 	}
@@ -235,6 +271,8 @@ class ActorComparator implements Comparator<Actor>{
 	public int compare(Actor o1, Actor o2) {
 		if (o2 instanceof FloorTile) return 1;
 		if (o1 instanceof FloorTile) return -1;
+		if (o2 instanceof StairTile) return 1;
+		if (o1 instanceof StairTile) return -1;
 		if (o2 instanceof MapItem) return 1;
 		if (o1 instanceof MapItem) return -1;
 		if (o2 instanceof DeathAnimation) return -1;

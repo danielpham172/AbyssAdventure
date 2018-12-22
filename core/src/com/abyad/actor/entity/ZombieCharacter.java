@@ -28,8 +28,8 @@ public class ZombieCharacter extends HumanoidEntity{
 	
 	private final float SPEED = 0.3f;
 	
-	public ZombieCharacter() {
-		super();
+	public ZombieCharacter(float x, float y) {
+		super(x, y);
 		
 		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get("ZOMBIE");	//Gotta set the zombie sprite
 

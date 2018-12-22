@@ -28,8 +28,11 @@ public abstract class AbstractEntity extends Actor{
 	/**
 	 * Initiates an AbstractEntity. Most important is that it adds it to the array list
 	 */
-	public AbstractEntity() {
+	public AbstractEntity(float x, float y) {
 		entities.add(this);
+		
+		setX(x);
+		setY(y);
 		
 		velocity = new Vector2();
 		invulnLength = 0;

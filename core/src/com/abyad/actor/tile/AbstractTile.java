@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  */
 public abstract class AbstractTile extends Actor{
 	
-	private TextureRegion tex;			//The texture of the tile
+	protected TextureRegion tex;			//The texture of the tile
 	private int row;					//What row the tile is in on the map
 	private int col;					//What column the tile is in on the map
 	

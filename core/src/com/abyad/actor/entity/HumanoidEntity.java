@@ -16,8 +16,8 @@ public abstract class HumanoidEntity extends AbstractEntity{
 	private static int SPRITE_LENGTH = 16;	//The length and height of the sprite
 	protected Rectangle viewbox = new Rectangle(0, 0, SPRITE_LENGTH, SPRITE_LENGTH);		//The viewbox used to check whether to draw the sprite or not
 	
-	public HumanoidEntity() {
-		super();
+	public HumanoidEntity(float x, float y) {
+		super(x, y);
 		
 		hitboxes = new ArrayList<Rectangle>();
 		hitboxes.add(new Rectangle());

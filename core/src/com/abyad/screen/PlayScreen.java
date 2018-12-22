@@ -1,6 +1,8 @@
 package com.abyad.screen;
 
+import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.game.AbyssAdventureGame;
+import com.abyad.game.Player;
 import com.abyad.stage.PlayStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,10 +12,12 @@ public class PlayScreen implements Screen{
 
 	private AbyssAdventureGame game;					//The game object
 	private PlayStage playStage;						//The level stage (where the map and characters are at)
+	private int floor;
 	
 	public PlayScreen(AbyssAdventureGame game) {
 		this.game = game;
 		playStage = new PlayStage(game);		//Creates a play stage
+		floor = 1;
 	}
 	
 	public PlayStage getPlayStage() {
@@ -39,6 +43,18 @@ public class PlayScreen implements Screen{
 		playStage.getViewport().apply();	//Applies the camera
 		playStage.act();			//Calls the act method for the stage
 		playStage.draw();			//Calls the drawing of the stage
+		
+		if (playStage.isReadyForNextLevel()) {
+			playStage.dispose();
+			for (Player player : game.getPlayers()) {
+				PlayerCharacter.getPlayers().add(player.getCharacter());
+				PlayerCharacter.getEntities().add(player.getCharacter());
+			}
+			floor++;
+			PlayStage nextStage = new PlayStage(game);
+			
+			playStage = nextStage;
+		}
 		
 	}
 
