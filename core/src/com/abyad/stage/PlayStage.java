@@ -8,6 +8,7 @@ import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.entity.ZombieCharacter;
 import com.abyad.actor.mapobjects.TreasureChest;
+import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.tile.AbstractTile;
@@ -34,6 +35,7 @@ public class PlayStage extends Stage{
 	private ArrayList<Rectangle> rooms;				//The rooms (x = row, y = col)
 	private ArrayList<FloorTile> floorTiles;		//The floor tiles
 	private ArrayList<FloorTile> roomTiles;			//The room tiles
+	private ArrayList<TreasureChest> treasure;
 	
 	private boolean readyForNextLevel;
 	
@@ -73,10 +75,13 @@ public class PlayStage extends Stage{
 			}
 		}
 		
+		//Generating treasure
+		treasure = new ArrayList<TreasureChest>();
 		for (Rectangle room : rooms) {
 			if (Math.random() < 1) {
 				FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
 				TreasureChest chest = new TreasureChest(center);
+				treasure.add(chest);
 				addActor(chest);
 			}
 		}
@@ -89,12 +94,16 @@ public class PlayStage extends Stage{
 			int col = (int)(Math.random() * randomRoom.getHeight()) + (int)randomRoom.getY();
 			
 			if (tileMap[row][col].getCollisionBox().isEmpty()) {
-				StairTile stairs = new StairTile(row, col, true);
+				boolean locked = (Math.random() < 0.25 || treasure.isEmpty()) ? false : true;
+				StairTile stairs = new StairTile(row, col, locked);
 				tileMap[row][col].remove();
 				floorTiles.remove(tileMap[row][col]);
 				roomTiles.remove(tileMap[row][col]);
 				tileMap[row][col] = stairs;
 				addActor(stairs);
+				if (locked) {
+					treasure.get((int)(Math.random() * treasure.size())).addItem(new KeyItem(0, 0, new Vector2(1, 1)));
+				}
 				stairCreated = true;
 			}
 		}
