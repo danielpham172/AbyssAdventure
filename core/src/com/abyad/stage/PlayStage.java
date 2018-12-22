@@ -5,9 +5,9 @@ import java.util.Comparator;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
-import com.abyad.actor.mapobjects.LootItem;
-import com.abyad.actor.mapobjects.MapItem;
 import com.abyad.actor.mapobjects.TreasureChest;
+import com.abyad.actor.mapobjects.items.LootItem;
+import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.actor.tile.WallTile;

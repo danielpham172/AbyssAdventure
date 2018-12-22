@@ -1,4 +1,4 @@
-package com.abyad.actor.mapobjects;
+package com.abyad.actor.mapobjects.items;
 
 import java.util.ArrayList;
 
@@ -167,6 +167,14 @@ public abstract class MapItem extends Actor{
 	
 	public void setFollowing(boolean following) {
 		this.following = following;
+	}
+	
+	public TextureRegion getTexture() {
+		return tex;
+	}
+	
+	public Vector2 getVelocity() {
+		return velocity;
 	}
 	
 	public abstract void updateCollideAndInteractBox();

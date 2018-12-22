@@ -2,6 +2,7 @@ package com.abyad.actor.entity;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.mapobjects.items.CarryingItem;
 import com.abyad.controls.PlayerController;
 import com.abyad.data.HitEvent;
 import com.abyad.game.Player;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -31,6 +33,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
 	private ArrayList<Relic> relics = new ArrayList<Relic>();
+	private CarryingItem heldItem;
 	
 	private final float MAX_SPEED = 2.5f;
 	
@@ -89,8 +92,8 @@ public class PlayerCharacter extends HumanoidEntity{
 				//If not in an attack animation
 				if (controller.attackPressed() && !attackHeld) {
 					//This checks to see if the player has pressed the attack button
-					if (interactableObjects.isEmpty()) {
-						//If there is nothing to interact, just attack
+					if (interactableObjects.isEmpty() && heldItem == null) {
+						//If there is nothing to interact and not holding an item, just attack
 						attacking = true;
 						if (state.equals("IDLE")) {
 							//If the player was in idle, give a small forward movement. May remove or lower this.
@@ -100,22 +103,46 @@ public class PlayerCharacter extends HumanoidEntity{
 						setState("ATTACK - " + weapon);	//Set the state to attacking
 					}
 					else {
+						//Interact with things around
+						boolean interactedWithSomething = false;
 						for (Interactable interactable : interactableObjects) {
-							interactable.interact(this);
+							if (interactable.interact(this)) {
+								interactedWithSomething = true;
+							}
+						}
+						//If holding an item and interacted with nothing, then drop the item
+						if (heldItem != null && !interactedWithSomething) {
+							dropItemOnGround();
 						}
 					}
 				}
 				else if (xChange == 0 && yChange == 0) {
 					//No movement? the character is idling
-					setState("IDLE");
+					if (heldItem == null) {
+						setState("IDLE");
+					}
+					else {
+						setState("CARRYING_IDLE");
+					}
 				}
 				else {
 					//This happens if the character is moving, scale the change to match velocity
-					velocity.x = xChange * MAX_SPEED;
-					velocity.y = yChange * MAX_SPEED;
-					if (velocity.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);	//Sometimes the velocity is over the actual max speed, so set it back
-					setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
-					move(velocity);
+					if (heldItem == null) {
+						velocity.x = xChange * MAX_SPEED;
+						velocity.y = yChange * MAX_SPEED;
+						if (velocity.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);	//Sometimes the velocity is over the actual max speed, so set it back
+						setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
+						move(velocity);
+					}
+					else {
+						//If carrying an item, slow by weight, a set correct state
+						float slowedSpeed =  MAX_SPEED / (heldItem.getWeight() + 1.0f);
+						velocity.x = xChange * slowedSpeed;
+						velocity.y = yChange * slowedSpeed;
+						if (velocity.len() > slowedSpeed) velocity.setLength(slowedSpeed);
+						setState("CARRYING_MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
+						move(velocity);
+					}
 				}
 			}
 			else {
@@ -167,10 +194,37 @@ public class PlayerCharacter extends HumanoidEntity{
 		relics.add(relic);
 	}
 	
+	public boolean carryItem(CarryingItem carry) {
+		if (heldItem == null) {
+			heldItem = carry;
+			return true;
+		}
+		else return false;
+	}
+	
+	public void dropItemOnGround() {
+		heldItem.setPosition(getCenterX(), getCenterY());
+		if (!state.equals("CARRYING_IDLE")) {
+			heldItem.getVelocity().set(velocity);
+		}
+		else {
+			heldItem.getVelocity().setLength(0);
+		}
+		getStage().addActor(heldItem);
+		heldItem.spawn();
+		heldItem = null;
+	}
+	
 	@Override
 	public void draw(Batch batch, float a) {
-		//drawHitbox(batch, a);
 		super.draw(batch, a);
+		if (inView()) {
+			if (heldItem != null) {
+				batch.draw(heldItem.getTexture(), getX() - getOriginX(), getY() + (getOriginY() / 4),
+						getOriginX(), getOriginY(), heldItem.getTexture().getRegionWidth(), heldItem.getTexture().getRegionHeight(),
+						getScaleX(), getScaleY(), getRotation());
+			}
+		}
 	}
 	
 	/**

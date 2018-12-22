@@ -1,4 +1,4 @@
-package com.abyad.actor.mapobjects;
+package com.abyad.actor.mapobjects.items;
 
 import java.util.ArrayList;
 
@@ -44,9 +44,10 @@ public class RelicLoot extends LootItem{
 	}
 
 	@Override
-	public void interact(PlayerCharacter source) {
+	public boolean interact(PlayerCharacter source) {
 		if (!markForRemoval) source.pickupRelic(relic);
 		markForRemoval = true;
+		return true;
 	}
 
 	@Override

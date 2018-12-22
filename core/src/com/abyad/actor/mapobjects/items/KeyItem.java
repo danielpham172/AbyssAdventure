@@ -1,51 +1,55 @@
-package com.abyad.actor.mapobjects;
+package com.abyad.actor.mapobjects.items;
 
 import java.util.ArrayList;
 
-import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class HeartItem extends AutoItem{
+public class KeyItem extends CarryingItem{
 
-	private ArrayList<Rectangle> collideBox;
+	private ArrayList<Rectangle> interactBox;
 	private ArrayList<Rectangle> temporaryCollideBox;
 	
-	private static Rectangle baseBox = new Rectangle(0, 0, 5, 5);
+	private static Rectangle baseBox = new Rectangle(0, 0, 16, 16);
 	
-	public HeartItem(Vector2 velocity, float x, float y) {
-		super(AbstractSpriteSheet.spriteSheets.get("PICKUPS").getSprite("HEART"), 80, false);
-		this.velocity = velocity;
-		setX(x);
-		setY(y);
+	private boolean markForRemoval;
+	
+	public KeyItem(float x, float y, Vector2 velocity) {
+		super(x, y, velocity, AbstractSpriteSheet.spriteSheets.get("CARRY").getSprite("KEY"), 1.0f);
 		
-		collideBox = new ArrayList<Rectangle>();
+		interactBox = new ArrayList<Rectangle>();
 		temporaryCollideBox = new ArrayList<Rectangle>();
 		
 		Rectangle box = new Rectangle(baseBox);
 		Rectangle tempBox = new Rectangle(baseBox);
 		
-		collideBox.add(box);
+		interactBox.add(box);
 		temporaryCollideBox.add(tempBox);
 		
 		updateCollideAndInteractBox();
 	}
 
 	@Override
-	public void playerPickup(PlayerCharacter player) {
-		player.restoreHealth(1);
+	public void act(float delta) {
+		super.act(delta);
+		if (markForRemoval) remove();
+	}
+	
+	@Override
+	public ArrayList<Rectangle> getInteractBox() {
+		return interactBox;
 	}
 
 	@Override
 	public void updateCollideAndInteractBox() {
-		Rectangle box = collideBox.get(0);
+		Rectangle box = interactBox.get(0);
 		box.setPosition(getX() - (box.getWidth() / 2), getY() - (box.getHeight() / 2));
 	}
 
 	@Override
 	public ArrayList<Rectangle> getCollideBox() {
-		return collideBox;
+		return interactBox;
 	}
 
 	@Override

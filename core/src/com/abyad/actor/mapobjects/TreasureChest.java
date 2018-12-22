@@ -3,6 +3,9 @@ package com.abyad.actor.mapobjects;
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.mapobjects.items.KeyItem;
+import com.abyad.actor.mapobjects.items.LootItem;
+import com.abyad.actor.mapobjects.items.RelicLoot;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.interfaces.Interactable;
@@ -62,7 +65,8 @@ public class TreasureChest extends Actor implements Interactable{
 	public LootItem generateRandomLoot() {
 		Vector2 velocity = new Vector2(1, 1);
 		velocity.setLength((float)(Math.random() * 3.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
-		return new RelicLoot(getX(), getY(), velocity, new TonWeightRelic());
+		//return new RelicLoot(getX(), getY(), velocity, new TonWeightRelic());
+		return new KeyItem(getX(), getY(), velocity);
 	}
 	
 	@Override
@@ -96,14 +100,16 @@ public class TreasureChest extends Actor implements Interactable{
 	}
 
 	@Override
-	public void interact(PlayerCharacter source) {
+	public boolean interact(PlayerCharacter source) {
 		if (!isOpen) {
 			isOpen = true;
 			interactBox.clear();
 			
 			item.spawn();
 			getStage().addActor(item);
+			return true;
 		}
+		return false;
 	}
 	
 	@Override

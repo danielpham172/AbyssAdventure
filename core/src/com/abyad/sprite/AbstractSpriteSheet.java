@@ -22,6 +22,9 @@ public abstract class AbstractSpriteSheet {
 		
 		String[][] pickupsNames = { {"HEART"} };
 		spriteSheets.put("PICKUPS", new BasicSprite(Assets.manager.get(Assets.pickups), pickupsNames.length, pickupsNames[0].length, pickupsNames));
+		
+		String[][] carryingNames = { {"KEY"} };
+		spriteSheets.put("CARRY", new BasicSprite(Assets.manager.get(Assets.carrying), carryingNames.length, carryingNames[0].length, carryingNames));
 	}
 	
 	public AbstractSpriteSheet() {

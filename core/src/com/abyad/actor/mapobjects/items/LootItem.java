@@ -1,4 +1,4 @@
-package com.abyad.actor.mapobjects;
+package com.abyad.actor.mapobjects.items;
 
 import com.abyad.interfaces.Interactable;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class LootItem extends MapItem implements Interactable{
 	
-
-	private Vector2 velocity;
 	private boolean isInteractable;
 	
 	public LootItem(float x, float y, Vector2 velocity, TextureRegion tex) {
@@ -20,6 +18,7 @@ public abstract class LootItem extends MapItem implements Interactable{
 	
 	public void spawn() {
 		interactables.add(this);
+		updateCollideAndInteractBox();
 	}
 	
 	@Override

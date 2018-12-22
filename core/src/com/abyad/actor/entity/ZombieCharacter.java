@@ -3,7 +3,7 @@ package com.abyad.actor.entity;
 import java.util.ArrayList;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
-import com.abyad.actor.mapobjects.HeartItem;
+import com.abyad.actor.mapobjects.items.HeartItem;
 import com.abyad.data.HitEvent;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;

@@ -10,6 +10,6 @@ public interface Interactable {
 	public static ArrayList<Interactable> interactables = new ArrayList<Interactable>();
 	
 	public ArrayList<Rectangle> getInteractBox();
-	public void interact(PlayerCharacter source);
+	public boolean interact(PlayerCharacter source);
 	public void setCanInteract(boolean flag);
 }
