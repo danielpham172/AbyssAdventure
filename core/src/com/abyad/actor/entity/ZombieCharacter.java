@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.mapobjects.items.GoldItem;
 import com.abyad.actor.mapobjects.items.HeartItem;
+import com.abyad.actor.mapobjects.items.LootItem;
+import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.data.HitEvent;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
@@ -35,6 +37,8 @@ public class ZombieCharacter extends HumanoidEntity{
 		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get("ZOMBIE");	//Gotta set the zombie sprite
 
 		wanderDirection.rotate((float)(Math.random() * 360));		//Randomly set a direction for the zombie to wander
+		
+		setDeathLoot();
 		updateHitbox();
 	}
 	
@@ -91,6 +95,12 @@ public class ZombieCharacter extends HumanoidEntity{
 				knockbackLength--;
 			}
 		}
+	}
+	
+	public void setDeathLoot() {
+		if (Math.random() < 0.04) addHeart();
+		if (Math.random() < 0.30) addGold();
+		if (Math.random() < 0.30) addGold();
 	}
 	
 	/**
@@ -195,9 +205,11 @@ public class ZombieCharacter extends HumanoidEntity{
 			if (isDead()) {
 				DeathAnimation deathAnimation = new DeathAnimation(getCenterX(), getCenterY());
 				getStage().addActor(deathAnimation);
-				if (Math.random() < 0.05) dropHeart();
-				if (Math.random() < 0.25) dropGold();
-				if (Math.random() < 0.25) dropGold();
+				for (MapItem item : deathLoot) {
+					if (item instanceof LootItem) ((LootItem)item).spawn();
+					item.setPosition(getCenterX(), getCenterY());
+					getStage().addActor(item);
+				}
 				markForRemoval = true;
 			}
 			else {
@@ -206,18 +218,23 @@ public class ZombieCharacter extends HumanoidEntity{
 		}
 	}
 	
-	public void dropHeart() {
+	private void addHeart() {
 		Vector2 velocity = new Vector2(1, 0);
 		velocity.setAngle((float)(Math.random() * 360)).setLength((float)(Math.random() * 0.5f) + 1.0f);
 		HeartItem heart = new HeartItem(getCenterX(), getCenterY(), velocity);
-		getStage().addActor(heart);
+		deathLoot.add(heart);
 	}
 	
-	public void dropGold() {
+	private void addGold() {
 		Vector2 velocity = new Vector2(1, 0);
 		velocity.setAngle((float)(Math.random() * 360)).setLength((float)(Math.random() * 0.5f) + 0.5f);
 		GoldItem gold = new GoldItem(getCenterX(), getCenterY(), velocity);
-		getStage().addActor(gold);
+		deathLoot.add(gold);
+	}
+	
+	public void addDeathLoot(MapItem item) {
+		item.getVelocity().set(1.0f, 0).setLength((float)(Math.random() * 0.5f) + 1.0f).setToRandomDirection();
+		deathLoot.add(item);
 	}
 
 }

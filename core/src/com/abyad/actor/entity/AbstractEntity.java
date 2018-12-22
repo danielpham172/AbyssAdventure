@@ -2,6 +2,7 @@ package com.abyad.actor.entity;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.data.HitEvent;
 import com.abyad.sprite.EntitySprite;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -23,7 +24,9 @@ public abstract class AbstractEntity extends Actor{
 	protected String state;				//String used to figure out what the entity is doing (ie. Walking or Idle)
 	protected int framesSinceLast;		//The amount of frames that have passed since it changed state (used for animation)
 	protected float frameFraction;		//The amount of partial frames that have passed, mainly used for walking slowly and such
+	
 	protected boolean markForRemoval;
+	protected ArrayList<MapItem> deathLoot;
 	
 	protected float height;				//Used to simulate 3D (typically only for drawing)
 	
@@ -42,6 +45,8 @@ public abstract class AbstractEntity extends Actor{
 		state = "IDLE";
 		framesSinceLast = 0;
 		frameFraction = 0f;
+		
+		deathLoot = new ArrayList<MapItem>();
 	}
 	
 	/**
@@ -220,6 +225,11 @@ public abstract class AbstractEntity extends Actor{
 		center = viewbox.getCenter(center);
 		return getStage().getCamera().frustum.boundsInFrustum(center.x, center.y, 0,
 				getViewbox().width / 2, getViewbox().height / 2, 0);
+	}
+	
+	public void addDeathLoot(MapItem item) {
+		item.getVelocity().set(1.0f, 0).setLength((float)(Math.random() * 0.5f) + 1.0f).setToRandomDirection();
+		deathLoot.add(item);
 	}
 	
 	@Override
