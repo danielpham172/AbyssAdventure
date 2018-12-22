@@ -14,7 +14,7 @@ public class HeartItem extends AutoItem{
 	
 	private static Rectangle baseBox = new Rectangle(0, 0, 5, 5);
 	
-	public HeartItem(Vector2 velocity, float x, float y) {
+	public HeartItem(float x, float y, Vector2 velocity) {
 		super(AbstractSpriteSheet.spriteSheets.get("PICKUPS").getSprite("HEART"), 80, false);
 		this.velocity = velocity;
 		setX(x);

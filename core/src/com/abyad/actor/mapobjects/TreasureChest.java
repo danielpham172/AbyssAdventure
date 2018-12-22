@@ -3,6 +3,7 @@ package com.abyad.actor.mapobjects;
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.mapobjects.items.HeartItem;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
 import com.abyad.actor.mapobjects.items.MapItem;
@@ -59,15 +60,27 @@ public class TreasureChest extends Actor implements Interactable{
 		floor.addCollisionBox(hitbox);
 		
 		items = new ArrayList<MapItem>();
-		items.add(generateRandomLoot());
+		generateRandomLoot();
+		if (Math.random() < 0.2) generateRandomLoot();
 		
 		interactables.add(this);
 	}
 	
-	public MapItem generateRandomLoot() {
-		Vector2 velocity = new Vector2(1, 1);
-		velocity.setLength((float)(Math.random() * 3.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
-		return new RelicLoot(getX(), getY(), velocity, new TonWeightRelic());
+	public void generateRandomLoot() {
+		int choice = (int)(Math.random() * 3);
+		if (choice == 0) {
+			Vector2 velocity = new Vector2(1, 0);
+			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
+			items.add(new RelicLoot(getX(), getY(), velocity, new TonWeightRelic()));
+		}
+		else {
+			int heartAmount = (int)(Math.random() * 3) + 1;
+			for (int i = 0; i <= heartAmount; i++) {
+				Vector2 velocity = new Vector2(1, 0);
+				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
+				items.add(new HeartItem(getX(), getY(), velocity));
+			}
+		}
 		//return new KeyItem(getX(), getY(), velocity);
 	}
 	
@@ -108,9 +121,6 @@ public class TreasureChest extends Actor implements Interactable{
 			interactBox.clear();
 			
 			for (MapItem item : items) {
-				item.setPosition(getX(), getY());
-				item.getVelocity().setLength((float)(Math.random() * 2.0f) + 3.0f)
-					.setAngle((float)(Math.random() * 360.0f)).setAngle((float)(Math.random() * 360.0f));
 				if (item instanceof LootItem) ((LootItem)item).spawn();
 				getStage().addActor(item);
 			}
@@ -120,6 +130,9 @@ public class TreasureChest extends Actor implements Interactable{
 	}
 	
 	public void addItem(MapItem item) {
+		item.setPosition(getX(), getY());
+		item.getVelocity().setLength((float)(Math.random() * 2.0f) + 3.0f)
+			.setAngle((float)(Math.random() * 360.0f)).setAngle((float)(Math.random() * 360.0f));
 		items.add(item);
 	}
 	
