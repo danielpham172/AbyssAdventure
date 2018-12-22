@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
+import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.mapobjects.items.RelicLoot;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class TreasureChest extends Actor implements Interactable{
 
-	private LootItem item;
+	private ArrayList<MapItem> items;
 	
 	private static TextureRegion closedChest;
 	private static TextureRegion openChest;
@@ -57,16 +58,17 @@ public class TreasureChest extends Actor implements Interactable{
 				20 * AbstractTile.TILE_SCALE, 15 * AbstractTile.TILE_SCALE);
 		floor.addCollisionBox(hitbox);
 		
-		item = generateRandomLoot();
+		items = new ArrayList<MapItem>();
+		items.add(generateRandomLoot());
 		
 		interactables.add(this);
 	}
 	
-	public LootItem generateRandomLoot() {
+	public MapItem generateRandomLoot() {
 		Vector2 velocity = new Vector2(1, 1);
 		velocity.setLength((float)(Math.random() * 3.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
-		//return new RelicLoot(getX(), getY(), velocity, new TonWeightRelic());
-		return new KeyItem(getX(), getY(), velocity);
+		return new RelicLoot(getX(), getY(), velocity, new TonWeightRelic());
+		//return new KeyItem(getX(), getY(), velocity);
 	}
 	
 	@Override
@@ -105,11 +107,20 @@ public class TreasureChest extends Actor implements Interactable{
 			isOpen = true;
 			interactBox.clear();
 			
-			item.spawn();
-			getStage().addActor(item);
+			for (MapItem item : items) {
+				item.setPosition(getX(), getY());
+				item.getVelocity().setLength((float)(Math.random() * 2.0f) + 3.0f)
+					.setAngle((float)(Math.random() * 360.0f)).setAngle((float)(Math.random() * 360.0f));
+				if (item instanceof LootItem) ((LootItem)item).spawn();
+				getStage().addActor(item);
+			}
 			return true;
 		}
 		return false;
+	}
+	
+	public void addItem(MapItem item) {
+		items.add(item);
 	}
 	
 	@Override
