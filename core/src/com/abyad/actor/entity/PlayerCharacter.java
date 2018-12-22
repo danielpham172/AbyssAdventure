@@ -83,9 +83,11 @@ public class PlayerCharacter extends HumanoidEntity{
 				
 				interactableObjects.clear();
 				for (Interactable interactable : Interactable.interactables) {
-					if (isOverlapping(interactable.getInteractBox(), getCollideBox())) {
-						interactableObjects.add(interactable);
-						interactable.setCanInteract(true);
+					if (!(interactable instanceof CarryingItem) || !isHoldingItem()) {
+						if (isOverlapping(interactable.getInteractBox(), getCollideBox())) {
+							interactableObjects.add(interactable);
+							interactable.setCanInteract(true);
+						}
 					}
 				}
 				
@@ -101,7 +103,7 @@ public class PlayerCharacter extends HumanoidEntity{
 					}
 					//If no interactions happen, then try attacking or dropping item
 					if (!interactedWithSomething) {
-						if (heldItem == null) {
+						if (!isHoldingItem()) {
 							//If there is nothing to interact and not holding an item, just attack
 							attacking = true;
 							if (state.equals("IDLE")) {
@@ -119,7 +121,7 @@ public class PlayerCharacter extends HumanoidEntity{
 				}
 				else if (xChange == 0 && yChange == 0) {
 					//No movement? the character is idling
-					if (heldItem == null) {
+					if (!isHoldingItem()) {
 						setState("IDLE");
 					}
 					else {
@@ -128,7 +130,7 @@ public class PlayerCharacter extends HumanoidEntity{
 				}
 				else {
 					//This happens if the character is moving, scale the change to match velocity
-					if (heldItem == null) {
+					if (!isHoldingItem()) {
 						velocity.x = xChange * MAX_SPEED;
 						velocity.y = yChange * MAX_SPEED;
 						if (velocity.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);	//Sometimes the velocity is over the actual max speed, so set it back
@@ -196,7 +198,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	}
 	
 	public boolean carryItem(CarryingItem carry) {
-		if (heldItem == null) {
+		if (!isHoldingItem()) {
 			heldItem = carry;
 			return true;
 		}
@@ -220,6 +222,10 @@ public class PlayerCharacter extends HumanoidEntity{
 		return heldItem;
 	}
 	
+	public boolean isHoldingItem() {
+		return heldItem != null;
+	}
+	
 	public void removeHeldItem() {
 		heldItem = null;
 	}
@@ -228,7 +234,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	public void draw(Batch batch, float a) {
 		super.draw(batch, a);
 		if (inView()) {
-			if (heldItem != null) {
+			if (isHoldingItem()) {
 				batch.draw(heldItem.getTexture(), getX() - getOriginX(), getY() + (getOriginY() / 4),
 						getOriginX(), getOriginY(), heldItem.getTexture().getRegionWidth(), heldItem.getTexture().getRegionHeight(),
 						getScaleX(), getScaleY(), getRotation());
@@ -283,6 +289,9 @@ public class PlayerCharacter extends HumanoidEntity{
 				if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
 					relic.onDefense(this, event);
 				}
+			}
+			if (isHoldingItem()) {
+				dropItemOnGround();
 			}
 			
 			knockbackVelocity = event.getKnockbackVelocity();
