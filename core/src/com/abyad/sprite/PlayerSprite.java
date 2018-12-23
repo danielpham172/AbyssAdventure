@@ -149,6 +149,25 @@ public class PlayerSprite extends EntitySprite{
 				frames.add(weapon);
 			}
 		}
+		if (state.contains("WIND_BLADE")) {
+			int frame = 0;
+			int[] attackLengths = {6, 10, 14, 24};				//The frame thresholds for the attack
+			String dir = getDirection(direction);
+			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
+				frame++;
+			}
+			if (frame >= 4) frame = 3;
+			TextureRegion weapon = swordSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
+			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
+			if (isWeaponBehind(dir, frame, "SWORD")) {
+				frames.add(weapon);
+				frames.add(character);
+			}
+			else {
+				frames.add(character);
+				frames.add(weapon);
+			}
+		}
 		return frames;
 	}
 	

@@ -38,6 +38,7 @@ public class BasicSwordAttack extends AttackData{
 					int kbLength = 8;
 					int damage = 1;
 					HitEvent event = new HitEvent(player, entity, damage, knockback, kbLength);
+					player.addPartialMana(1);
 					
 					//Activate relic hit effects (modifies the event)
 					for (Relic relic : player.getRelics()) {

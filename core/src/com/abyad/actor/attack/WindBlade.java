@@ -4,24 +4,22 @@ import java.util.ArrayList;
 
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.projectile.WindSlashProjectile;
 import com.abyad.data.HitEvent;
 import com.abyad.relic.Relic;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class SpinSlash extends SpecialAttackData{
+public class WindBlade extends SpecialAttackData{
 
-	private int[] attackLengths = {4, 10, 16, 22, 28, 34};
+	private int[] attackLengths = {6, 10, 14, 24};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
 	
 	@Override
 	public void initiateAttack(PlayerCharacter player) {
 		if (player.getState().equals("IDLE")) {
 			//If the player was in idle, give a small forward movement. May remove or lower this.
 			player.getVelocity().setAngle(((int)(player.getVelocity().angle() + 45) / 90) * 90.0f);
-			player.getVelocity().setLength(0.5f);
-		}
-		else if (player.getState().equals("MOVE")) {
-			player.getVelocity().scl(2.0f);
+			player.getVelocity().setLength(1.5f);
 		}
 	}
 	
@@ -37,10 +35,11 @@ public class SpinSlash extends SpecialAttackData{
 				if (isOverlapping(hurtboxes, otherHitbox)) {
 					//Attacked someone
 					Vector2 knockback = new Vector2(entity.getCenterX() - player.getCenterX(), entity.getCenterY() - player.getCenterY());
-					knockback.setLength(5.0f);
+					knockback.setLength(4.0f);
 					int kbLength = 8;
 					int damage = 1;
 					HitEvent event = new HitEvent(player, entity, damage, knockback, kbLength);
+					player.addPartialMana(1);
 					
 					//Activate relic hit effects (modifies the event)
 					for (Relic relic : player.getRelics()) {
@@ -54,14 +53,13 @@ public class SpinSlash extends SpecialAttackData{
 			}
 		}
 		
-		int frame = 0;
-		while (frame < attackLengths.length && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
+		//Spawn the wind slash
+		if (framesSinceLast == 10) {
+			Vector2 velocity = new Vector2(player.getVelocity());
+			velocity.setLength(5.0f).setAngle(((int)(player.getVelocity().angle() + 45) / 90) * 90.0f);
+			WindSlashProjectile projectile = new WindSlashProjectile(player.getCenterX() + velocity.x, player.getCenterY() + velocity.y, player, velocity);
+			player.getStage().addActor(projectile);
 		}
-		if (frame >= attackLengths.length) frame = attackLengths.length - 1;
-		player.setHeight((-(float)Math.pow((2 - frame), 2) + 9) * 0.25f);
-		if (frame == 5) player.setHeight(0);
-		
 	}
 	
 	/**
@@ -78,7 +76,7 @@ public class SpinSlash extends SpecialAttackData{
 		}
 		return false;
 	}
-
+	
 	@Override
 	public ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast) {
 		ArrayList<Rectangle> hurtboxes = new ArrayList<Rectangle>();
@@ -86,39 +84,42 @@ public class SpinSlash extends SpecialAttackData{
 		int dir = (int)((player.getVelocity().angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
 		float xOffset = 0;	//Offsets to set the hurtbox
 		float yOffset = 0;	//Offsets to set the hurtbox correctly
-		while (frame < attackLengths.length && framesSinceLast >= attackLengths[frame]) {
+		while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
 			frame++;	//This figures out what frame the player is in
 		}
-		if (frame >= attackLengths.length) frame = attackLengths.length - 1;
+		if (frame >= 4) frame = 3;
 		
-		if (frame != 5) dir = (dir + frame) % 4;
-		
-		if (frame == 5) {
-			Rectangle hurtbox = new Rectangle(player.getCenterX() - 8, player.getCenterY() - 8, 16, 16);
+		if (frame == 1) {
+			//This is the initial side swing
+			Rectangle hurtbox;
 			//Left - Right direction
 			if (dir % 2 == 0) {
-				xOffset = (1 - dir) * 6.0f;
-				yOffset = (dir - 1) * 6.0f;
+				hurtbox = new Rectangle(player.getCenterX() - 8, player.getCenterY() - 5, 16, 10);
+				xOffset = (1 - dir) * 4.5f;	//Fancy math for offsetting the hurtbox
+				yOffset = (dir - 1) * 6;
 			}
 			//Front - Back direction
 			else {
-				xOffset = (2 - dir) * 6.0f;
-				yOffset = (2 - dir) * 6.0f;
+				hurtbox = new Rectangle(player.getCenterX() - 5, player.getCenterY() - 8, 10, 16);
+				xOffset = (2 - dir) * 6;
+				yOffset = (2 - dir) * 4.5f;
 			}
 			hurtbox.setPosition(hurtbox.getX() + xOffset, hurtbox.getY() + yOffset);
 			hurtboxes.add(hurtbox);
 		}
-		else if (frame != 0){
+		
+		if (frame == 2) {
+			//This is the front swing
 			Rectangle hurtbox;
 			//Left - Right direction
 			if (dir % 2 == 0) {
-				hurtbox = new Rectangle(player.getCenterX() - 16, player.getCenterY() - 8, 32, 16);
-				yOffset = (dir - 1) * 6.0f;
+				hurtbox = new Rectangle(player.getCenterX() - 6, player.getCenterY() - 10, 12, 20);
+				xOffset = (1 - dir) * 8.0f;
 			}
 			//Front - Back direction
 			else {
-				hurtbox = new Rectangle(player.getCenterX() - 8, player.getCenterY() - 16, 16, 32);
-				xOffset = (2 - dir) * 6.0f;
+				hurtbox = new Rectangle(player.getCenterX() - 10, player.getCenterY() - 6, 20, 12);
+				yOffset = (2 - dir) * 8.0f;
 			}
 			hurtbox.setPosition(hurtbox.getX() + xOffset, hurtbox.getY() + yOffset);
 			hurtboxes.add(hurtbox);
@@ -128,12 +129,6 @@ public class SpinSlash extends SpecialAttackData{
 
 	@Override
 	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
-		return (framesSinceLast >= 34);
+		return (framesSinceLast >= 24);
 	}
-	
-	@Override
-	public int getRequiredMana() {
-		return 1;
-	}
-
 }

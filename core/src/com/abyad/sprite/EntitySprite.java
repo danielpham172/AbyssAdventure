@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public class EntitySprite extends AbstractSpriteSheet{
+public class EntitySprite extends AnimationSprite{
 
 	//Basic Entity Sprite Sheet, consisting of 4 directional movement and idle
 	//Col 0 - 3: Idle, Right Step, Middle Step, Left Step
@@ -48,6 +48,7 @@ public class EntitySprite extends AbstractSpriteSheet{
 		}
 	}
 	
+	@Override
 	/**
 	 * Returns the TextureRegions given a state, the direction, and frame count
 	 * @param state					The state of the entity

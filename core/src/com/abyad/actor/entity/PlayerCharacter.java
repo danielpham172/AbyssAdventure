@@ -60,7 +60,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		weapon = "SWORD";
 		basicAttack = AttackData.basicAttacks.get(weapon);
-		specialName = "SPIN_SLASH";
+		specialName = "WIND_BLADE";
 		specialAttack = AttackData.specialAttacks.get(specialName);
 		
 		updateHitbox();
@@ -138,11 +138,12 @@ public class PlayerCharacter extends HumanoidEntity{
 						}
 					}
 				}
-				else if (controller.specialPressed() && !specialHeld && !isHoldingItem()) {
+				else if (controller.specialPressed() && !specialHeld && !isHoldingItem() && getMana() >= specialAttack.getRequiredMana()) {
 					//This checks to see if the player has pressed the special button
 					attacking = true;
 					specialAttack.initiateAttack(this);
 					setState("SPECIAL_ATTACK - " + specialName);
+					removeMana(specialAttack.getRequiredMana());
 				}
 				else if (xChange == 0 && yChange == 0) {
 					//No movement? the character is idling
