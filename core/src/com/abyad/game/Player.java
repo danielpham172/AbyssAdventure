@@ -4,11 +4,13 @@ import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.controls.GamepadController;
 import com.abyad.controls.KeyboardController;
 import com.abyad.controls.PlayerController;
+import com.abyad.table.PlayerDisplay;
 
 public class Player {
 
 	private PlayerController controller;			//The controller the player is using
 	private PlayerCharacter character;				//The player character that this player controls
+	private PlayerDisplay display;
 	private int number;								//The player number
 	
 	public Player(int num, AbyssAdventureGame game) {
@@ -30,6 +32,7 @@ public class Player {
 			
 		}
 		character = new PlayerCharacter(this, 0, 0);
+		display = new PlayerDisplay(this);
 	}
 	
 	public PlayerController getController() {
@@ -38,6 +41,10 @@ public class Player {
 	
 	public PlayerCharacter getCharacter() {
 		return character;
+	}
+	
+	public PlayerDisplay getDisplay() {
+		return display;
 	}
 	
 	public int getNumber() {

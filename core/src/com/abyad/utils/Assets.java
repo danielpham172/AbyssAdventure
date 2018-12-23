@@ -11,7 +11,9 @@ public class Assets {
 	public static final AssetManager manager = new AssetManager();
 	
 	public static final AssetDescriptor<Texture> boy1 = new AssetDescriptor<Texture>("character/boy1/spriteSheet.png", Texture.class);
+	public static final AssetDescriptor<Texture> boy1_head = new AssetDescriptor<Texture>("character/boy1/head.png", Texture.class);
 	public static final AssetDescriptor<Texture> girl1 = new AssetDescriptor<Texture>("character/girl1/spriteSheet.png", Texture.class);
+	public static final AssetDescriptor<Texture> girl1_head = new AssetDescriptor<Texture>("character/girl1/head.png", Texture.class);
 	
 	public static final AssetDescriptor<Texture> zombie = new AssetDescriptor<Texture>("character/zombie/sprite.png", Texture.class);
 	
@@ -31,6 +33,8 @@ public class Assets {
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
 	
 	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
+	public static final AssetDescriptor<Texture> healthCell = new AssetDescriptor<Texture>("ui/health/healthCell.png", Texture.class);
+	public static final AssetDescriptor<Texture> manaCell = new AssetDescriptor<Texture>("ui/mana/manaCell.png", Texture.class);
 	
 	public static Texture redBox;		//Texture used for debugging hitboxes for the tile
 	public static Texture greenBox;		//Texture used for debugging hitboxes for the tile
@@ -51,7 +55,9 @@ public class Assets {
 	
 	public static void loadAssets() {
 		manager.load(boy1);
+		manager.load(boy1_head);
 		manager.load(girl1);
+		manager.load(girl1_head);
 		manager.load(zombie);
 		manager.load(windSlash);
 		manager.load(relics);
@@ -64,6 +70,8 @@ public class Assets {
 		manager.load(stairTile);
 		manager.load(treasureChest);
 		manager.load(buttons);
+		manager.load(healthCell);
+		manager.load(manaCell);
 		manager.finishLoading();
 	}
 	

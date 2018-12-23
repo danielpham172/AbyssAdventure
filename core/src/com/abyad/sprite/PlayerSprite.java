@@ -36,7 +36,7 @@ public class PlayerSprite extends EntitySprite{
 	 * Constructor for creating the sprite for a player.
 	 * @param spriteSheet		The texture to use
 	 */
-	public PlayerSprite(Texture spriteSheet) {
+	public PlayerSprite(Texture spriteSheet, Texture head) {
 		super(spriteSheet, SHEET_ROWS, SHEET_COLS);
 		
 		TextureRegion[][] charRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / SHEET_COLS, spriteSheet.getHeight() / SHEET_ROWS);
@@ -50,6 +50,8 @@ public class PlayerSprite extends EntitySprite{
 				sprites.put("char_" + rowNames[r] + "_" + weaponColNames[c - 8], charRegions[r][c]);
 			}
 		}
+		
+		sprites.put("head", TextureRegion.split(head, head.getWidth(), head.getHeight())[0][0]);
 	}
 	
 	/**

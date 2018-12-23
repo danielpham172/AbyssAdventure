@@ -110,6 +110,10 @@ public abstract class AbstractEntity extends Actor{
 	public String getState() {
 		return state;
 	}
+	
+	public EntitySprite getSprite() {
+		return sprite;
+	}
 	/**
 	 * Sets the state of the entity. If the state is the same, increments the frameSinceLast by 1.
 	 * @param newState		The state to change into

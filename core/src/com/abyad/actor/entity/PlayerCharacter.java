@@ -60,7 +60,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		weapon = "SWORD";
 		basicAttack = AttackData.basicAttacks.get(weapon);
-		specialName = "WIND_BLADE";
+		specialName = "SPIN_SLASH";
 		specialAttack = AttackData.specialAttacks.get(specialName);
 		
 		updateHitbox();
@@ -272,10 +272,12 @@ public class PlayerCharacter extends HumanoidEntity{
 	}
 	
 	public void addPartialMana(int add) {
-		partialMP += add;
-		while (partialMP >= 4) {
-			addMana(1);
-			partialMP -= 4;
+		if (mp < maxMP) {
+			partialMP += add;
+			while (partialMP >= 4) {
+				addMana(1);
+				partialMP -= 4;
+			}
 		}
 	}
 	
