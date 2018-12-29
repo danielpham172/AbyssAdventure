@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 
 public class Assets {
@@ -51,6 +52,7 @@ public class Assets {
 	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
 	public static final AssetDescriptor<Texture> healthCell = new AssetDescriptor<Texture>("ui/health/healthCell.png", Texture.class);
 	public static final AssetDescriptor<Texture> manaCell = new AssetDescriptor<Texture>("ui/mana/manaCell.png", Texture.class);
+	public static final AssetDescriptor<BitmapFont> font = new AssetDescriptor<BitmapFont>("ui/silkscreen.fnt", BitmapFont.class);
 	
 	public static Texture redBox;		//Texture used for debugging hitboxes for the tile
 	public static Texture greenBox;		//Texture used for debugging hitboxes for the tile
@@ -121,6 +123,7 @@ public class Assets {
 		manager.load(buttons);
 		manager.load(healthCell);
 		manager.load(manaCell);
+		manager.load(font);
 		manager.finishLoading();
 	}
 	

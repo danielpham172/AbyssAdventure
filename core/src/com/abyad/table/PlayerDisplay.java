@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.game.Player;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.BarSprite;
+import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,7 +29,7 @@ public class PlayerDisplay extends Actor{
 	private static float goldIconYOffset = -20f;
 	private static float goldScale = 1.0f;
 	
-	private static BitmapFont font = new BitmapFont();
+	private static BitmapFont font = Assets.manager.get(Assets.font);
 	private static float goldTextXOffset = 20f;
 	private static float goldTextYOffset = -5f;
 	
