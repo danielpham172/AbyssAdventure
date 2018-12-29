@@ -10,10 +10,10 @@ public class ControlConstants {
 	public static LinkedHashMap<Integer, PlayerController> playerControls = new LinkedHashMap<Integer, PlayerController>();
 	
 	static {
-		DEFAULT_KEYBOARD_CONTROLS.put("UP", new KeyControl(Input.Keys.W,0));
-		DEFAULT_KEYBOARD_CONTROLS.put("DOWN", new KeyControl(Input.Keys.S,0));
-		DEFAULT_KEYBOARD_CONTROLS.put("RIGHT", new KeyControl(Input.Keys.D,0));
-		DEFAULT_KEYBOARD_CONTROLS.put("LEFT", new KeyControl(Input.Keys.A,0));
+		DEFAULT_KEYBOARD_CONTROLS.put("UP", new KeyControl(Input.Keys.UP,0));
+		DEFAULT_KEYBOARD_CONTROLS.put("DOWN", new KeyControl(Input.Keys.DOWN,0));
+		DEFAULT_KEYBOARD_CONTROLS.put("RIGHT", new KeyControl(Input.Keys.RIGHT,0));
+		DEFAULT_KEYBOARD_CONTROLS.put("LEFT", new KeyControl(Input.Keys.LEFT,0));
 		DEFAULT_KEYBOARD_CONTROLS.put("ATTACK", new KeyControl(Input.Keys.Z,0));
 		DEFAULT_KEYBOARD_CONTROLS.put("SPECIAL", new KeyControl(Input.Keys.X,0));
 		
