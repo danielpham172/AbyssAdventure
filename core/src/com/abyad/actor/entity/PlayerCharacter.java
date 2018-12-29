@@ -78,6 +78,9 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		specialAttack = AttackData.specialAttacks.get(specialName);
 		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
+		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
+		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
+		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
 		cursor = new MagicCursor(this);
 		
 		updateHitbox();

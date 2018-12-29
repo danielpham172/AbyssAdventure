@@ -76,6 +76,7 @@ public class MagicRingMenu extends Actor{
 						ICON_SCALE, ICON_SCALE, 0);
 				batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
 			}
+			drawOffsets.rotate(angleSpacing);
 		}
 		batch.draw(magicSelectCursor, center.x - (magicSelectCursor.getRegionWidth() / 2), center.y + RADIUS - (magicSelectCursor.getRegionHeight() / 2),
 					magicSelectCursor.getRegionWidth() / 2, magicSelectCursor.getRegionHeight() / 2, magicSelectCursor.getRegionWidth(), magicSelectCursor.getRegionHeight(),
@@ -91,7 +92,7 @@ public class MagicRingMenu extends Actor{
 			}
 			else if (direction > 0) {
 				rotating = -ROTATING_TIME;
-				selection = (selection - 1) % player.getCharacter().getMagicSpells().size();
+				selection = (selection + player.getCharacter().getMagicSpells().size() - 1) % player.getCharacter().getMagicSpells().size();
 			}
 		}
 	}
