@@ -131,4 +131,9 @@ public class WindBlade extends SpecialAttackData{
 	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
 		return (framesSinceLast >= 24);
 	}
+	
+	@Override
+	public int getRequiredMana() {
+		return 1;
+	}
 }
