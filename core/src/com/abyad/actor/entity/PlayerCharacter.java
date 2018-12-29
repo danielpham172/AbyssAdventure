@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.attack.SpecialAttackData;
 import com.abyad.actor.mapobjects.items.CarryingItem;
+import com.abyad.actor.ui.MagicCursor;
 import com.abyad.controls.PlayerController;
 import com.abyad.data.HitEvent;
 import com.abyad.game.Player;
@@ -44,7 +45,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	private boolean lSwapHeld = false;
 	private ArrayList<AbstractMagic> magicSpells = new ArrayList<AbstractMagic>();
 	private AbstractMagic castingMagic;
-	private Vector2 cursorPosition = new Vector2(0, 0);
+	private MagicCursor cursor;
 	private boolean casting;
 	
 	private int mp;
@@ -69,7 +70,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		weapon = "SWORD";
 		basicAttack = AttackData.basicAttacks.get(weapon);
-		if (player.getNumber() == 2) {
+		if (player.getNumber() == 1) {
 			specialName = "SPIN_SLASH";
 		}
 		else {
@@ -77,6 +78,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		specialAttack = AttackData.specialAttacks.get(specialName);
 		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
+		cursor = new MagicCursor(this);
 		
 		updateHitbox();
 		maxHP = hp = 3;
@@ -157,10 +159,14 @@ public class PlayerCharacter extends HumanoidEntity{
 					else {
 						int selection = player.getSelectedMagic();
 						castingMagic = magicSpells.get(selection);
-						setState("CASTING");
-						casting = true;
-						cursorPosition.set(getCenterX() + 0.1f, getCenterY());
-						player.toggleRingMenu();
+						if (getMana() >= castingMagic.getManaCost()) {
+							removeMana(castingMagic.getManaCost());
+							cursor.setPosition(getCenterX(), getCenterY() - 0.5f);
+							setState("CASTING");
+							casting = true;
+							getStage().addActor(cursor);
+							player.toggleRingMenu();
+						}
 					}
 				}
 				else if (controller.specialPressed() && !specialHeld && !isHoldingItem() && getMana() >= specialAttack.getRequiredMana() && !player.isRingMenuActive()) {
@@ -229,14 +235,23 @@ public class PlayerCharacter extends HumanoidEntity{
 			else if (casting) {
 				if (state.equals("CASTING")) {
 					setState("CASTING");
-					if (framesSinceLast > castingMagic.getCastTime()) {
-						castingMagic.castMagic(this, cursorPosition);
+					if (xChange != 0 || yChange != 0) {
+						Vector2 move = new Vector2(xChange * MAX_SPEED, yChange * MAX_SPEED);
+						if (move.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);
+						cursor.move(move.x, move.y);
+					}
+					velocity.set(cursor.getX() - getCenterX(), cursor.getY() - getCenterY()).setLength(0.5f);
+					
+					if (framesSinceLast > castingMagic.getCastTime() && !controller.attackPressed()) {
+						Vector2 cursorPositon = new Vector2(cursor.getX(), cursor.getY());
+						castingMagic.castMagic(this, cursorPositon);
 						setState("FINISH_CASTING");
 					}
 				}
 				else if (state.equals("FINISH_CASTING")) {
 					setState("FINISH_CASTING");
 					if (framesSinceLast > castingMagic.getAfterTime()) {
+						cursor.remove();
 						casting = false;
 					}
 				}
@@ -428,6 +443,11 @@ public class PlayerCharacter extends HumanoidEntity{
 			knockbackLength = event.getKnockbackLength();
 			modifyHP(-event.getDamage());
 			invulnLength = 40;
+			
+			if (casting) {
+				casting = false;
+				cursor.remove();
+			}
 		}
 	}
 	

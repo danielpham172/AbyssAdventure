@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.game.Player;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.sprite.AbstractSpriteSheet;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -24,6 +25,7 @@ public class MagicRingMenu extends Actor{
 	private int rotating;
 	
 	private boolean markForRemoval;
+	private int blinkTime;
 	
 	public MagicRingMenu(Player player) {
 		this.player = player;
@@ -38,6 +40,7 @@ public class MagicRingMenu extends Actor{
 			markForRemoval = false;
 			rotating = 0;
 		}
+		blinkTime = (blinkTime + 1) % 6;
 	}
 	
 	@Override
@@ -61,9 +64,18 @@ public class MagicRingMenu extends Actor{
 		batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
 		for (AbstractMagic magic : sortedMagicList) {
 			TextureRegion icon = magic.getIcon();
-			batch.draw(icon, center.x + drawOffsets.x - (icon.getRegionWidth() / 2), center.y + drawOffsets.y - (icon.getRegionHeight() / 2),
-					icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
-					ICON_SCALE, ICON_SCALE, 0);
+			if (player.getCharacter().getMana() >= magic.getManaCost()) {
+				batch.draw(icon, center.x + drawOffsets.x - (icon.getRegionWidth() / 2), center.y + drawOffsets.y - (icon.getRegionHeight() / 2),
+						icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
+						ICON_SCALE, ICON_SCALE, 0);
+			}
+			else if (blinkTime <= 2){
+				batch.setColor(1.0f, 1.0f, 1.0f, 0.3f);
+				batch.draw(icon, center.x + drawOffsets.x - (icon.getRegionWidth() / 2), center.y + drawOffsets.y - (icon.getRegionHeight() / 2),
+						icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
+						ICON_SCALE, ICON_SCALE, 0);
+				batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
+			}
 		}
 		batch.draw(magicSelectCursor, center.x - (magicSelectCursor.getRegionWidth() / 2), center.y + RADIUS - (magicSelectCursor.getRegionHeight() / 2),
 					magicSelectCursor.getRegionWidth() / 2, magicSelectCursor.getRegionHeight() / 2, magicSelectCursor.getRegionWidth(), magicSelectCursor.getRegionHeight(),

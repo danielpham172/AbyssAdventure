@@ -135,6 +135,6 @@ public class WindBlade extends SpecialAttackData{
 	
 	@Override
 	public int getRequiredMana() {
-		return 0;
+		return 1;
 	}
 }

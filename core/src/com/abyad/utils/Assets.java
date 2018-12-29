@@ -16,9 +16,9 @@ public class Assets {
 	
 	//Characters
 	public static final AssetDescriptor<Texture> boy1 = new AssetDescriptor<Texture>("character/boy1/spriteSheet.png", Texture.class);
-	public static final AssetDescriptor<Texture> boy1_head = new AssetDescriptor<Texture>("character/boy1/head.png", Texture.class);
+	public static final AssetDescriptor<Texture> boy1_icons = new AssetDescriptor<Texture>("character/boy1/icons.png", Texture.class);
 	public static final AssetDescriptor<Texture> girl1 = new AssetDescriptor<Texture>("character/girl1/spriteSheet.png", Texture.class);
-	public static final AssetDescriptor<Texture> girl1_head = new AssetDescriptor<Texture>("character/girl1/head.png", Texture.class);
+	public static final AssetDescriptor<Texture> girl1_icons = new AssetDescriptor<Texture>("character/girl1/icons.png", Texture.class);
 	
 	//Monsters/NPCS
 	public static final AssetDescriptor<Texture> zombie = new AssetDescriptor<Texture>("character/zombie/sprite.png", Texture.class);
@@ -92,9 +92,9 @@ public class Assets {
 	public static void loadAssets() {
 		//Player Characters
 		manager.load(boy1);
-		manager.load(boy1_head);
+		manager.load(boy1_icons);
 		manager.load(girl1);
-		manager.load(girl1_head);
+		manager.load(girl1_icons);
 		//Monsters/NPCS
 		manager.load(zombie);
 		//Magic Stuff

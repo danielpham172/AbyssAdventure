@@ -16,6 +16,8 @@ import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.actor.tile.StairTile;
 import com.abyad.actor.tile.WallTile;
+import com.abyad.actor.ui.MagicCursor;
+import com.abyad.actor.ui.MagicRingMenu;
 import com.abyad.game.AbyssAdventureGame;
 import com.abyad.utils.DungeonGenerator;
 import com.badlogic.gdx.math.Rectangle;
@@ -307,6 +309,10 @@ class ActorComparator implements Comparator<Actor>{
 
 	@Override
 	public int compare(Actor o1, Actor o2) {
+		if (o2 instanceof MagicCursor) return -1;
+		if (o1 instanceof MagicCursor) return 1;
+		if (o2 instanceof MagicRingMenu) return -1;
+		if (o1 instanceof MagicRingMenu) return 1;
 		if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) return -1;
 		if (o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) return 1;
 		if (o2 instanceof FloorTile) return 1;

@@ -12,8 +12,8 @@ public abstract class AbstractSpriteSheet {
 	public static LinkedHashMap<String, AbstractSpriteSheet> spriteSheets = new LinkedHashMap<String, AbstractSpriteSheet>();
 	static {
 		spriteSheets.put("ZOMBIE", new EntitySprite(Assets.manager.get(Assets.zombie)));
-		spriteSheets.put("BOY_1", new PlayerSprite(Assets.manager.get(Assets.boy1), Assets.manager.get(Assets.boy1_head)));
-		spriteSheets.put("GIRL_1", new PlayerSprite(Assets.manager.get(Assets.girl1), Assets.manager.get(Assets.girl1_head)));
+		spriteSheets.put("BOY_1", new PlayerSprite(Assets.manager.get(Assets.boy1), Assets.manager.get(Assets.boy1_icons)));
+		spriteSheets.put("GIRL_1", new PlayerSprite(Assets.manager.get(Assets.girl1), Assets.manager.get(Assets.girl1_icons)));
 		
 		spriteSheets.put("WIND_SLASH", new ProjectileSprite(Assets.manager.get(Assets.windSlash), 4, 1, 6));
 		spriteSheets.put("MAGIC_BOLT_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.magicBoltProjectile), 1, 2, 6, true));
