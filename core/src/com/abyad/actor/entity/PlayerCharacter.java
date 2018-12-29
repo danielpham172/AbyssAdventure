@@ -123,11 +123,13 @@ public class PlayerCharacter extends HumanoidEntity{
 			else if (!attacking && !casting) {
 				
 				interactableObjects.clear();
-				for (Interactable interactable : Interactable.interactables) {
-					if (!(interactable instanceof CarryingItem) || !isHoldingItem()) {
-						if (isOverlapping(interactable.getInteractBox(), getCollideBox())) {
-							interactableObjects.add(interactable);
-							interactable.setCanInteract(true);
+				if (!player.isRingMenuActive()) {
+					for (Interactable interactable : Interactable.interactables) {
+						if (!(interactable instanceof CarryingItem) || !isHoldingItem()) {
+							if (isOverlapping(interactable.getInteractBox(), getCollideBox())) {
+								interactableObjects.add(interactable);
+								interactable.setCanInteract(true);
+							}
 						}
 					}
 				}
