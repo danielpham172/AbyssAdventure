@@ -22,6 +22,7 @@ public class Assets {
 	public static final AssetDescriptor<Texture> relics = new AssetDescriptor<Texture>("items/relics.png", Texture.class); 
 	public static final AssetDescriptor<Texture> pickups = new AssetDescriptor<Texture>("items/pickups.png", Texture.class); 
 	public static final AssetDescriptor<Texture> carrying = new AssetDescriptor<Texture>("items/carrying.png", Texture.class); 
+	public static final AssetDescriptor<Texture> capsules = new AssetDescriptor<Texture>("items/capsules.png", Texture.class); 
 	
 	public static final AssetDescriptor<Texture> deathAnim = new AssetDescriptor<Texture>("other/deathSprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
@@ -54,21 +55,30 @@ public class Assets {
 	
 	
 	public static void loadAssets() {
+		//Player Characters
 		manager.load(boy1);
 		manager.load(boy1_head);
 		manager.load(girl1);
 		manager.load(girl1_head);
+		//Monsters/NPCS
 		manager.load(zombie);
+		//Projectiles
 		manager.load(windSlash);
+		//Items
 		manager.load(relics);
 		manager.load(pickups);
 		manager.load(carrying);
+		manager.load(capsules);
+		//Animation
 		manager.load(deathAnim);
+		//Weapon
 		manager.load(sword);
+		//Dungeon Tiles and Objects
 		manager.load(floorTiles);
 		manager.load(wallTiles);
 		manager.load(stairTile);
 		manager.load(treasureChest);
+		//UI Stuff
 		manager.load(buttons);
 		manager.load(healthCell);
 		manager.load(manaCell);
