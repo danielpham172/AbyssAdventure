@@ -95,8 +95,20 @@ public abstract class AbstractEntity extends Actor{
 		return hp;
 	}
 	
+	public void modifyHP(int modification) {
+		hp += modification;
+		if (hp > maxHP) hp = maxHP;
+		if (hp < 0) hp = 0;
+	}
+	
 	public int getMaxHP() {
 		return maxHP;
+	}
+	
+	public void modifyMaxHP(int modification) {
+		maxHP += modification;
+		if (maxHP <= 0) maxHP = 1;
+		if (maxHP < hp) hp = maxHP;
 	}
 	
 	public void restoreHealth(int heal) {
