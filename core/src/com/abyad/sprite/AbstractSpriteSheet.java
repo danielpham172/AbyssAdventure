@@ -32,6 +32,9 @@ public abstract class AbstractSpriteSheet {
 		
 		String[][] carryingNames = { {"KEY"} };
 		spriteSheets.put("CARRY", new BasicSprite(Assets.manager.get(Assets.carrying), carryingNames.length, carryingNames[0].length, carryingNames));
+		
+		String[][] capsuleNames = { {"LIFE_CAPSULE", "MANA_CAPSULE"} };
+		spriteSheets.put("CAPSULES", new BasicSprite(Assets.manager.get(Assets.capsules), capsuleNames.length, capsuleNames[0].length, capsuleNames));
 	}
 	
 	public AbstractSpriteSheet() {
