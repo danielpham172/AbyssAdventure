@@ -33,6 +33,7 @@ public class PlayerDisplay extends Actor{
 	private static float goldTextYOffset = -5f;
 	
 	private static float offsetFromTop = 58f;
+	private static float offsetFromBottom = 30f;
 	
 	public PlayerDisplay(Player player) {
 		super();
@@ -47,6 +48,9 @@ public class PlayerDisplay extends Actor{
 		Frustum frustum = getStage().getCamera().frustum;
 		if (player.getNumber() == 1) {
 			setPosition(frustum.planePoints[3].x + 10, frustum.planePoints[3].y - offsetFromTop);
+		}
+		if (player.getNumber() == 2) {
+			setPosition(frustum.planePoints[0].x + 10, frustum.planePoints[0].y + offsetFromBottom);
 		}
 	}
 	

@@ -60,7 +60,12 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		weapon = "SWORD";
 		basicAttack = AttackData.basicAttacks.get(weapon);
-		specialName = "SPIN_SLASH";
+		if (player.getNumber() == 1) {
+			specialName = "SPIN_SLASH";
+		}
+		else {
+			specialName = "WIND_BLADE";
+		}
 		specialAttack = AttackData.specialAttacks.get(specialName);
 		
 		updateHitbox();
@@ -261,6 +266,15 @@ public class PlayerCharacter extends HumanoidEntity{
 		return maxMP;
 	}
 	
+	public void modifyMaxMana(int modification) {
+		maxMP += modification;
+		if (maxMP <= 0) maxMP = 1;
+		if (maxMP < mp) {
+			mp = maxMP;
+			partialMP = 0;
+		}
+	}
+	
 	public void addMana(int add) {
 		mp += add;
 		if (mp > maxMP) mp = maxMP;
@@ -291,7 +305,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		//drawHitbox(batch, a);
+		drawHitbox(batch, a);
 		super.draw(batch, a);
 		if (inView()) {
 			if (isHoldingItem()) {
@@ -353,7 +367,7 @@ public class PlayerCharacter extends HumanoidEntity{
 			
 			knockbackVelocity = event.getKnockbackVelocity();
 			knockbackLength = event.getKnockbackLength();
-			hp -= event.getDamage();
+			modifyHP(-event.getDamage());
 			invulnLength = 40;
 		}
 	}

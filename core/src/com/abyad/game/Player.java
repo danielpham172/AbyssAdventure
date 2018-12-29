@@ -16,9 +16,9 @@ public class Player {
 	public Player(int num, AbyssAdventureGame game) {
 		number = num;
 		try {
-			switch (game.controllerType)
+			switch (num)
 			{
-				case 0:
+				case 2:
 					controller = new KeyboardController();	//This tries to make the player have the keyboard controller
 					break;
 				case 1:

@@ -141,8 +141,11 @@ public class PlayStage extends Stage{
 		}
 		
 		//Spawn in players
+		Rectangle randomRoom = rooms.get((int)(Math.random() * rooms.size()));
 		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
-			setRandomSpawn(player);
+			int row = (int)(Math.random() * randomRoom.getWidth()) + (int)randomRoom.getX();
+			int col = (int)(Math.random() * randomRoom.getHeight()) + (int)randomRoom.getY();
+			player.setPosition(tileMap[row][col].getCenter().x, tileMap[row][col].getCenter().y);
 			player.getVelocity().setLength(0);
 			player.removeHeldItem();
 			addActor(player);
