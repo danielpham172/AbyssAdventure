@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.abyad.actor.entity.ZombieCharacter;
+import com.abyad.magic.AbstractMagic;
 import com.abyad.screen.PlayScreen;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.Game;
@@ -21,6 +22,7 @@ public class AbyssAdventureGame extends Game {
 	@Override
 	public void create() {
 		Assets.loadAssets();
+		AbstractMagic.initializeSprites();
 		
 		//Generate Players
 		Player player1 = new Player(1, this);

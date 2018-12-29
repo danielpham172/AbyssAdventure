@@ -23,6 +23,7 @@ public abstract class AbstractSpriteSheet {
 		
 		String[][] buttonNames = { {"A", "B"}, {"X", "Y"} };
 		spriteSheets.put("UI_BUTTONS", new BasicSprite(Assets.manager.get(Assets.buttons), 2, 2, buttonNames));
+		spriteSheets.put("MAGIC_SELECTION", new BasicSprite(Assets.manager.get(Assets.magicSelectCursor), 1, 1, new String[][] {{"SELECTION"}}));
 		spriteSheets.put("HEALTH_CELL", new BarSprite(Assets.manager.get(Assets.healthCell), 5, 11));
 		spriteSheets.put("MANA_CELL", new BarSprite(Assets.manager.get(Assets.manaCell), 5, 11));
 		

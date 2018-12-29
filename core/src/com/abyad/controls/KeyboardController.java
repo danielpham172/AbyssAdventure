@@ -42,6 +42,21 @@ public class KeyboardController extends PlayerController{
 		return keyPressedBool("SPECIAL");
 	}
 	
+	@Override
+	public boolean magicPressed() {
+		return keyPressedBool("MAGIC");
+	}
+
+	@Override
+	public boolean rightSwapPressed() {
+		return keyPressedBool("R_SWAP");
+	}
+
+	@Override
+	public boolean leftSwapPressed() {
+		return keyPressedBool("L_SWAP");
+	}
+	
 	private float keyPressed(String k)	{
 		KeyControl key = keyMap.get(k);
 		return (Gdx.input.isKeyPressed(key.getKeyCode())) ? 1.0f : 0;

@@ -12,4 +12,7 @@ public abstract class PlayerController {
 	
 	public abstract boolean attackPressed();
 	public abstract boolean specialPressed();
+	public abstract boolean magicPressed();
+	public abstract boolean rightSwapPressed();
+	public abstract boolean leftSwapPressed();
 }

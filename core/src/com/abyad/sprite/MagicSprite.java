@@ -22,7 +22,7 @@ public class MagicSprite extends AnimationSprite{
 		this.particleFrames = particleFrames;
 		this.particleFrameLengths = particleFrameLengths;
 		
-		sprites.put("icon", TextureRegion.split(Assets.manager.get(textures.get("ICON")),
+		sprites.put("ICON", TextureRegion.split(Assets.manager.get(textures.get("ICON")),
 				Assets.manager.get(textures.get("ICON")).getWidth(), Assets.manager.get(textures.get("ICON")).getHeight())[0][0]);
 		if (textures.containsKey("CIRCLE")) {
 			Texture circle = Assets.manager.get(textures.get("CIRCLE"));

@@ -37,9 +37,15 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
 	private ArrayList<Relic> relics = new ArrayList<Relic>();
-	private ArrayList<AbstractMagic> magicSpells = new ArrayList<AbstractMagic>();
 	private CarryingItem heldItem;
+	
+	private boolean magicHeld = false;
+	private boolean rSwapHeld = false;
+	private boolean lSwapHeld = false;
+	private ArrayList<AbstractMagic> magicSpells = new ArrayList<AbstractMagic>();
 	private AbstractMagic castingMagic;
+	private Vector2 cursorPosition = new Vector2(0, 0);
+	private boolean casting;
 	
 	private int mp;
 	private int partialMP;
@@ -70,6 +76,7 @@ public class PlayerCharacter extends HumanoidEntity{
 			specialName = "WIND_BLADE";
 		}
 		specialAttack = AttackData.specialAttacks.get(specialName);
+		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
 		
 		updateHitbox();
 		maxHP = hp = 3;
@@ -110,7 +117,7 @@ public class PlayerCharacter extends HumanoidEntity{
 				move(knockbackVelocity);
 				knockbackLength--;
 			}
-			else if (!attacking) {
+			else if (!attacking && !casting) {
 				
 				interactableObjects.clear();
 				for (Interactable interactable : Interactable.interactables) {
@@ -124,65 +131,89 @@ public class PlayerCharacter extends HumanoidEntity{
 				
 				//If not in an attack animation
 				if (controller.attackPressed() && !attackHeld) {
-					//This checks to see if the player has pressed the attack button
-					//First see if the player can interact with something
-					boolean interactedWithSomething = false;
-					for (Interactable interactable : interactableObjects) {
-						if (interactable.interact(this)) {
-							interactedWithSomething = true;
+					if (!player.isRingMenuActive()) {
+						//This checks to see if the player has pressed the attack button
+						//First see if the player can interact with something
+						boolean interactedWithSomething = false;
+						for (Interactable interactable : interactableObjects) {
+							if (interactable.interact(this)) {
+								interactedWithSomething = true;
+							}
+						}
+						//If no interactions happen, then try attacking or dropping item
+						if (!interactedWithSomething) {
+							if (!isHoldingItem()) {
+								//If there is nothing to interact and not holding an item, just attack
+								attacking = true;
+								basicAttack.initiateAttack(this);
+								setState("BASIC_ATTACK - " + weapon);	//Set the state to attacking
+							}
+							else {
+								//Drop item holding
+								dropItemOnGround();
+							}
 						}
 					}
-					//If no interactions happen, then try attacking or dropping item
-					if (!interactedWithSomething) {
-						if (!isHoldingItem()) {
-							//If there is nothing to interact and not holding an item, just attack
-							attacking = true;
-							basicAttack.initiateAttack(this);
-							setState("BASIC_ATTACK - " + weapon);	//Set the state to attacking
-						}
-						else {
-							//Drop item holding
-							dropItemOnGround();
-						}
+					else {
+						int selection = player.getSelectedMagic();
+						castingMagic = magicSpells.get(selection);
+						setState("CASTING");
+						casting = true;
+						cursorPosition.set(getCenterX() + 0.1f, getCenterY());
+						player.toggleRingMenu();
 					}
 				}
-				else if (controller.specialPressed() && !specialHeld && !isHoldingItem() && getMana() >= specialAttack.getRequiredMana()) {
+				else if (controller.specialPressed() && !specialHeld && !isHoldingItem() && getMana() >= specialAttack.getRequiredMana() && !player.isRingMenuActive()) {
 					//This checks to see if the player has pressed the special button
 					attacking = true;
 					specialAttack.initiateAttack(this);
 					setState("SPECIAL_ATTACK - " + specialName);
 					removeMana(specialAttack.getRequiredMana());
 				}
-				else if (xChange == 0 && yChange == 0) {
-					//No movement? the character is idling
-					if (!isHoldingItem()) {
-						setState("IDLE");
-					}
-					else {
-						setState("CARRYING_IDLE");
-					}
-				}
 				else {
-					//This happens if the character is moving, scale the change to match velocity
-					if (!isHoldingItem()) {
-						velocity.x = xChange * MAX_SPEED;
-						velocity.y = yChange * MAX_SPEED;
-						if (velocity.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);	//Sometimes the velocity is over the actual max speed, so set it back
-						setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
-						move(velocity);
+					if (xChange == 0 && yChange == 0) {
+						//No movement? the character is idling
+						if (!isHoldingItem()) {
+							setState("IDLE");
+						}
+						else {
+							setState("CARRYING_IDLE");
+						}
 					}
 					else {
-						//If carrying an item, slow by weight, a set correct state
-						float slowedSpeed =  MAX_SPEED / (heldItem.getWeight() + 1.0f);
-						velocity.x = xChange * slowedSpeed;
-						velocity.y = yChange * slowedSpeed;
-						if (velocity.len() > slowedSpeed) velocity.setLength(slowedSpeed);
-						setState("CARRYING_MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
-						move(velocity);
+						//This happens if the character is moving, scale the change to match velocity
+						if (!isHoldingItem()) {
+							velocity.x = xChange * MAX_SPEED;
+							velocity.y = yChange * MAX_SPEED;
+							if (velocity.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);	//Sometimes the velocity is over the actual max speed, so set it back
+							setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
+							move(velocity);
+						}
+						else {
+							//If carrying an item, slow by weight, a set correct state
+							float slowedSpeed =  MAX_SPEED / (heldItem.getWeight() + 1.0f);
+							velocity.x = xChange * slowedSpeed;
+							velocity.y = yChange * slowedSpeed;
+							if (velocity.len() > slowedSpeed) velocity.setLength(slowedSpeed);
+							setState("CARRYING_MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
+							move(velocity);
+						}
+					}
+					
+					if (controller.magicPressed() && !magicHeld && !isHoldingItem()) {
+						player.toggleRingMenu();
+					}
+					if (player.isRingMenuActive()) {
+						if (controller.rightSwapPressed() && !rSwapHeld) {
+							player.rotateRingMenu(1);
+						}
+						if (controller.leftSwapPressed() && !lSwapHeld) {
+							player.rotateRingMenu(-1);
+						}
 					}
 				}
 			}
-			else {
+			else if (attacking){
 				//Sets the state into attacking
 				if (state.contains("BASIC_ATTACK")) {
 					setState("BASIC_ATTACK - " + weapon);
@@ -195,8 +226,26 @@ public class PlayerCharacter extends HumanoidEntity{
 					if (specialAttack.isFinishedAttacking(this, framesSinceLast)) attacking = false;	//Ends the attack after a certain amount of frames
 				}
 			}
+			else if (casting) {
+				if (state.equals("CASTING")) {
+					setState("CASTING");
+					if (framesSinceLast > castingMagic.getCastTime()) {
+						castingMagic.castMagic(this, cursorPosition);
+						setState("FINISH_CASTING");
+					}
+				}
+				else if (state.equals("FINISH_CASTING")) {
+					setState("FINISH_CASTING");
+					if (framesSinceLast > castingMagic.getAfterTime()) {
+						casting = false;
+					}
+				}
+			}
 			attackHeld = controller.attackPressed();
 			specialHeld = controller.specialPressed();
+			magicHeld = controller.magicPressed();
+			rSwapHeld = controller.rightSwapPressed();
+			lSwapHeld = controller.leftSwapPressed();
 		}
 	}
 	
@@ -298,6 +347,10 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 	}
 	
+	public ArrayList<AbstractMagic> getMagicSpells(){
+		return magicSpells;
+	}
+	
 	public int getGold() {
 		return gold;
 	}
@@ -308,8 +361,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		drawHitbox(batch, a);
-		if (state.equals("CASTING")) {
+		//drawHitbox(batch, a);
+		if (inView() && state.equals("CASTING")) {
 			castingMagic.drawMagic(batch, a, this, framesSinceLast);
 		}
 		super.draw(batch, a);

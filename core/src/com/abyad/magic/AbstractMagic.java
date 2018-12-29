@@ -3,6 +3,7 @@ package com.abyad.magic;
 import java.util.LinkedHashMap;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.MagicSprite;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,7 +13,7 @@ public abstract class AbstractMagic {
 
 	public static LinkedHashMap<String, AbstractMagic> magicList = new LinkedHashMap<String, AbstractMagic>();
 	static {
-		
+		magicList.put("MAGIC BOLT", new MagicBolt());
 	}
 	
 	private String name;
@@ -24,6 +25,12 @@ public abstract class AbstractMagic {
 	private MagicSprite spriteSheet;
 	
 	private static final float CIRCLE_OFFSET_Y = -3f;
+	
+	public static void initializeSprites() {
+		for (String key : magicList.keySet()) {
+			magicList.get(key).initializeSpriteSheet();
+		}
+	}
 	
 	public AbstractMagic(String name, String desc, int manaCost, int castTime, int afterCastTime, String resourceFolder) {
 		this.name = name;
@@ -56,7 +63,12 @@ public abstract class AbstractMagic {
 	public String getAssetsDirectory() {
 		return resourceFolder;
 	}
-	
+	public TextureRegion getIcon() {
+		return spriteSheet.getSprite("ICON");
+	}
+	public void initializeSpriteSheet() {
+		spriteSheet = (MagicSprite)AbstractSpriteSheet.spriteSheets.get(name);
+	}
 	
 	public boolean usesCursor() {
 		return true;
@@ -66,7 +78,8 @@ public abstract class AbstractMagic {
 	public void drawMagic(Batch batch, float a, PlayerCharacter source, int framesSinceLast) {
 		if (drawsMagicCircle()) {
 			TextureRegion circle = spriteSheet.getNextFrame("CIRCLE", null, framesSinceLast).get(0);
-			batch.draw(circle, source.getCenterX(), source.getCenterY() + CIRCLE_OFFSET_Y,
+			batch.draw(circle, source.getCenterX() - (circle.getRegionWidth() / 2),
+					source.getCenterY() + CIRCLE_OFFSET_Y - (circle.getRegionHeight() / 2),
 					circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
 					circle.getRegionWidth(), circle.getRegionHeight(), 1, 1, 0);
 		}

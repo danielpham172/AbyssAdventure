@@ -85,6 +85,24 @@ public class PlayerSprite extends EntitySprite{
 			frames.add(getSprite("char_" + dir + "_carrying-mstep"));
 			return frames;
 		}
+		else if (state.equals("CASTING")) {
+			ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
+			String dir = getDirection(direction);
+			int frame = (framesSinceLast / 5) % 5;
+			if (frame >= 3) {
+				frames.add(getSprite("char_" + dir + "_carrying-mstep"));
+			}
+			else {
+				frames.add(getSprite("char_" + dir + "_idle"));
+			}
+			return frames;
+		}
+		else if (state.equals("FINISH_CASTING")) {
+			ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
+			String dir = getDirection(direction);
+			frames.add(getSprite("char_" + dir + "_swing"));
+			return frames;
+		}
 		else {
 			return super.getNextFrame(state, direction, framesSinceLast);
 		}

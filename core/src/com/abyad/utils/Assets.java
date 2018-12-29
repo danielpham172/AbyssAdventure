@@ -50,6 +50,7 @@ public class Assets {
 	
 	//UI things
 	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
+	public static final AssetDescriptor<Texture> magicSelectCursor = new AssetDescriptor<Texture>("ui/magicSelection.png", Texture.class);
 	public static final AssetDescriptor<Texture> healthCell = new AssetDescriptor<Texture>("ui/health/healthCell.png", Texture.class);
 	public static final AssetDescriptor<Texture> manaCell = new AssetDescriptor<Texture>("ui/mana/manaCell.png", Texture.class);
 	public static final AssetDescriptor<BitmapFont> font = new AssetDescriptor<BitmapFont>("ui/silkscreen.fnt", BitmapFont.class);
@@ -121,6 +122,7 @@ public class Assets {
 		manager.load(treasureChest);
 		//UI Stuff
 		manager.load(buttons);
+		manager.load(magicSelectCursor);
 		manager.load(healthCell);
 		manager.load(manaCell);
 		manager.load(font);

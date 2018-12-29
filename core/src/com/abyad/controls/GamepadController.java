@@ -83,8 +83,26 @@ public class GamepadController extends PlayerController{
 	
 	@Override
 	public boolean specialPressed() {
-		KeyControl attack = keyMap.get("SPECIAL");
-		return getPressed(attack);
+		KeyControl special = keyMap.get("SPECIAL");
+		return getPressed(special);
+	}
+	
+	@Override
+	public boolean magicPressed() {
+		KeyControl magic = keyMap.get("MAGIC");
+		return getPressed(magic);
+	}
+
+	@Override
+	public boolean rightSwapPressed() {
+		KeyControl rSwap = keyMap.get("R_SWAP");
+		return getPressed(rSwap);
+	}
+
+	@Override
+	public boolean leftSwapPressed() {
+		KeyControl lSwap = keyMap.get("L_SWAP");
+		return getPressed(lSwap);
 	}
 	
 	private boolean getPressed(KeyControl key) {

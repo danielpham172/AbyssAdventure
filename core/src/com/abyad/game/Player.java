@@ -1,6 +1,7 @@
 package com.abyad.game;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.ui.MagicRingMenu;
 import com.abyad.controls.GamepadController;
 import com.abyad.controls.KeyboardController;
 import com.abyad.controls.PlayerController;
@@ -11,6 +12,7 @@ public class Player {
 	private PlayerController controller;			//The controller the player is using
 	private PlayerCharacter character;				//The player character that this player controls
 	private PlayerDisplay display;
+	private MagicRingMenu ringMenu;
 	private int number;								//The player number
 	
 	public Player(int num, AbyssAdventureGame game) {
@@ -33,6 +35,7 @@ public class Player {
 		}
 		character = new PlayerCharacter(this, 0, 0);
 		display = new PlayerDisplay(this);
+		ringMenu = new MagicRingMenu(this);
 	}
 	
 	public PlayerController getController() {
@@ -49,5 +52,26 @@ public class Player {
 	
 	public int getNumber() {
 		return number;
+	}
+	
+	public void toggleRingMenu() {
+		if (ringMenu.getStage() == null) {
+			character.getStage().addActor(ringMenu);
+		}
+		else {
+			ringMenu.setToRemove();
+		}
+	}
+	
+	public boolean isRingMenuActive() {
+		return (ringMenu.getStage() != null);
+	}
+
+	public void rotateRingMenu(int direction) {
+		ringMenu.rotate(direction);
+	}
+
+	public int getSelectedMagic() {
+		return ringMenu.getSelection();
 	}
 }
