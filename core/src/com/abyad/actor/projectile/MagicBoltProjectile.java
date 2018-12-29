@@ -12,14 +12,36 @@ import com.abyad.stage.PlayStage;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class WindSlashProjectile extends AbstractProjectile{
+public class MagicBoltProjectile extends AbstractProjectile{
 
 	private ArrayList<Rectangle> hitboxes = new ArrayList<Rectangle>();
 	private ArrayList<Rectangle> tempHitboxes = new ArrayList<Rectangle>();
 	
 	private static Rectangle baseBox = new Rectangle(0, 0, 16, 8);
 	
-	public WindSlashProjectile(float x, float y, AbstractEntity source, Vector2 velocity) {
+	//Hitbox Rectangles		length		xOff	yOff (measured center to center)
+	/**
+	 * 						18			3		0
+	 * 						8			10		0
+	 * 						10			3		6
+	 * 						10			3		-6
+	 * 						6			-6		3
+	 * 						6			-6		-3
+	 * 						8			-10		0
+	 */
+	
+	private static ArrayList<Rectangle> baseHitboxes = new ArrayList<Rectangle>();
+	static {
+		baseHitboxes.add(new Rectangle(3, 0, 18, 18));
+		baseHitboxes.add(new Rectangle(10, 0, 8, 8));
+		baseHitboxes.add(new Rectangle(3, 6, 10, 10));
+		baseHitboxes.add(new Rectangle(3, -6, 10, 10));
+		baseHitboxes.add(new Rectangle(-6, 3, 6, 6));
+		baseHitboxes.add(new Rectangle(-6, -3, 6, 6));
+		baseHitboxes.add(new Rectangle(-10, 0, 8, 8));
+	}
+	
+	public MagicBoltProjectile(float x, float y, AbstractEntity source, Vector2 velocity) {
 		super(x, y, source);
 		
 		
@@ -27,13 +49,14 @@ public class WindSlashProjectile extends AbstractProjectile{
 		hitboxes = new ArrayList<Rectangle>();
 		tempHitboxes = new ArrayList<Rectangle>();
 		
-		Rectangle hitbox = new Rectangle(baseBox);
-		Rectangle tempHitbox = new Rectangle(baseBox);
+		for (Rectangle baseHitbox : baseHitboxes) {
+			hitboxes.add(new Rectangle(baseHitbox));
+			tempHitboxes.add(new Rectangle(baseHitbox));
+		}
+		updateHitbox();
 		
-		hitboxes.add(hitbox);
-		tempHitboxes.add(tempHitbox);
-		
-		sprite = (ProjectileSprite)AbstractSpriteSheet.spriteSheets.get("WIND_SLASH");
+		sprite = (ProjectileSprite)AbstractSpriteSheet.spriteSheets.get("MAGIC_BOLT_PROJECTILE");
+		setRotation(velocity.angle());
 	}
 	
 	@Override
@@ -76,23 +99,18 @@ public class WindSlashProjectile extends AbstractProjectile{
 		}
 		
 		framesSinceLast++;
-		if (isHit) markForRemoval = true;
 		
 		super.act(delta);
 	}
 	
 	@Override
 	public void updateHitbox() {
-		Rectangle hitbox = hitboxes.get(0);
-		int dir = (int)((velocity.angle() + 45) / 90) % 4;
-		
-		if (dir % 2 == 0) {
-			hitbox.set(getX() - (baseBox.getHeight() / 2), getY() - (baseBox.getWidth() / 2), baseBox.getHeight(), baseBox.getWidth());
+		for (int i = 0; i < hitboxes.size(); i++) {
+			Rectangle hitbox = hitboxes.get(i);
+			Vector2 offsets = new Vector2(baseHitboxes.get(i).x, baseHitboxes.get(i).y);
+			offsets.rotate(getRotation());
+			hitbox.setCenter(getX() + offsets.x, getY() + offsets.y);
 		}
-		else {
-			hitbox.set(getX() - (baseBox.getWidth() / 2), getY() - (baseBox.getHeight() / 2), baseBox.getWidth(), baseBox.getHeight());
-		}
-		setOrigin(hitbox.getWidth() / 2, hitbox.getHeight());
 	}
 	@Override
 	public ArrayList<Rectangle> getHitbox() {
@@ -100,22 +118,18 @@ public class WindSlashProjectile extends AbstractProjectile{
 	}
 	@Override
 	public ArrayList<Rectangle> getHitbox(float x, float y) {
-		Rectangle hitbox = tempHitboxes.get(0);
-		int dir = (int)((velocity.angle() + 45) / 90) % 4;
-		
-		if (dir % 2 == 0) {
-			hitbox.set(x, y, baseBox.getHeight(), baseBox.getWidth());
+		for (int i = 0; i < tempHitboxes.size(); i++) {
+			Rectangle hitbox = tempHitboxes.get(i);
+			Vector2 offsets = new Vector2(baseHitboxes.get(i).x, baseHitboxes.get(i).y);
+			offsets.rotate(getRotation());
+			hitbox.setCenter(x + offsets.x, + offsets.y);
 		}
-		else {
-			hitbox.set(x, y, baseBox.getWidth(), baseBox.getHeight());
-		}
-		setOrigin(hitbox.getWidth() / 2, hitbox.getHeight());
 		return tempHitboxes;
 	}
 	@Override
 	public Rectangle getViewbox() {
-		Rectangle viewbox = new Rectangle(getX() - 8, getY() - 8, 16, 16);
+		Rectangle viewbox = new Rectangle(getX() - 16, getY() - 16, 32, 32);
 		return viewbox;
 	}
-
+	
 }

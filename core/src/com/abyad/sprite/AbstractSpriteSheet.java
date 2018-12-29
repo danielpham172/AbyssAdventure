@@ -2,6 +2,7 @@ package com.abyad.sprite;
 
 import java.util.LinkedHashMap;
 
+import com.abyad.magic.AbstractMagic;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -15,6 +16,7 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("GIRL_1", new PlayerSprite(Assets.manager.get(Assets.girl1), Assets.manager.get(Assets.girl1_head)));
 		
 		spriteSheets.put("WIND_SLASH", new ProjectileSprite(Assets.manager.get(Assets.windSlash), 4, 1, 6));
+		spriteSheets.put("MAGIC_BOLT_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.magicBoltProjectile), 1, 2, 6, true));
 		
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
 		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames.length, chestNames[0].length, chestNames));
@@ -35,6 +37,14 @@ public abstract class AbstractSpriteSheet {
 		
 		String[][] capsuleNames = { {"LIFE_CAPSULE", "MANA_CAPSULE"} };
 		spriteSheets.put("CAPSULES", new BasicSprite(Assets.manager.get(Assets.capsules), capsuleNames.length, capsuleNames[0].length, capsuleNames));
+		
+		
+		//Magic
+		for (String magicName : Assets.magicAssets.keySet()) {
+			AbstractMagic magic = AbstractMagic.magicList.get(magicName);
+			spriteSheets.put(magicName, new MagicSprite(Assets.magicAssets.get(magicName),
+					magic.magicCircleFrames(), magic.magicCircleFrameTime(), magic.particleFrames(), magic.particleFrameTime()));
+		}
 	}
 	
 	public AbstractSpriteSheet() {

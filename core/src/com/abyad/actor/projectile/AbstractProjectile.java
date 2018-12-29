@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.sprite.ProjectileSprite;
+import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;

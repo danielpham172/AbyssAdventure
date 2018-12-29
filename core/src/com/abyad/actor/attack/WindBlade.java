@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.projectile.MagicBoltProjectile;
 import com.abyad.actor.projectile.WindSlashProjectile;
 import com.abyad.data.HitEvent;
 import com.abyad.relic.Relic;
@@ -134,6 +135,6 @@ public class WindBlade extends SpecialAttackData{
 	
 	@Override
 	public int getRequiredMana() {
-		return 1;
+		return 0;
 	}
 }

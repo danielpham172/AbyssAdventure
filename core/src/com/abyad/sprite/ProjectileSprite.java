@@ -14,16 +14,38 @@ public class ProjectileSprite extends AnimationSprite{
 	private int cols;
 	private int frameLengths;
 	
+	private boolean rotates;
+	
 	public ProjectileSprite(Texture sheet, int rows, int cols, int frameLengths) {
+		this(sheet, rows, cols, frameLengths, false);
+	}
+	
+	public ProjectileSprite(Texture sheet, int rows, int cols, int frameLengths, boolean rotates) {
 		super();
 		
-		this.rows = rows;
-		this.cols = cols;
-		this.frameLengths = frameLengths;
-		TextureRegion[][] textureRegions = TextureRegion.split(sheet, sheet.getWidth() / cols, sheet.getHeight() / rows);
-		for (int r = 0; r < rows; r++) {
-			for (int c = 0; c < cols; c++) {
-				sprites.put("projectile_" + rowNames[r] + "_" + c, textureRegions[r][c]);
+		this.rotates = rotates;
+		if (rotates) {
+			this.rows = rows;
+			this.cols = cols;
+			this.frameLengths = frameLengths;
+			int count = 0;
+			TextureRegion[][] textureRegions = TextureRegion.split(sheet, sheet.getWidth() / cols, sheet.getHeight() / rows);
+			for (int r = 0; r < rows; r++) {
+				for (int c = 0; c < cols; c++) {
+					sprites.put("projectile_" + count, textureRegions[r][c]);
+					count++;
+				}
+			}
+		}
+		else {
+			this.rows = rows;
+			this.cols = cols;
+			this.frameLengths = frameLengths;
+			TextureRegion[][] textureRegions = TextureRegion.split(sheet, sheet.getWidth() / cols, sheet.getHeight() / rows);
+			for (int r = 0; r < rows; r++) {
+				for (int c = 0; c < cols; c++) {
+					sprites.put("projectile_" + rowNames[r] + "_" + c, textureRegions[r][c]);
+				}
 			}
 		}
 	}
@@ -31,12 +53,15 @@ public class ProjectileSprite extends AnimationSprite{
 	@Override
 	public ArrayList<TextureRegion> getNextFrame(String state, Vector2 direction, int framesSinceLast) {
 		ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
-		String dir = getDirection(direction);
-		
-		int frame = (framesSinceLast / frameLengths) % cols;
-		
-		frames.add(getSprite("projectile_" + dir + "_" + frame));
-		
+		if (!rotates) {
+			String dir = getDirection(direction);
+			int frame = (framesSinceLast / frameLengths) % cols;
+			frames.add(getSprite("projectile_" + dir + "_" + frame));
+		}
+		else {
+			int frame = (framesSinceLast / frameLengths) % (cols * rows);
+			frames.add(getSprite("projectile_" + frame));
+		}
 		return frames;
 	}
 	

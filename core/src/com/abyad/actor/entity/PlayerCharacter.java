@@ -9,6 +9,7 @@ import com.abyad.controls.PlayerController;
 import com.abyad.data.HitEvent;
 import com.abyad.game.Player;
 import com.abyad.interfaces.Interactable;
+import com.abyad.magic.AbstractMagic;
 import com.abyad.relic.Relic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
@@ -36,7 +37,9 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
 	private ArrayList<Relic> relics = new ArrayList<Relic>();
+	private ArrayList<AbstractMagic> magicSpells = new ArrayList<AbstractMagic>();
 	private CarryingItem heldItem;
+	private AbstractMagic castingMagic;
 	
 	private int mp;
 	private int partialMP;
@@ -60,7 +63,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		weapon = "SWORD";
 		basicAttack = AttackData.basicAttacks.get(weapon);
-		if (player.getNumber() == 1) {
+		if (player.getNumber() == 2) {
 			specialName = "SPIN_SLASH";
 		}
 		else {
@@ -306,6 +309,9 @@ public class PlayerCharacter extends HumanoidEntity{
 	@Override
 	public void draw(Batch batch, float a) {
 		drawHitbox(batch, a);
+		if (state.equals("CASTING")) {
+			castingMagic.drawMagic(batch, a, this, framesSinceLast);
+		}
 		super.draw(batch, a);
 		if (inView()) {
 			if (isHoldingItem()) {
