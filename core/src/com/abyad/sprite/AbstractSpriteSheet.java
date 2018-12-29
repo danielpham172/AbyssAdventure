@@ -17,6 +17,7 @@ public abstract class AbstractSpriteSheet {
 		
 		spriteSheets.put("WIND_SLASH", new ProjectileSprite(Assets.manager.get(Assets.windSlash), 4, 1, 6));
 		spriteSheets.put("MAGIC_BOLT_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.magicBoltProjectile), 1, 2, 6, true));
+		spriteSheets.put("HEALING_FIELD_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.healingFieldProjectile), 1, 2, 6, true));
 		
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
 		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames.length, chestNames[0].length, chestNames));
@@ -38,6 +39,9 @@ public abstract class AbstractSpriteSheet {
 		
 		String[][] capsuleNames = { {"LIFE_CAPSULE", "MANA_CAPSULE"} };
 		spriteSheets.put("CAPSULES", new BasicSprite(Assets.manager.get(Assets.capsules), capsuleNames.length, capsuleNames[0].length, capsuleNames));
+		
+		String[][] particleNames = { {"RED", "ORANGE", "YELLOW", "GREEN"}, {"CYAN", "BLUE", "PURPLE", "PINK"} };
+		spriteSheets.put("PARTICLES",  new BasicSprite(Assets.manager.get(Assets.particles), particleNames.length, particleNames[0].length, particleNames));
 		
 		
 		//Magic

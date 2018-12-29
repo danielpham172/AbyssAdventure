@@ -78,9 +78,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 		specialAttack = AttackData.specialAttacks.get(specialName);
 		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
-		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
-		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
-		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
+		magicSpells.add(AbstractMagic.magicList.get("HEALING FIELD"));
 		cursor = new MagicCursor(this);
 		
 		updateHitbox();
@@ -244,6 +242,7 @@ public class PlayerCharacter extends HumanoidEntity{
 						cursor.move(move.x, move.y);
 					}
 					velocity.set(cursor.getX() - getCenterX(), cursor.getY() - getCenterY()).setLength(0.5f);
+					castingMagic.addsParticle(this);
 					
 					if (framesSinceLast > castingMagic.getCastTime() && !controller.attackPressed()) {
 						Vector2 cursorPositon = new Vector2(cursor.getX(), cursor.getY());

@@ -2,6 +2,7 @@ package com.abyad.magic;
 
 import java.util.LinkedHashMap;
 
+import com.abyad.actor.cosmetic.CosmeticParticle;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.MagicSprite;
@@ -14,6 +15,7 @@ public abstract class AbstractMagic {
 	public static LinkedHashMap<String, AbstractMagic> magicList = new LinkedHashMap<String, AbstractMagic>();
 	static {
 		magicList.put("MAGIC BOLT", new MagicBolt());
+		magicList.put("HEALING FIELD", new HealingField());
 	}
 	
 	private String name;
@@ -93,26 +95,40 @@ public abstract class AbstractMagic {
 	public int magicCircleFrameTime() {
 		return 6;
 	}
+	
+	public void addsParticle(PlayerCharacter source) {
+		if (spawnsParticles() && Math.random() < particleDensity()) {
+			Vector2 pointing = new Vector2(0, particleSpeed() * (float)((Math.random() * 0.4) + 0.8f));
+			pointing.rotate(maxParticleAngle() - (float)(Math.random() * maxParticleAngle() * 2));
+			int lifetime = (int)(((Math.random() * 0.4) + 0.8) * particleLifetime());
+			float randomXModifier = (float)(Math.random() * 10f) - 5f;
+			CosmeticParticle particle = new CosmeticParticle(spriteSheet.getNextFrame("PARTICLE",
+					null, 0).get(0), source.getCenterX() + randomXModifier, source.getCenterY() + CIRCLE_OFFSET_Y, 0.0f,
+					new Vector2(pointing.x, 0), pointing.y, lifetime);
+			
+			source.getStage().addActor(particle);
+		}
+	}
 	public boolean spawnsParticles() {
 		return true;
 	}
 	public float maxParticleAngle() {
-		return 0;
+		return 30f;
 	}
 	public float particleSpeed() {
-		return 0.3f;
+		return 0.45f;
 	}
 	public float particleDensity() {
-		return 0.1f;
+		return 0.6f;
 	}
 	public int particleFrames() {
-		return 2;
+		return 1;
 	}
 	public int particleFrameTime() {
 		return 10;
 	}
 	public int particleLifetime() {
-		return 60;
+		return 18;
 	}
 	
 }

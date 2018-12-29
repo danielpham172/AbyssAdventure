@@ -49,7 +49,7 @@ public class MagicSprite extends AnimationSprite{
 		}
 		if (state.equals("PARTICLE")) {
 			int frame = (framesSinceLast / particleFrameLengths) % particleFrames;
-			frames.add(getSprite("circle_" + frame));
+			frames.add(getSprite("particle_" + frame));
 		}
 		return frames;
 	}

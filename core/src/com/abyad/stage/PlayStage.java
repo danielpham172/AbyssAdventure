@@ -12,6 +12,7 @@ import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
 import com.abyad.actor.mapobjects.items.MapItem;
+import com.abyad.actor.projectile.OnGroundProjectile;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.actor.tile.StairTile;
@@ -315,16 +316,18 @@ class ActorComparator implements Comparator<Actor>{
 		if (o1 instanceof MagicRingMenu) return 1;
 		if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) return -1;
 		if (o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) return 1;
+		if (o2 instanceof DeathAnimation) return -1;
+		if (o1 instanceof DeathAnimation) return 1;
+		if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
+		if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) return 1;
 		if (o2 instanceof FloorTile) return 1;
 		if (o1 instanceof FloorTile) return -1;
 		if (o2 instanceof StairTile) return 1;
 		if (o1 instanceof StairTile) return -1;
 		if (o2 instanceof MapItem) return 1;
 		if (o1 instanceof MapItem) return -1;
-		if (o2 instanceof DeathAnimation) return -1;
-		if (o1 instanceof DeathAnimation) return 1;
-		if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
-		if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) return 1;
+		if (o2 instanceof OnGroundProjectile) return 1;
+		if (o1 instanceof OnGroundProjectile) return -1;
 		else return (int)(o2.getY() - o1.getY());
 	}
 	

@@ -29,6 +29,7 @@ public class Assets {
 	//Projectiles
 	public static final AssetDescriptor<Texture> windSlash = new AssetDescriptor<Texture>("projectile/windSlash/sprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> magicBoltProjectile = new AssetDescriptor<Texture>("projectile/magicBolt/projectile.png", Texture.class);
+	public static final AssetDescriptor<Texture> healingFieldProjectile = new AssetDescriptor<Texture>("projectile/healingField/projectile.png", Texture.class);
 	
 	//Items
 	public static final AssetDescriptor<Texture> relics = new AssetDescriptor<Texture>("items/relics.png", Texture.class); 
@@ -38,6 +39,7 @@ public class Assets {
 	
 	//Animation Stuffs/Weapons
 	public static final AssetDescriptor<Texture> deathAnim = new AssetDescriptor<Texture>("other/deathSprite.png", Texture.class);
+	public static final AssetDescriptor<Texture> particles = new AssetDescriptor<Texture>("other/particles.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	
 	//Dungeon Tiles
@@ -106,6 +108,7 @@ public class Assets {
 		//Projectiles
 		manager.load(windSlash);
 		manager.load(magicBoltProjectile);
+		manager.load(healingFieldProjectile);
 		//Items
 		manager.load(relics);
 		manager.load(pickups);
@@ -113,6 +116,7 @@ public class Assets {
 		manager.load(capsules);
 		//Animation
 		manager.load(deathAnim);
+		manager.load(particles);
 		//Weapon
 		manager.load(sword);
 		//Dungeon Tiles and Objects

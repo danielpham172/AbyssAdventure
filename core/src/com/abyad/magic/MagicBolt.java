@@ -22,6 +22,6 @@ public class MagicBolt extends AbstractMagic{
 
 	@Override
 	public boolean spawnsParticles() {
-		return false;
+		return true;
 	}
 }
