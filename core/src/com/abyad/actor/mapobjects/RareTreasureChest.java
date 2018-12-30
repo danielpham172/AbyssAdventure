@@ -71,7 +71,7 @@ public class RareTreasureChest extends TreasureChest{
 	public void draw(Batch batch, float a) {
 		if (floor.inView()) {
 			if (!isOpen) {
-				batch.draw(closedChest, getX() - getOriginX() + (((((shakeLength + 2) % 5) - 2)) * (1.5f * AbstractTile.TILE_SCALE)), getY() - getOriginY(),
+				batch.draw(closedChest, getX() - getOriginX() + (new float[] {0.0f, 1.0f, 2.0f, 1.0f, 0.0f, -1.0f, -2.0f, -1.0f}[shakeLength % 8] * (1.5f * AbstractTile.TILE_SCALE)), getY() - getOriginY(),
 						AbstractTile.TILE_SIZE / 2, AbstractTile.TILE_SIZE / 2,
 						AbstractTile.TILE_SIZE, AbstractTile.TILE_SIZE, AbstractTile.TILE_SCALE, AbstractTile.TILE_SCALE, getRotation());
 			}
