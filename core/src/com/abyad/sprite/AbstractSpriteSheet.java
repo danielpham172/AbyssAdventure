@@ -19,6 +19,11 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("MAGIC_BOLT_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.magicBoltProjectile), 1, 2, 6, true));
 		spriteSheets.put("HEALING_FIELD_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.healingFieldProjectile), 1, 2, 6, true));
 		
+		spriteSheets.put("GREY_DUNGEON", new EnvironmentSprite(Assets.manager.get(Assets.greyFloorTiles), 2, 2,
+				Assets.manager.get(Assets.greyWallTiles), 1, 11, Assets.manager.get(Assets.greyStairTile), true));
+		spriteSheets.put("MOSSY_DUNGEON", new EnvironmentSprite(Assets.manager.get(Assets.mossyFloorTiles), 3, 2,
+				Assets.manager.get(Assets.mossyWallTiles), 1, 11, Assets.manager.get(Assets.mossyStairTile), true));
+		
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
 		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames.length, chestNames[0].length, chestNames));
 		

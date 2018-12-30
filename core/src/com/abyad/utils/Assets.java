@@ -43,9 +43,13 @@ public class Assets {
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	
 	//Dungeon Tiles
-	public static final AssetDescriptor<Texture> floorTiles = new AssetDescriptor<Texture>("tile/floorTiles.png", Texture.class);
-	public static final AssetDescriptor<Texture> wallTiles = new AssetDescriptor<Texture>("tile/wallTiles.png", Texture.class);
-	public static final AssetDescriptor<Texture> stairTile = new AssetDescriptor<Texture>("tile/stairTiles.png", Texture.class);
+	public static final AssetDescriptor<Texture> greyFloorTiles = new AssetDescriptor<Texture>("tile/greyDungeon/floorTiles.png", Texture.class);
+	public static final AssetDescriptor<Texture> greyWallTiles = new AssetDescriptor<Texture>("tile/greyDungeon/wallTiles.png", Texture.class);
+	public static final AssetDescriptor<Texture> greyStairTile = new AssetDescriptor<Texture>("tile/greyDungeon/stairTiles.png", Texture.class);
+	
+	public static final AssetDescriptor<Texture> mossyFloorTiles = new AssetDescriptor<Texture>("tile/mossyDungeon/floorTiles.png", Texture.class);
+	public static final AssetDescriptor<Texture> mossyWallTiles = new AssetDescriptor<Texture>("tile/mossyDungeon/wallTiles.png", Texture.class);
+	public static final AssetDescriptor<Texture> mossyStairTile = new AssetDescriptor<Texture>("tile/mossyDungeon/stairTiles.png", Texture.class);
 	
 	//Map Objects
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
@@ -120,9 +124,12 @@ public class Assets {
 		//Weapon
 		manager.load(sword);
 		//Dungeon Tiles and Objects
-		manager.load(floorTiles);
-		manager.load(wallTiles);
-		manager.load(stairTile);
+		manager.load(greyFloorTiles);
+		manager.load(greyWallTiles);
+		manager.load(greyStairTile);
+		manager.load(mossyFloorTiles);
+		manager.load(mossyWallTiles);
+		manager.load(mossyStairTile);
 		manager.load(treasureChest);
 		//UI Stuff
 		manager.load(buttons);

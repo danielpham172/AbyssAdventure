@@ -20,6 +20,8 @@ import com.abyad.actor.tile.WallTile;
 import com.abyad.actor.ui.MagicCursor;
 import com.abyad.actor.ui.MagicRingMenu;
 import com.abyad.game.AbyssAdventureGame;
+import com.abyad.sprite.AbstractSpriteSheet;
+import com.abyad.sprite.EnvironmentSprite;
 import com.abyad.utils.DungeonGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -44,9 +46,12 @@ public class PlayStage extends Stage{
 	private ArrayList<AbstractEntity> enemies;		//All enemies
 	
 	private boolean readyForNextLevel;
+	private EnvironmentSprite environment;
 	
 	//Comparator object to organize the actors
 	private static ActorComparator comparator = new ActorComparator();
+	
+	private static String[] environments = {"MOSSY_DUNGEON"};
 	
 	/**
 	 * Constructor to create the stage
@@ -55,6 +60,8 @@ public class PlayStage extends Stage{
 	public PlayStage(AbyssAdventureGame game) {
 		super(new ExtendViewport(384, 216));		//Creates the stage with a viewport
 		this.game = game;
+		environment = (EnvironmentSprite)AbstractSpriteSheet.spriteSheets.get(
+				environments[(int)(Math.random() * environments.length)]);
 		
 		DungeonGenerator generator = new DungeonGenerator(18, 18, 3, 5, 600);		//Create a generator
 		generator.runDungeonGenerator();		//Generate the dungeon
@@ -67,7 +74,7 @@ public class PlayStage extends Stage{
 		for (int r = 0; r < map.length; r++) {
 			for (int c = 0; c < map[r].length; c++) {
 				if (map[r][c] == 0) {
-					FloorTile tile = new FloorTile(r, c);
+					FloorTile tile = new FloorTile(r, c, environment);
 					addActor(tile);
 					tileMap[r][c] = tile;
 					floorTiles.add(tile);
@@ -130,7 +137,7 @@ public class PlayStage extends Stage{
 			
 			if (tileMap[row][col].getCollisionBox().isEmpty()) {
 				boolean locked = (Math.random() < 0.25 || treasure.isEmpty()) ? false : true;
-				StairTile stairs = new StairTile(row, col, locked);
+				StairTile stairs = new StairTile(row, col, locked, environment);
 				tileMap[row][col].remove();
 				floorTiles.remove(tileMap[row][col]);
 				roomTiles.remove(tileMap[row][col]);
@@ -173,7 +180,7 @@ public class PlayStage extends Stage{
 				}
 			}
 		}
-		WallTile tile = new WallTile(row, col, surrounding);
+		WallTile tile = new WallTile(row, col, surrounding, environment);
 		tileMap[row][col] = tile;
 		addActor(tile);
 	}

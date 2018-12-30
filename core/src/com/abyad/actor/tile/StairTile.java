@@ -6,6 +6,7 @@ import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.interfaces.Interactable;
 import com.abyad.sprite.AbstractSpriteSheet;
+import com.abyad.sprite.EnvironmentSprite;
 import com.abyad.stage.PlayStage;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -14,16 +15,19 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class StairTile extends AbstractTile implements Interactable{
 
-	private static TextureRegion unlockedStairTex = TextureRegion.split(Assets.manager.get(Assets.stairTile), TILE_SIZE, TILE_SIZE)[0][0];
-	private static TextureRegion lockedStairTex = TextureRegion.split(Assets.manager.get(Assets.stairTile), TILE_SIZE, TILE_SIZE)[0][1];
+	private TextureRegion unlockedStairTex;
+	private TextureRegion lockedStairTex;
 	
 	private ArrayList<Rectangle> interactBox;
 	private boolean isInteractable;
 	
 	private boolean locked;
 	
-	public StairTile(int row, int col, boolean locked) {
-		super(unlockedStairTex, row, col);
+	public StairTile(int row, int col, boolean locked, EnvironmentSprite environment) {
+		super(null, row, col);
+		
+		unlockedStairTex = environment.getSprite("UNLOCKED_STAIRS");
+		lockedStairTex = environment.getSprite("LOCKED_STAIRS");
 		
 		interactBox = new ArrayList<Rectangle>();
 		interactBox.add(getBox());
