@@ -317,6 +317,10 @@ class ActorComparator implements Comparator<Actor>{
 
 	@Override
 	public int compare(Actor o1, Actor o2) {
+		if (o1.getClass().equals(o2.getClass())) {
+			if (o2.getY() > o1.getY()) return 1;
+			else return -1;
+		}
 		if (o2 instanceof MagicCursor) return -1;
 		if (o1 instanceof MagicCursor) return 1;
 		if (o2 instanceof MagicRingMenu) return -1;
@@ -335,7 +339,10 @@ class ActorComparator implements Comparator<Actor>{
 		if (o1 instanceof MapItem) return -1;
 		if (o2 instanceof OnGroundProjectile) return 1;
 		if (o1 instanceof OnGroundProjectile) return -1;
-		else return (int)(o2.getY() - o1.getY());
+		else {
+			if (o2.getY() > o1.getY()) return 1;
+			else return -1;
+		}
 	}
 	
 }
