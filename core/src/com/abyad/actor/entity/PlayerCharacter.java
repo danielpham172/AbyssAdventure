@@ -378,6 +378,10 @@ public class PlayerCharacter extends HumanoidEntity{
 		gold += modification;
 	}
 	
+	public int getKnockbackLength() {
+		return knockbackLength;
+	}
+	
 	@Override
 	public void draw(Batch batch, float a) {
 		//drawHitbox(batch, a);
