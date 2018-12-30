@@ -3,6 +3,7 @@ package com.abyad.actor.cosmetic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -54,8 +55,15 @@ public class CosmeticParticle extends Actor{
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		batch.draw(texture, getX() - getOriginX(), getY() - getOriginY()+ height, getOriginX(),
+		if (inView()) {
+			batch.draw(texture, getX() - getOriginX(), getY() - getOriginY()+ height, getOriginX(),
 				getOriginY(), texture.getRegionWidth(), texture.getRegionHeight(), getScaleX(), getScaleY(), getRotation());
+		}
+	}
+	
+	public boolean inView() {
+		return getStage().getCamera().frustum.boundsInFrustum(getX(), getY(), 0,
+				texture.getRegionWidth() / 2, texture.getRegionHeight() / 2, 0);
 	}
 	
 	public float getHeight() {
