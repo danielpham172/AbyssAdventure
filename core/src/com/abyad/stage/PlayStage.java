@@ -69,7 +69,10 @@ public class PlayStage extends Stage{
 		tileMap = new AbstractTile[map.length][map[0].length];
 		floorTiles = new ArrayList<FloorTile>();
 		roomTiles = new ArrayList<FloorTile>();
+		ArrayList<FloorTile> spawnRoomTiles = new ArrayList<FloorTile>();
 		rooms = generator.getRooms();
+		
+		Rectangle playerSpawnRoom = rooms.remove((int)(Math.random() * rooms.size()));
 		
 		for (int r = 0; r < map.length; r++) {
 			for (int c = 0; c < map[r].length; c++) {
@@ -81,11 +84,25 @@ public class PlayStage extends Stage{
 					if (isRoomTile(r, c)) {
 						roomTiles.add(tile);
 					}
+					if (r >= playerSpawnRoom.getX() && r < playerSpawnRoom.getX() + playerSpawnRoom.getWidth() &&
+							c >= playerSpawnRoom.getY() && c < playerSpawnRoom.getY() + playerSpawnRoom.getHeight()) {
+						spawnRoomTiles.add(tile);
+					}
 				}
 				if (map[r][c] == 1) {
 					createWallTile(r, c);	//Used to see if a wall tile needs to be made
 				}
 			}
+		}
+		
+		//Spawn in players
+		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
+			int row = (int)(Math.random() * playerSpawnRoom.getWidth()) + (int)playerSpawnRoom.getX();
+			int col = (int)(Math.random() * playerSpawnRoom.getHeight()) + (int)playerSpawnRoom.getY();
+			player.setPosition(tileMap[row][col].getCenter().x, tileMap[row][col].getCenter().y);
+			player.getVelocity().setLength(0);
+			player.removeHeldItem();
+			addActor(player);
 		}
 		
 		//Generate enemies
@@ -150,16 +167,7 @@ public class PlayStage extends Stage{
 			}
 		}
 		
-		//Spawn in players
-		Rectangle randomRoom = rooms.get((int)(Math.random() * rooms.size()));
-		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
-			int row = (int)(Math.random() * randomRoom.getWidth()) + (int)randomRoom.getX();
-			int col = (int)(Math.random() * randomRoom.getHeight()) + (int)randomRoom.getY();
-			player.setPosition(tileMap[row][col].getCenter().x, tileMap[row][col].getCenter().y);
-			player.getVelocity().setLength(0);
-			player.removeHeldItem();
-			addActor(player);
-		}
+		roomTiles.addAll(spawnRoomTiles);
 		getViewport().setCamera(new FollowCam());
 	}
 	
@@ -317,31 +325,45 @@ class ActorComparator implements Comparator<Actor>{
 
 	@Override
 	public int compare(Actor o1, Actor o2) {
-		if (o1.getClass().equals(o2.getClass())) {
-			if (o2.getY() > o1.getY()) return 1;
-			else return -1;
+		if (o1.getClass().getName().equals(o2.getClass().getName()) &&
+				!(o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) &&
+				!(o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) &&
+				!(o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) &&
+				!(o2 instanceof WallTile && !((WallTile)o2).isFrontWall())) {
+			return (int)((o2.getY() - o1.getY()));
 		}
-		if (o2 instanceof MagicCursor) return -1;
+		
 		if (o1 instanceof MagicCursor) return 1;
-		if (o2 instanceof MagicRingMenu) return -1;
+		if (o2 instanceof MagicCursor) return -1;
 		if (o1 instanceof MagicRingMenu) return 1;
+		if (o2 instanceof MagicRingMenu) return -1;
+		if (o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) {
+			if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn())
+				return (int)((o2.getY() - o1.getY())); 
+			else return 1;
+		}
 		if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) return -1;
-		if (o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) return 1;
-		if (o2 instanceof DeathAnimation) return -1;
 		if (o1 instanceof DeathAnimation) return 1;
+		if (o2 instanceof DeathAnimation) return -1;
+		if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) {
+			if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) {
+				return (int)((o2.getY() - o1.getY())); 
+			}
+			return 1;
+		}
 		if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
-		if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) return 1;
-		if (o2 instanceof FloorTile) return 1;
+		
 		if (o1 instanceof FloorTile) return -1;
-		if (o2 instanceof StairTile) return 1;
+		if (o2 instanceof FloorTile) return 1;
 		if (o1 instanceof StairTile) return -1;
-		if (o2 instanceof MapItem) return 1;
+		if (o2 instanceof StairTile) return 1;
 		if (o1 instanceof MapItem) return -1;
-		if (o2 instanceof OnGroundProjectile) return 1;
+		if (o2 instanceof MapItem) return 1;
 		if (o1 instanceof OnGroundProjectile) return -1;
+		if (o2 instanceof OnGroundProjectile) return 1;
+		
 		else {
-			if (o2.getY() > o1.getY()) return 1;
-			else return -1;
+			return (int)((o2.getY() - o1.getY()));
 		}
 	}
 	
