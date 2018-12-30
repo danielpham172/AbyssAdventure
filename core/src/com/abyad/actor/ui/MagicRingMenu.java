@@ -21,6 +21,9 @@ public class MagicRingMenu extends Actor{
 	private static final int ROTATING_TIME = 20;
 	private static final float ICON_SCALE = 1.0f;
 	private static final float FONT_SCALE = 0.2f;
+	
+	private static final float MIN_SCALE_ANGLE = 30f;
+	
 	private static BitmapFont font = Assets.manager.get(Assets.font);
 	
 	private static TextureRegion magicSelectCursor = AbstractSpriteSheet.spriteSheets.get("MAGIC_SELECTION").getSprite("SELECTION");
@@ -64,65 +67,75 @@ public class MagicRingMenu extends Actor{
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		ArrayList<AbstractMagic> magicList = player.getCharacter().getMagicSpells();
-		Vector2 center = new Vector2(player.getCharacter().getCenter());
-		Vector2 drawOffsets = new Vector2(0, RADIUS);
-		float angleSpacing = 360f / magicList.size();
-		if (rotating != 0) {
-			float offsetRotation = angleSpacing * ((float)rotating / (float)ROTATING_TIME);
-			drawOffsets.rotate(offsetRotation);
-		}
-		ArrayList<AbstractMagic> sortedMagicList = new ArrayList<AbstractMagic>();
-		for (int i = selection; i < magicList.size(); i++) {
-			sortedMagicList.add(magicList.get(i));
-		}
-		for (int i = 0; i < selection; i++) {
-			sortedMagicList.add(magicList.get(i));
-		}
-		
-		batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
-		for (AbstractMagic magic : sortedMagicList) {
-			TextureRegion icon = magic.getIcon();
-			if (player.getCharacter().getMana() >= magic.getManaCost()) {
-				batch.draw(icon, center.x + drawOffsets.x - (icon.getRegionWidth() / 2), center.y + drawOffsets.y - (icon.getRegionHeight() / 2),
-						icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
-						ICON_SCALE, ICON_SCALE, 0);
+		if (player.getCharacter().inView()) {
+			ArrayList<AbstractMagic> magicList = player.getCharacter().getMagicSpells();
+			Vector2 center = new Vector2(player.getCharacter().getCenter());
+			Vector2 drawOffsets = new Vector2(0, RADIUS);
+			float angleSpacing = 360f / magicList.size();
+			if (rotating != 0) {
+				if (angleSpacing >= MIN_SCALE_ANGLE) {
+					float offsetRotation = angleSpacing * ((float)rotating / (float)ROTATING_TIME);
+					drawOffsets.rotate(offsetRotation);
+				}
+				else {
+					float offsetRotation = angleSpacing * ((float)rotating / (float)(ROTATING_TIME * (angleSpacing / MIN_SCALE_ANGLE)));
+					drawOffsets.rotate(offsetRotation);
+				}
 			}
-			else if (blinkTime <= 2){
-				batch.setColor(1.0f, 1.0f, 1.0f, 0.3f);
-				batch.draw(icon, center.x + drawOffsets.x - (icon.getRegionWidth() / 2), center.y + drawOffsets.y - (icon.getRegionHeight() / 2),
-						icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
-						ICON_SCALE, ICON_SCALE, 0);
-				batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
+			ArrayList<AbstractMagic> sortedMagicList = new ArrayList<AbstractMagic>();
+			for (int i = selection; i < magicList.size(); i++) {
+				sortedMagicList.add(magicList.get(i));
 			}
-			drawOffsets.rotate(angleSpacing);
-		}
-		batch.draw(magicSelectCursor, center.x - (magicSelectCursor.getRegionWidth() / 2), center.y + RADIUS - (magicSelectCursor.getRegionHeight() / 2),
-					magicSelectCursor.getRegionWidth() / 2, magicSelectCursor.getRegionHeight() / 2, magicSelectCursor.getRegionWidth(), magicSelectCursor.getRegionHeight(),
-					ICON_SCALE, ICON_SCALE, 0);
-		if (rotating == 0) {
-			font.getData().setScale(FONT_SCALE);
-			float fontX = center.x - (magicDesc.width / 2);
-			float fontY = center.y + RADIUS + SPACING + 16;
-			font.draw(batch, magicDesc, fontX, fontY);
+			for (int i = 0; i < selection; i++) {
+				sortedMagicList.add(magicList.get(i));
+			}
 			
-			fontX = center.x - (magicName.width / 2);
-			fontY += magicDesc.height + SPACING;
-			font.draw(batch, magicName, fontX, fontY);
-			font.getData().setScale(1.0f);
+			batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
+			float iconScaling = Math.min(ICON_SCALE, ICON_SCALE * (angleSpacing / MIN_SCALE_ANGLE));
+			for (AbstractMagic magic : sortedMagicList) {
+				TextureRegion icon = magic.getIcon();
+				if (player.getCharacter().getMana() >= magic.getManaCost()) {
+					batch.draw(icon, center.x + drawOffsets.x - (icon.getRegionWidth() / 2), center.y + drawOffsets.y - (icon.getRegionHeight() / 2),
+							icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
+							iconScaling, iconScaling, 0);
+				}
+				else if (blinkTime <= 2){
+					batch.setColor(1.0f, 1.0f, 1.0f, 0.3f);
+					batch.draw(icon, center.x + drawOffsets.x - (icon.getRegionWidth() / 2), center.y + drawOffsets.y - (icon.getRegionHeight() / 2),
+							icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
+							iconScaling, iconScaling, 0);
+					batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
+				}
+				drawOffsets.rotate(angleSpacing);
+			}
+			batch.draw(magicSelectCursor, center.x - (magicSelectCursor.getRegionWidth() / 2), center.y + RADIUS - (magicSelectCursor.getRegionHeight() / 2),
+						magicSelectCursor.getRegionWidth() / 2, magicSelectCursor.getRegionHeight() / 2, magicSelectCursor.getRegionWidth(), magicSelectCursor.getRegionHeight(),
+						iconScaling, iconScaling, 0);
+			if (rotating == 0) {
+				font.getData().setScale(FONT_SCALE);
+				float fontX = center.x - (magicDesc.width / 2);
+				float fontY = center.y + RADIUS + SPACING + 16;
+				font.draw(batch, magicDesc, fontX, fontY);
+				
+				fontX = center.x - (magicName.width / 2);
+				fontY += magicDesc.height + SPACING;
+				font.draw(batch, magicName, fontX, fontY);
+				font.getData().setScale(1.0f);
+			}
+			batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		}
-		batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 	
 	public void rotate(int direction) {
 		if (rotating == 0) {
+			int listSize = player.getCharacter().getMagicSpells().size();
 			if (direction < 0) {
-				rotating = ROTATING_TIME;
-				selection = (selection + 1) % player.getCharacter().getMagicSpells().size();
+				rotating = (int)Math.min(ROTATING_TIME, ROTATING_TIME * ((360f / listSize) / MIN_SCALE_ANGLE));
+				selection = (selection + 1) % listSize;
 			}
 			else if (direction > 0) {
-				rotating = -ROTATING_TIME;
-				selection = (selection + player.getCharacter().getMagicSpells().size() - 1) % player.getCharacter().getMagicSpells().size();
+				rotating = -(int)Math.min(ROTATING_TIME, ROTATING_TIME * ((360f / listSize) / MIN_SCALE_ANGLE));
+				selection = (selection + listSize - 1) % listSize;
 			}
 			AbstractMagic magic = player.getCharacter().getMagicSpells().get(selection);
 			font.getData().setScale(FONT_SCALE);
