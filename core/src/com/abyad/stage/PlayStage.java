@@ -23,10 +23,12 @@ import com.abyad.game.AbyssAdventureGame;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EnvironmentSprite;
 import com.abyad.utils.DungeonGenerator;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 /**
@@ -51,7 +53,7 @@ public class PlayStage extends Stage{
 	//Comparator object to organize the actors
 	private static ActorComparator comparator = new ActorComparator();
 	
-	private static String[] environments = {"MOSSY_DUNGEON"};
+	private static String[] environments = {"GREY_DUNGEON", "MOSSY_DUNGEON"};
 	
 	/**
 	 * Constructor to create the stage
@@ -308,7 +310,18 @@ public class PlayStage extends Stage{
 	
 	@Override
 	public void draw() {
-		getActors().sort(comparator);
+		//long initial = System.nanoTime();
+		//comparator.quicksortActorArray(getActors());
+		int ogSize = getActors().size;
+		try {
+			getActors().sort(comparator);
+		}
+		catch (IllegalArgumentException e){
+			System.out.println("Caught an exception: " + e.getMessage());
+			System.out.println("  Old Size: " + ogSize);
+			System.out.println("  New Size: " + getActors().size);
+		}
+		//System.out.println(System.nanoTime() - initial);
 		super.draw();
 	}
 	
@@ -323,6 +336,41 @@ public class PlayStage extends Stage{
 
 class ActorComparator implements Comparator<Actor>{
 
+	public void quicksortActorArray(Array<Actor> actors) {
+		quicksortActorArray(actors, 0, actors.size - 1);
+	}
+	
+	public void quicksortActorArray(Array<Actor> actors, int lo, int hi) {
+		if (lo < hi) {
+			int p = partitionArray(actors, lo, hi);
+			quicksortActorArray(actors, lo, p);
+			quicksortActorArray(actors, p + 1, hi);
+		}
+	}
+	
+	public int partitionArray(Array<Actor> actors, int lo, int hi) {
+		Actor pivot = actors.get((lo + hi) / 2);
+		int lower = lo - 1;
+		int higher = hi + 1;
+		
+		while (true) {
+			do {
+				lower++;
+			} while (compare(actors.get(lower), pivot) < 0);
+			
+			do {
+				higher--;
+			} while (compare(actors.get(higher), pivot) > 0);
+			
+			if (lower >= higher) {
+				return higher;
+			}
+			else {
+				actors.swap(lower, higher);
+			}
+		}
+	}
+	
 	@Override
 	public int compare(Actor o1, Actor o2) {
 		if (o1.getClass().getName().equals(o2.getClass().getName()) &&
