@@ -2,6 +2,7 @@ package com.abyad.sprite;
 
 import java.util.LinkedHashMap;
 
+import com.abyad.actor.tile.AbstractTile;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,11 +19,6 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("WIND_SLASH", new ProjectileSprite(Assets.manager.get(Assets.windSlash), 4, 1, 6));
 		spriteSheets.put("MAGIC_BOLT_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.magicBoltProjectile), 1, 2, 6, true));
 		spriteSheets.put("HEALING_FIELD_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.healingFieldProjectile), 1, 2, 6, true));
-		
-		spriteSheets.put("GREY_DUNGEON", new EnvironmentSprite(Assets.manager.get(Assets.greyFloorTiles), 2, 2,
-				Assets.manager.get(Assets.greyWallTiles), 1, 11, Assets.manager.get(Assets.greyStairTile), true));
-		spriteSheets.put("MOSSY_DUNGEON", new EnvironmentSprite(Assets.manager.get(Assets.mossyFloorTiles), 3, 2,
-				Assets.manager.get(Assets.mossyWallTiles), 1, 11, Assets.manager.get(Assets.mossyStairTile), true));
 		
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
 		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames.length, chestNames[0].length, chestNames));
@@ -54,6 +50,13 @@ public abstract class AbstractSpriteSheet {
 			AbstractMagic magic = AbstractMagic.magicList.get(magicName);
 			spriteSheets.put(magicName, new MagicSprite(Assets.magicAssets.get(magicName),
 					magic.magicCircleFrames(), magic.magicCircleFrameTime(), magic.particleFrames(), magic.particleFrameTime()));
+		}
+		
+		//Dungeon
+		for (String dungeonName : Assets.tileAssets.keySet()) {
+			spriteSheets.put(dungeonName, new BasicSprite(Assets.manager.get(Assets.tileAssets.get(dungeonName)),
+					Assets.manager.get(Assets.tileAssets.get(dungeonName)).getHeight() / AbstractTile.TILE_SIZE,
+					Assets.manager.get(Assets.tileAssets.get(dungeonName)).getWidth() / AbstractTile.TILE_SIZE));
 		}
 	}
 	

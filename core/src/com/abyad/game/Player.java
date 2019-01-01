@@ -2,10 +2,10 @@ package com.abyad.game;
 
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.ui.MagicRingMenu;
+import com.abyad.actor.ui.PlayerDisplay;
 import com.abyad.controls.GamepadController;
 import com.abyad.controls.KeyboardController;
 import com.abyad.controls.PlayerController;
-import com.abyad.table.PlayerDisplay;
 
 public class Player {
 

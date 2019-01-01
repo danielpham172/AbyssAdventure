@@ -3,6 +3,7 @@ package com.abyad.utils;
 import java.util.LinkedHashMap;
 
 import com.abyad.magic.AbstractMagic;
+import com.abyad.mapdata.MapEnvironment;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -43,13 +44,7 @@ public class Assets {
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	
 	//Dungeon Tiles
-	public static final AssetDescriptor<Texture> greyFloorTiles = new AssetDescriptor<Texture>("tile/greyDungeon/floorTiles.png", Texture.class);
-	public static final AssetDescriptor<Texture> greyWallTiles = new AssetDescriptor<Texture>("tile/greyDungeon/wallTiles.png", Texture.class);
-	public static final AssetDescriptor<Texture> greyStairTile = new AssetDescriptor<Texture>("tile/greyDungeon/stairTiles.png", Texture.class);
-	
-	public static final AssetDescriptor<Texture> mossyFloorTiles = new AssetDescriptor<Texture>("tile/mossyDungeon/floorTiles.png", Texture.class);
-	public static final AssetDescriptor<Texture> mossyWallTiles = new AssetDescriptor<Texture>("tile/mossyDungeon/wallTiles.png", Texture.class);
-	public static final AssetDescriptor<Texture> mossyStairTile = new AssetDescriptor<Texture>("tile/mossyDungeon/stairTiles.png", Texture.class);
+	public static final LinkedHashMap<String, AssetDescriptor<Texture>> tileAssets = new LinkedHashMap<String, AssetDescriptor<Texture>>();
 	
 	//Map Objects
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
@@ -92,6 +87,17 @@ public class Assets {
 			
 			magicAssets.put(key, list);
 		}
+		
+		String[] dungeonList = FileReads.readFileToArray("tile/dungeons.txt");
+		for (String dungeon : dungeonList) {
+			int spaceIndex = dungeon.indexOf(' ');
+			String folderName = dungeon.substring(0, spaceIndex);
+			String envName = dungeon.substring(spaceIndex + 1);
+			MapEnvironment environment = new MapEnvironment(envName, folderName);
+			
+			tileAssets.put(envName, new AssetDescriptor<Texture>("tile/" + folderName + "/tiles.png", Texture.class));
+			MapEnvironment.environments.put(envName, environment);
+		}
 	}
 	
 	
@@ -124,13 +130,10 @@ public class Assets {
 		//Weapon
 		manager.load(sword);
 		//Dungeon Tiles and Objects
-		manager.load(greyFloorTiles);
-		manager.load(greyWallTiles);
-		manager.load(greyStairTile);
-		manager.load(mossyFloorTiles);
-		manager.load(mossyWallTiles);
-		manager.load(mossyStairTile);
 		manager.load(treasureChest);
+		for (String key : tileAssets.keySet()) {
+			manager.load(tileAssets.get(key));
+		}
 		//UI Stuff
 		manager.load(buttons);
 		manager.load(magicSelectCursor);

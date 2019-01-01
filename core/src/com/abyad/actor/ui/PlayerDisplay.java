@@ -1,4 +1,4 @@
-package com.abyad.table;
+package com.abyad.actor.ui;
 
 import java.util.ArrayList;
 

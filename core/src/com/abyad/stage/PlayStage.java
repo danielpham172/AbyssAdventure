@@ -10,7 +10,6 @@ import com.abyad.actor.entity.ZombieCharacter;
 import com.abyad.actor.mapobjects.RareTreasureChest;
 import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.mapobjects.items.KeyItem;
-import com.abyad.actor.mapobjects.items.LootItem;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.projectile.OnGroundProjectile;
 import com.abyad.actor.tile.AbstractTile;
@@ -20,10 +19,8 @@ import com.abyad.actor.tile.WallTile;
 import com.abyad.actor.ui.MagicCursor;
 import com.abyad.actor.ui.MagicRingMenu;
 import com.abyad.game.AbyssAdventureGame;
-import com.abyad.sprite.AbstractSpriteSheet;
-import com.abyad.sprite.EnvironmentSprite;
+import com.abyad.mapdata.MapEnvironment;
 import com.abyad.utils.DungeonGenerator;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -48,12 +45,9 @@ public class PlayStage extends Stage{
 	private ArrayList<AbstractEntity> enemies;		//All enemies
 	
 	private boolean readyForNextLevel;
-	private EnvironmentSprite environment;
 	
 	//Comparator object to organize the actors
 	private static ActorComparator comparator = new ActorComparator();
-	
-	private static String[] environments = {"GREY_DUNGEON", "MOSSY_DUNGEON"};
 	
 	/**
 	 * Constructor to create the stage
@@ -62,8 +56,7 @@ public class PlayStage extends Stage{
 	public PlayStage(AbyssAdventureGame game) {
 		super(new ExtendViewport(384, 216));		//Creates the stage with a viewport
 		this.game = game;
-		environment = (EnvironmentSprite)AbstractSpriteSheet.spriteSheets.get(
-				environments[(int)(Math.random() * environments.length)]);
+		MapEnvironment environment = MapEnvironment.environments.get(MapEnvironment.environments.keySet().toArray(new String[] {})[(int)(Math.random() * MapEnvironment.environments.size())]);
 		
 		DungeonGenerator generator = new DungeonGenerator(18, 18, 3, 5, 600);		//Create a generator
 		generator.runDungeonGenerator();		//Generate the dungeon
@@ -79,7 +72,7 @@ public class PlayStage extends Stage{
 		for (int r = 0; r < map.length; r++) {
 			for (int c = 0; c < map[r].length; c++) {
 				if (map[r][c] == 0) {
-					FloorTile tile = new FloorTile(r, c, environment);
+					FloorTile tile = environment.getFloorTile(map, r, c);
 					addActor(tile);
 					tileMap[r][c] = tile;
 					floorTiles.add(tile);
@@ -92,7 +85,9 @@ public class PlayStage extends Stage{
 					}
 				}
 				if (map[r][c] == 1) {
-					createWallTile(r, c);	//Used to see if a wall tile needs to be made
+					WallTile tile = environment.getWallTile(map, r, c);
+					addActor(tile);
+					tileMap[r][c] = tile;
 				}
 			}
 		}
@@ -101,7 +96,7 @@ public class PlayStage extends Stage{
 		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
 			int row = (int)(Math.random() * playerSpawnRoom.getWidth()) + (int)playerSpawnRoom.getX();
 			int col = (int)(Math.random() * playerSpawnRoom.getHeight()) + (int)playerSpawnRoom.getY();
-			player.setPosition(tileMap[row][col].getCenter().x, tileMap[row][col].getCenter().y);
+			player.setPosition(tileMap[row][col].getCenter().x + 0.1f, tileMap[row][col].getCenter().y);
 			player.getVelocity().setLength(0);
 			player.removeHeldItem();
 			addActor(player);
@@ -156,7 +151,8 @@ public class PlayStage extends Stage{
 			
 			if (tileMap[row][col].getCollisionBox().isEmpty()) {
 				boolean locked = (Math.random() < 0.25 || treasure.isEmpty()) ? false : true;
-				StairTile stairs = new StairTile(row, col, locked, environment);
+				//StairTile stairs = new StairTile(row, col, locked, environment);
+				StairTile stairs = environment.getStairs(row, col, locked);
 				tileMap[row][col].remove();
 				floorTiles.remove(tileMap[row][col]);
 				roomTiles.remove(tileMap[row][col]);
@@ -171,28 +167,6 @@ public class PlayStage extends Stage{
 		
 		roomTiles.addAll(spawnRoomTiles);
 		getViewport().setCamera(new FollowCam());
-	}
-	
-	/**
-	 * Create wall tiles if needed at the specified row and column
-	 * @param row			The row to create the wall tile
-	 * @param col			The column to create the wall tile
-	 */
-	private void createWallTile(int row, int col) {
-		int[][] surrounding = new int[3][3];
-		for (int r = -1; r <= 1; r++) {
-			for (int c = -1; c <= 1; c++) {
-				if (inBounds(row + r, col + c)) {
-					surrounding[r + 1][c + 1] = map[row + r][col + c];
-				}
-				else {
-					surrounding[r + 1][c + 1] = 1;
-				}
-			}
-		}
-		WallTile tile = new WallTile(row, col, surrounding, environment);
-		tileMap[row][col] = tile;
-		addActor(tile);
 	}
 	
 	

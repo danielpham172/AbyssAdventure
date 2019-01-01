@@ -2,7 +2,7 @@ package com.abyad.actor.tile;
 
 import java.util.ArrayList;
 
-import com.abyad.sprite.EnvironmentSprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
@@ -18,8 +18,9 @@ public class FloorTile extends AbstractTile{
 	 * @param row		Row of the tile
 	 * @param col		Column of the tile
 	 */
-	public FloorTile(int row, int col, EnvironmentSprite environment) {
-		super(environment.getRandomFloorSprite(), row, col, environment.getRandomRotation());
+	
+	public FloorTile(TextureRegion tex, int row, int col, float rotation) {
+		super(tex, row, col, rotation);
 	}
 
 	@Override
