@@ -164,7 +164,7 @@ public class PlayerCharacter extends HumanoidEntity{
 						castingMagic = magicSpells.get(selection);
 						if (getMana() >= castingMagic.getManaCost()) {
 							removeMana(castingMagic.getManaCost());
-							cursor.setPosition(getCenterX(), getCenterY() - 0.5f);
+							cursor.spawnInCursor();
 							setState("CASTING");
 							casting = true;
 							getStage().addActor(cursor);
