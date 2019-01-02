@@ -78,10 +78,10 @@ public class DungeonGenerator {
 	private void buildRooms() {
 		rooms = new ArrayList<Rectangle>();
 		for (int count = 0; count < density; count++) {
-			int row = (int)(Math.random() * rows);
-			int col = (int)(Math.random() * cols);
 			int length = (int)(Math.pow(Math.random(), /*cols/rows*/ 1) * (maxRoomSize - minRoomSize + 1)) + minRoomSize;
 			int height = (int)(Math.pow(Math.random(), /*rows/cols*/ 1) * (maxRoomSize - minRoomSize + 1)) + minRoomSize;
+			int row = (int)(Math.random() * (rows - length + 1));
+			int col = (int)(Math.random() * (cols - height + 1));
 			if (canBuild(row, col, length, height)) {
 				Rectangle room = new Rectangle(row, col, length, height);
 				rooms.add(room);

@@ -43,13 +43,6 @@ public class PlayScreen implements Screen{
 		//Renders the stage
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1.0f);		//Clears the screen to black
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
-		playStage.getViewport().apply();	//Applies the camera
-		playStage.act();			//Calls the act method for the stage
-		playStage.draw();			//Calls the drawing of the stage
-		playHUD.getViewport().apply();
-		playHUD.act();
-		playHUD.draw();
-		
 		if (playStage.isReadyForNextLevel()) {
 			playStage.dispose();
 			for (Player player : game.getPlayers()) {
@@ -61,7 +54,14 @@ public class PlayScreen implements Screen{
 			
 			playStage = nextStage;
 		}
-		
+		else {
+			playStage.getViewport().apply();	//Applies the camera
+			playStage.act();			//Calls the act method for the stage
+			playStage.draw();			//Calls the drawing of the stage
+			playHUD.getViewport().apply();
+			playHUD.act();
+			playHUD.draw();
+		}
 	}
 
 	@Override

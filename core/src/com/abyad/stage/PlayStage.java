@@ -68,6 +68,7 @@ public class PlayStage extends Stage{
 		rooms = generator.getRooms();
 		
 		Rectangle playerSpawnRoom = rooms.remove((int)(Math.random() * rooms.size()));
+		if (rooms.size() == 0) rooms.add(playerSpawnRoom);
 		
 		for (int r = 0; r < map.length; r++) {
 			for (int c = 0; c < map[r].length; c++) {
@@ -100,11 +101,15 @@ public class PlayStage extends Stage{
 			player.getVelocity().setLength(0);
 			player.removeHeldItem();
 			addActor(player);
+			
+			if (rooms.contains(playerSpawnRoom)) {
+				roomTiles.remove(tileMap[row][col]);
+			}
 		}
 		
 		//Generate enemies
 		enemies = new ArrayList<AbstractEntity>();
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 100; i++) {
 			Vector2 randomPos = getRandomOpenPos();
 			ZombieCharacter zombie = new ZombieCharacter(randomPos.x, randomPos.y);
 			enemies.add(zombie);
@@ -150,7 +155,7 @@ public class PlayStage extends Stage{
 			int col = (int)(Math.random() * randomRoom.getHeight()) + (int)randomRoom.getY();
 			
 			if (tileMap[row][col].getCollisionBox().isEmpty()) {
-				boolean locked = (Math.random() < 0.25 || treasure.isEmpty()) ? false : true;
+				boolean locked = (Math.random() < 0.3 || treasure.isEmpty()) ? false : true;
 				//StairTile stairs = new StairTile(row, col, locked, environment);
 				StairTile stairs = environment.getStairs(row, col, locked);
 				tileMap[row][col].remove();
@@ -165,7 +170,10 @@ public class PlayStage extends Stage{
 			}
 		}
 		
-		roomTiles.addAll(spawnRoomTiles);
+		if (!rooms.contains(playerSpawnRoom)) {
+			roomTiles.addAll(spawnRoomTiles);
+			rooms.add(playerSpawnRoom);
+		}
 		getViewport().setCamera(new FollowCam());
 	}
 	
@@ -300,8 +308,9 @@ public class PlayStage extends Stage{
 	
 	@Override
 	public void dispose() {
-		for (int i = 0; i < getActors().size; i++) {
-			getActors().get(i).remove();
+		int size = getActors().size;
+		for (int i = 0; i < size; i++) {
+			getActors().get(0).remove();
 		}
 		super.dispose();
 	}
