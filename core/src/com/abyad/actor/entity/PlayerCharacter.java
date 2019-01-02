@@ -247,7 +247,7 @@ public class PlayerCharacter extends HumanoidEntity{
 					castingMagic.addsParticle(this);
 					
 					if (framesSinceLast > castingMagic.getCastTime() && !controller.attackPressed()) {
-						Vector2 cursorPositon = new Vector2(cursor.getX(), cursor.getY());
+						Vector2 cursorPositon = getCursorPosition();
 						castingMagic.castMagic(this, cursorPositon);
 						setState("FINISH_CASTING");
 					}
@@ -276,8 +276,16 @@ public class PlayerCharacter extends HumanoidEntity{
 		if (!players.contains(this)) players.add(this);
 		if (!getEntities().contains(this)) getEntities().add(this);
 		setState("IDLE");
+		knockbackLength = 0;
+		invulnLength = 0;
 		velocity.setToRandomDirection();
 		updateHitbox();
+	}
+	
+	public void resetCharacter() {
+		relics.clear();
+		modifyMaxHP(3 - getMaxHP());
+		modifyMaxMana(3 - getMaxMana());
 	}
 	
 	public boolean isSpawningIn() {
@@ -363,6 +371,25 @@ public class PlayerCharacter extends HumanoidEntity{
 				addMana(1);
 				partialMP -= 4;
 			}
+		}
+	}
+	
+	public boolean isCursorActive() {
+		return (cursor.getStage() != null);
+	}
+	
+	public Vector2 getCursorPosition() {
+		return new Vector2(cursor.getX(), cursor.getY());
+	}
+	
+	public Vector2 getVisionCenter() {
+		if (!isSpawningIn()) {
+			Vector2 facing = new Vector2(velocity);
+			facing.setLength(24.0f);
+			return new Vector2(getCenterX() + facing.x, getCenterY() + facing.y);
+		}
+		else {
+			return getCenter();
 		}
 	}
 	

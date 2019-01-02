@@ -58,6 +58,9 @@ public abstract class AbstractSpriteSheet {
 					Assets.manager.get(Assets.tileAssets.get(dungeonName)).getHeight() / AbstractTile.TILE_SIZE,
 					Assets.manager.get(Assets.tileAssets.get(dungeonName)).getWidth() / AbstractTile.TILE_SIZE));
 		}
+		spriteSheets.put("TOWN", new BasicSprite(Assets.manager.get(Assets.townTiles),
+					Assets.manager.get(Assets.townTiles).getHeight() / AbstractTile.TILE_SIZE,
+					Assets.manager.get(Assets.townTiles).getWidth() / AbstractTile.TILE_SIZE));
 	}
 	
 	public AbstractSpriteSheet() {

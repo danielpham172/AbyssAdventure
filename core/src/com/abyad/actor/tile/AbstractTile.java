@@ -24,6 +24,7 @@ public abstract class AbstractTile extends Actor{
 	
 	public static final int TILE_SIZE = 32;			//The size of the texture
 	public static final float TILE_SCALE = 0.75f;	//How much to scale the texture
+	public static final float ADD_TILE_DRAW_SCALE = 1.00f;
 	public static final float TILE_LENGTH = TILE_SIZE * TILE_SCALE;		//The new length of the tile
 	
 	public static Texture box;		//Texture used for debugging hitboxes for the tile
@@ -74,11 +75,11 @@ public abstract class AbstractTile extends Actor{
 	public void draw(Batch batch, float a) {
 		if (tex != null && inView()) {
 			batch.draw(tex, getX() - ((TILE_SIZE - TILE_LENGTH) / 2), getY() - ((TILE_SIZE - TILE_LENGTH) / 2), TILE_SIZE / 2, TILE_SIZE / 2,
-					TILE_SIZE, TILE_SIZE, TILE_SCALE, TILE_SCALE, getRotation());
+					TILE_SIZE, TILE_SIZE, TILE_SCALE * ADD_TILE_DRAW_SCALE, TILE_SCALE * ADD_TILE_DRAW_SCALE, getRotation());
 			
 			for (TextureRegion d : decor) {
 				batch.draw(d, getX() - ((TILE_SIZE - TILE_LENGTH) / 2), getY() - ((TILE_SIZE - TILE_LENGTH) / 2), TILE_SIZE / 2, TILE_SIZE / 2,
-						TILE_SIZE, TILE_SIZE, TILE_SCALE, TILE_SCALE, getRotation());
+						TILE_SIZE, TILE_SIZE, TILE_SCALE * ADD_TILE_DRAW_SCALE, TILE_SCALE * ADD_TILE_DRAW_SCALE, getRotation());
 			}
 		}
 		//drawHitbox(batch, a);

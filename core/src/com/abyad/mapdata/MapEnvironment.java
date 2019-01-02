@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class MapEnvironment {
 
 	public static LinkedHashMap<String, MapEnvironment> environments = new LinkedHashMap<String, MapEnvironment>();
+	public static MapEnvironment townEnvironment;
 	
 	private TileDataTree floorTiles = new TileDataTree(0);
 	private TileDataTree wallTiles = new TileDataTree(0);
@@ -36,6 +37,7 @@ public class MapEnvironment {
 		for (String dungeonName : environments.keySet()) {
 			environments.get(dungeonName).setupEnvironment();
 		}
+		townEnvironment.setupEnvironment();
 	}
 	
 	private void setupEnvironment() {
@@ -87,6 +89,13 @@ public class MapEnvironment {
 	
 	public StairTile getStairs(int row, int col, boolean locked) {
 		return new StairTile(row, col, locked, unlockedStairs.getTexture(), lockedStairs.getTexture());
+	}
+	
+	public TextureRegion getUnlockedStairsTexture() {
+		return unlockedStairs.getTexture();
+	}
+	public TextureRegion getLockedStairsTexture() {
+		return lockedStairs.getTexture();
 	}
 	
 	private int getSurroundings(int[][] dungeon, int row, int col){

@@ -7,6 +7,7 @@ import com.abyad.stage.PlayStage;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class MagicCursor extends Actor{
@@ -71,8 +72,15 @@ public class MagicCursor extends Actor{
 	}
 	
 	public void spawnInCursor() {
-		setX(player.getCenterX());
-		setY(player.getCenterY() - 0.5f);
+		Vector2 direction = new Vector2(player.getVelocity());
+		if (direction.len() > 0) {
+			direction.setLength(12.0f);
+		}
+		else {
+			direction.set(12, 0);
+		}
+		setX(player.getCenterX() + direction.x);
+		setY(player.getCenterY() + direction.y);
 		updateCollideBox();
 	}
 	

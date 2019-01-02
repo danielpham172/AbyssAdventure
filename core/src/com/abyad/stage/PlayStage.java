@@ -34,28 +34,42 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
  */
 public class PlayStage extends Stage{
 
-	private AbyssAdventureGame game;				//The game object
-	private int[][] map;							//The int array map
-	private AbstractTile[][] tileMap;				//The map of the tiles
-	private ArrayList<Rectangle> rooms;				//The rooms (x = row, y = col)
-	private ArrayList<FloorTile> floorTiles;		//The floor tiles
-	private ArrayList<FloorTile> roomTiles;			//The room tiles
+	protected AbyssAdventureGame game;				//The game object
 	
-	private ArrayList<TreasureChest> treasure;		//All treasure chests
-	private ArrayList<AbstractEntity> enemies;		//All enemies
+	protected int[][] map;							//The int array map
+	protected AbstractTile[][] tileMap;				//The map of the tiles
+	protected ArrayList<Rectangle> rooms;				//The rooms (x = row, y = col)
+	protected ArrayList<FloorTile> floorTiles;		//The floor tiles
+	protected ArrayList<FloorTile> roomTiles;			//The room tiles
 	
-	private boolean readyForNextLevel;
+	protected ArrayList<TreasureChest> treasure;		//All treasure chests
+	protected ArrayList<AbstractEntity> enemies;		//All enemies
+	
+	protected boolean readyForNextLevel;
 	
 	//Comparator object to organize the actors
-	private static ActorComparator comparator = new ActorComparator();
+	protected static ActorComparator comparator = new ActorComparator();
+	protected static float ZOOM = 5f;
+	
+	public PlayStage(AbyssAdventureGame game, boolean generateFloor) {
+		super(new ExtendViewport(1920, 1080));		//Creates the stage with a viewport
+		this.game = game;
+		if (generateFloor) generateFloor();
+		getViewport().setCamera(new FollowCam(1 / ZOOM));
+	}
 	
 	/**
 	 * Constructor to create the stage
 	 * @param game			The game object
 	 */
 	public PlayStage(AbyssAdventureGame game) {
-		super(new ExtendViewport(384, 216));		//Creates the stage with a viewport
+		super(new ExtendViewport(1920, 1080));		//Creates the stage with a viewport
 		this.game = game;
+		generateFloor();
+		getViewport().setCamera(new FollowCam(1 / ZOOM));
+	}
+	
+	public void generateFloor() {
 		MapEnvironment environment = MapEnvironment.environments.get(MapEnvironment.environments.keySet().toArray(new String[] {})[(int)(Math.random() * MapEnvironment.environments.size())]);
 		
 		DungeonGenerator generator = new DungeonGenerator(18, 18, 3, 5, 600);		//Create a generator
@@ -97,7 +111,7 @@ public class PlayStage extends Stage{
 		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
 			int row = (int)(Math.random() * playerSpawnRoom.getWidth()) + (int)playerSpawnRoom.getX();
 			int col = (int)(Math.random() * playerSpawnRoom.getHeight()) + (int)playerSpawnRoom.getY();
-			player.setPosition(tileMap[row][col].getCenter().x + 0.1f, tileMap[row][col].getCenter().y);
+			player.setPosition(tileMap[row][col].getCenter().x, tileMap[row][col].getCenter().y);
 			player.getVelocity().setLength(0);
 			player.removeHeldItem();
 			addActor(player);
@@ -174,9 +188,7 @@ public class PlayStage extends Stage{
 			roomTiles.addAll(spawnRoomTiles);
 			rooms.add(playerSpawnRoom);
 		}
-		getViewport().setCamera(new FollowCam());
 	}
-	
 	
 	/**
 	 * Returns a list of rectangles around a given coordinate that matches collision boxes

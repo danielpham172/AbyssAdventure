@@ -45,6 +45,7 @@ public class Assets {
 	
 	//Dungeon Tiles
 	public static final LinkedHashMap<String, AssetDescriptor<Texture>> tileAssets = new LinkedHashMap<String, AssetDescriptor<Texture>>();
+	public static final AssetDescriptor<Texture> townTiles;
 	
 	//Map Objects
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
@@ -98,6 +99,10 @@ public class Assets {
 			tileAssets.put(envName, new AssetDescriptor<Texture>("tile/" + folderName + "/tiles.png", Texture.class));
 			MapEnvironment.environments.put(envName, environment);
 		}
+		
+		String townDirectory = FileReads.readFileToArray("tile/town.txt")[0];
+		townTiles = new AssetDescriptor<Texture>("tile/" + townDirectory + "/tiles.png", Texture.class);
+		MapEnvironment.townEnvironment = new MapEnvironment("TOWN", townDirectory);
 	}
 	
 	
@@ -134,6 +139,7 @@ public class Assets {
 		for (String key : tileAssets.keySet()) {
 			manager.load(tileAssets.get(key));
 		}
+		manager.load(townTiles);
 		//UI Stuff
 		manager.load(buttons);
 		manager.load(magicSelectCursor);
