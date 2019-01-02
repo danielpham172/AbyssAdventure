@@ -286,14 +286,13 @@ public class PlayStage extends Stage{
 	public void draw() {
 		//long initial = System.nanoTime();
 		//comparator.quicksortActorArray(getActors());
-		int ogSize = getActors().size;
 		try {
 			getActors().sort(comparator);
 		}
 		catch (IllegalArgumentException e){
-			System.out.println("Caught an exception: " + e.getMessage());
-			System.out.println("  Old Size: " + ogSize);
-			System.out.println("  New Size: " + getActors().size);
+			//If normal sorting fails, just use own quicksort instead (this one is pretty slow compared to the
+			//in Java one, like 5 to 20 times slower or something
+			comparator.quicksortActorArray(getActors());
 		}
 		//System.out.println(System.nanoTime() - initial);
 		super.draw();
@@ -301,8 +300,8 @@ public class PlayStage extends Stage{
 	
 	@Override
 	public void dispose() {
-		while (getActors().size > 0) {
-			getActors().pop().remove();
+		for (int i = 0; i < getActors().size; i++) {
+			getActors().get(i).remove();
 		}
 		super.dispose();
 	}

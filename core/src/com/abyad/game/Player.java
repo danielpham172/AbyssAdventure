@@ -56,15 +56,16 @@ public class Player {
 	
 	public void toggleRingMenu() {
 		if (ringMenu.getStage() == null) {
+			ringMenu.beginExpanding();
 			character.getStage().addActor(ringMenu);
 		}
 		else {
-			ringMenu.setToRemove();
+			ringMenu.closeMenu();
 		}
 	}
 	
 	public boolean isRingMenuActive() {
-		return (ringMenu.getStage() != null);
+		return ringMenu.isMenuActive();
 	}
 
 	public void rotateRingMenu(int direction) {

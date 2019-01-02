@@ -19,6 +19,7 @@ public class MagicRingMenu extends Actor{
 	private static final float RADIUS = 30f;
 	private static final float SPACING = 2f;
 	private static final int ROTATING_TIME = 20;
+	private static final int EXPANDING_TIME = 20;
 	private static final float ICON_SCALE = 1.0f;
 	private static final float FONT_SCALE = 0.2f;
 	
@@ -32,6 +33,8 @@ public class MagicRingMenu extends Actor{
 	private int selection;
 	
 	private int rotating;
+	private int expanding;
+	private boolean closing;
 	
 	private boolean markForRemoval;
 	private int blinkTime;
@@ -56,11 +59,16 @@ public class MagicRingMenu extends Actor{
 	@Override
 	public void act(float delta) {
 		if (rotating > 0) rotating--; else if (rotating < 0) rotating++;
+		if (expanding > 0 && !closing) {
+			expanding--;
+		}
+		else if (closing){
+			expanding++;
+			if (expanding == EXPANDING_TIME) markForRemoval = true;
+		}
 		setPosition(player.getCharacter().getCenterX(), player.getCharacter().getCenterY());
 		if (markForRemoval) {
 			remove();
-			markForRemoval = false;
-			rotating = 0;
 		}
 		blinkTime = (blinkTime + 1) % 6;
 	}
@@ -70,7 +78,8 @@ public class MagicRingMenu extends Actor{
 		if (player.getCharacter().inView()) {
 			ArrayList<AbstractMagic> magicList = player.getCharacter().getMagicSpells();
 			Vector2 center = new Vector2(player.getCharacter().getCenter());
-			Vector2 drawOffsets = new Vector2(0, RADIUS);
+			float expandingScale = (1 - ((float)expanding / EXPANDING_TIME));
+			Vector2 drawOffsets = new Vector2(0, RADIUS * expandingScale);
 			float angleSpacing = 360f / magicList.size();
 			if (rotating != 0) {
 				if (angleSpacing >= MIN_SCALE_ANGLE) {
@@ -82,6 +91,7 @@ public class MagicRingMenu extends Actor{
 					drawOffsets.rotate(offsetRotation);
 				}
 			}
+			drawOffsets.rotate(-270 * (1 - expandingScale));
 			ArrayList<AbstractMagic> sortedMagicList = new ArrayList<AbstractMagic>();
 			for (int i = selection; i < magicList.size(); i++) {
 				sortedMagicList.add(magicList.get(i));
@@ -91,7 +101,7 @@ public class MagicRingMenu extends Actor{
 			}
 			
 			batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
-			float iconScaling = Math.min(ICON_SCALE, ICON_SCALE * (angleSpacing / MIN_SCALE_ANGLE));
+			float iconScaling = Math.min(ICON_SCALE, ICON_SCALE * (angleSpacing / MIN_SCALE_ANGLE)) * expandingScale;
 			for (AbstractMagic magic : sortedMagicList) {
 				TextureRegion icon = magic.getIcon();
 				if (player.getCharacter().getMana() >= magic.getManaCost()) {
@@ -108,10 +118,12 @@ public class MagicRingMenu extends Actor{
 				}
 				drawOffsets.rotate(angleSpacing);
 			}
-			batch.draw(magicSelectCursor, center.x - (magicSelectCursor.getRegionWidth() / 2), center.y + RADIUS - (magicSelectCursor.getRegionHeight() / 2),
+			if (expanding == 0) {
+				batch.draw(magicSelectCursor, center.x - (magicSelectCursor.getRegionWidth() / 2), center.y + RADIUS - (magicSelectCursor.getRegionHeight() / 2),
 						magicSelectCursor.getRegionWidth() / 2, magicSelectCursor.getRegionHeight() / 2, magicSelectCursor.getRegionWidth(), magicSelectCursor.getRegionHeight(),
 						iconScaling, iconScaling, 0);
-			if (rotating == 0) {
+			}
+			if (rotating == 0 && (expanding == 0)) {
 				font.getData().setScale(FONT_SCALE);
 				float fontX = center.x - (magicDesc.width / 2);
 				float fontY = center.y + RADIUS + SPACING + 16;
@@ -127,7 +139,7 @@ public class MagicRingMenu extends Actor{
 	}
 	
 	public void rotate(int direction) {
-		if (rotating == 0) {
+		if (rotating == 0 && expanding == 0) {
 			int listSize = player.getCharacter().getMagicSpells().size();
 			if (direction < 0) {
 				rotating = (int)Math.min(ROTATING_TIME, ROTATING_TIME * ((360f / listSize) / MIN_SCALE_ANGLE));
@@ -145,8 +157,27 @@ public class MagicRingMenu extends Actor{
 		}
 	}
 	
-	public void setToRemove() {
-		markForRemoval = true;
+	@Override
+	public boolean remove() {
+		closing = false;
+		expanding = 0;
+		rotating = 0;
+		markForRemoval = false;
+		
+		return super.remove();
+	}
+	
+	public void closeMenu() {
+		closing = true;
+	}
+	
+	public void beginExpanding() {
+		closing = false;
+		expanding = EXPANDING_TIME;
+	}
+	
+	public boolean isMenuActive() {
+		return (getStage() != null && !closing);
 	}
 	
 	public int getSelection() {
