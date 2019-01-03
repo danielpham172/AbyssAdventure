@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.utils.Assets;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public abstract class AbstractSpriteSheet {
@@ -54,13 +55,32 @@ public abstract class AbstractSpriteSheet {
 		
 		//Dungeon
 		for (String dungeonName : Assets.tileAssets.keySet()) {
-			spriteSheets.put(dungeonName, new BasicSprite(Assets.manager.get(Assets.tileAssets.get(dungeonName)),
-					Assets.manager.get(Assets.tileAssets.get(dungeonName)).getHeight() / AbstractTile.TILE_SIZE,
-					Assets.manager.get(Assets.tileAssets.get(dungeonName)).getWidth() / AbstractTile.TILE_SIZE));
+			boolean first = true;
+			for (String imageKey : Assets.tileAssets.get(dungeonName).keySet()) {
+				Texture image = Assets.manager.get(Assets.tileAssets.get(dungeonName).get(imageKey));
+				if (first) {
+					spriteSheets.put(dungeonName, new BasicSprite(image, image.getHeight() / AbstractTile.TILE_SIZE,
+							image.getWidth() / AbstractTile.TILE_SIZE, imageKey));
+					first = false;
+				}
+				else {
+					((BasicSprite)spriteSheets.get(dungeonName)).addFullSheet(image, image.getHeight() / AbstractTile.TILE_SIZE,
+							image.getWidth() / AbstractTile.TILE_SIZE, imageKey);
+				}
+			}
 		}
-		spriteSheets.put("TOWN", new BasicSprite(Assets.manager.get(Assets.townTiles),
-					Assets.manager.get(Assets.townTiles).getHeight() / AbstractTile.TILE_SIZE,
-					Assets.manager.get(Assets.townTiles).getWidth() / AbstractTile.TILE_SIZE));
+		
+		for (String imageKey : Assets.townTiles.keySet()) {
+			Texture image = Assets.manager.get(Assets.townTiles.get(imageKey));
+			if (!spriteSheets.containsKey("TOWN")) {
+				spriteSheets.put("TOWN", new BasicSprite(image, image.getHeight() / AbstractTile.TILE_SIZE,
+						image.getWidth() / AbstractTile.TILE_SIZE, imageKey));
+			}
+			else {
+				((BasicSprite)spriteSheets.get("TOWN")).addFullSheet(image, image.getHeight() / AbstractTile.TILE_SIZE,
+						image.getWidth() / AbstractTile.TILE_SIZE, imageKey);
+			}
+		}
 	}
 	
 	public AbstractSpriteSheet() {

@@ -43,9 +43,9 @@ public class Assets {
 	public static final AssetDescriptor<Texture> particles = new AssetDescriptor<Texture>("other/particles.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	
-	//Dungeon Tiles
-	public static final LinkedHashMap<String, AssetDescriptor<Texture>> tileAssets = new LinkedHashMap<String, AssetDescriptor<Texture>>();
-	public static final AssetDescriptor<Texture> townTiles;
+	//Magic List
+		public static final LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>> tileAssets = new LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>>();
+	public static final LinkedHashMap<String, AssetDescriptor<Texture>> townTiles = new LinkedHashMap<String, AssetDescriptor<Texture>>();
 	
 	//Map Objects
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
@@ -94,14 +94,22 @@ public class Assets {
 			int spaceIndex = dungeon.indexOf(' ');
 			String folderName = dungeon.substring(0, spaceIndex);
 			String envName = dungeon.substring(spaceIndex + 1);
+			String[] dungeonData = FileReads.readFileToArray("tile/" + folderName + "/dungeonData.txt");
+			LinkedHashMap<String, AssetDescriptor<Texture>> list = new LinkedHashMap<String, AssetDescriptor<Texture>>();
+			for (String tileImages : dungeonData) {
+				list.put(tileImages, new AssetDescriptor<Texture>("tile/" + folderName + "/" + tileImages + ".png", Texture.class));
+			}
 			MapEnvironment environment = new MapEnvironment(envName, folderName);
 			
-			tileAssets.put(envName, new AssetDescriptor<Texture>("tile/" + folderName + "/tiles.png", Texture.class));
+			tileAssets.put(envName, list);
 			MapEnvironment.environments.put(envName, environment);
 		}
 		
 		String townDirectory = FileReads.readFileToArray("tile/town.txt")[0];
-		townTiles = new AssetDescriptor<Texture>("tile/" + townDirectory + "/tiles.png", Texture.class);
+		String[] townData = FileReads.readFileToArray("tile/" + townDirectory + "/dungeonData.txt");
+		for (String tileImages : townData) {
+			townTiles.put(tileImages, new AssetDescriptor<Texture>("tile/" + townDirectory + "/" + tileImages + ".png", Texture.class));
+		}
 		MapEnvironment.townEnvironment = new MapEnvironment("TOWN", townDirectory);
 	}
 	
@@ -137,9 +145,13 @@ public class Assets {
 		//Dungeon Tiles and Objects
 		manager.load(treasureChest);
 		for (String key : tileAssets.keySet()) {
-			manager.load(tileAssets.get(key));
+			for (String imageKey : tileAssets.get(key).keySet()) {
+				manager.load(tileAssets.get(key).get(imageKey));
+			}
 		}
-		manager.load(townTiles);
+		for (String key : townTiles.keySet()) {
+			manager.load(townTiles.get(key));
+		}
 		//UI Stuff
 		manager.load(buttons);
 		manager.load(magicSelectCursor);

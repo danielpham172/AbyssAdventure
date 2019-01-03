@@ -27,4 +27,24 @@ public class BasicSprite extends AbstractSpriteSheet{
 			}
 		}
 	}
+	
+	public BasicSprite(Texture sheet, int rows, int cols, String prefix) {
+		super();
+		
+		TextureRegion[][] textureRegions = TextureRegion.split(sheet, sheet.getWidth() / cols, sheet.getHeight() / rows);
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
+				sprites.put(prefix + "_r" + r + "_c" + c, textureRegions[r][c]);
+			}
+		}
+	}
+	
+	public void addFullSheet(Texture sheet, int rows, int cols, String prefix) {
+		TextureRegion[][] textureRegions = TextureRegion.split(sheet, sheet.getWidth() / cols, sheet.getHeight() / rows);
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
+				sprites.put(prefix + "_r" + r + "_c" + c, textureRegions[r][c]);
+			}
+		}
+	}
 }

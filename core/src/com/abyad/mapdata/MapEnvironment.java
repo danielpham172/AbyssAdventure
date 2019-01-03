@@ -42,8 +42,12 @@ public class MapEnvironment {
 	
 	private void setupEnvironment() {
 		sprites = AbstractSpriteSheet.spriteSheets.get(dungeonName);
-		for (String data : FileReads.readFileToArray("tile/" + folderDirectory + "/dungeonData.txt")) {
-			addTileData(data);
+		String[] dungeonData = FileReads.readFileToArray("tile/" + folderDirectory + "/dungeonData.txt");
+		for (String imageName : dungeonData) {
+			String[] imageData = FileReads.readFileToArray("tile/" + folderDirectory + "/" + imageName + ".txt");
+			for (String data : imageData) {
+				addTileData(data, imageName);
+			}
 		}
 	}
 	
@@ -123,7 +127,7 @@ public class MapEnvironment {
 		return (row >= 0 && row < dungeon.length && col >= 0 && col < dungeon[0].length);
 	}
 	
-	private void addTileData(String strData) {
+	private void addTileData(String strData, String prefix) {
 		int row = -1;
 		int col = -1;
 		int surroundings = -1;
@@ -153,12 +157,12 @@ public class MapEnvironment {
 				if (type.equals("ROW")) {
 					//Row on the spritesheet that the tile is located
 					row = number;
-					if (row != -1 && col != -1) tileData.setTexture(sprites.getSprite("r" + row + "_c" + col));
+					if (row != -1 && col != -1) tileData.setTexture(sprites.getSprite(prefix + "_r" + row + "_c" + col));
 				}
 				else if (type.equals("COL")) {
 					//Col on the spritesheet that the tile is located
 					col = number;
-					if (row != -1 && col != -1) tileData.setTexture(sprites.getSprite("r" + row + "_c" + col));
+					if (row != -1 && col != -1) tileData.setTexture(sprites.getSprite(prefix + "_r" + row + "_c" + col));
 				}
 				else if (type.equals("TYPE")) {
 					//Type of tile (floor or wall)
