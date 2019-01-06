@@ -1,5 +1,7 @@
 package com.abyad.game;
 
+import java.util.ArrayList;
+
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.ui.MagicRingMenu;
 import com.abyad.actor.ui.PlayerDisplay;
@@ -9,11 +11,13 @@ import com.abyad.controls.PlayerController;
 
 public class Player {
 
+	public static ArrayList<String> characterNames = new ArrayList<String>();
 	private PlayerController controller;			//The controller the player is using
 	private PlayerCharacter character;				//The player character that this player controls
 	private PlayerDisplay display;
 	private MagicRingMenu ringMenu;
 	private int number;								//The player number
+	private int selectedName;
 	
 	public Player(int num, AbyssAdventureGame game) {
 		number = num;
@@ -33,9 +37,14 @@ public class Player {
 		} catch (Exception e) {
 			
 		}
+		selectedName = num % characterNames.size();
 		character = new PlayerCharacter(this, 0, 0);
 		display = new PlayerDisplay(this);
 		ringMenu = new MagicRingMenu(this);
+	}
+	
+	public boolean isActive() {
+		return (character.getStage() != null);
 	}
 	
 	public PlayerController getController() {
@@ -48,6 +57,10 @@ public class Player {
 	
 	public PlayerDisplay getDisplay() {
 		return display;
+	}
+	
+	public String getCharacterName() {
+		return characterNames.get(selectedName);
 	}
 	
 	public int getNumber() {
@@ -74,5 +87,10 @@ public class Player {
 
 	public int getSelectedMagic() {
 		return ringMenu.getSelection();
+	}
+	
+	public void changeSelectedCharacter(int newSelectedName) {
+		selectedName = newSelectedName;
+		character.updateSpriteSheet();
 	}
 }

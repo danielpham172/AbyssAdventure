@@ -245,6 +245,15 @@ public class PlayStage extends Stage{
 		return boxes;
 	}
 	
+	public AbstractTile getTileAt(int row, int col) {
+		if (inBounds(row, col)) {
+			return tileMap[row][col];
+		}
+		else {
+			return null;
+		}
+	}
+	
 	/**
 	 * Randomly places an actor on an open position
 	 * @param a

@@ -1,8 +1,10 @@
 package com.abyad.screen;
 
+import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.game.AbyssAdventureGame;
 import com.abyad.game.Player;
+import com.abyad.stage.CharacterSelectStage;
 import com.abyad.stage.PlayHUD;
 import com.abyad.stage.PlayStage;
 import com.abyad.stage.TownStage;
@@ -17,11 +19,15 @@ public class PlayScreen implements Screen{
 	private PlayHUD playHUD;
 	private int floor;
 	
+	private CharacterSelectStage characterSelectStage;
+	private boolean noPlayerHUD;
+	
 	public PlayScreen(AbyssAdventureGame game) {
 		this.game = game;
 		//playStage = new PlayStage(game);		//Creates a play stage
 		playStage = new TownStage(game);
 		playHUD = new PlayHUD(game);
+		characterSelectStage = new CharacterSelectStage(game);
 		floor = 1;
 	}
 	
@@ -73,13 +79,34 @@ public class PlayScreen implements Screen{
 			playStage.getViewport().apply();	//Applies the camera
 			playStage.act();			//Calls the act method for the stage
 			playStage.draw();			//Calls the drawing of the stage
-			playHUD.getViewport().apply();
-			playHUD.act();
-			playHUD.draw();
+			if (!noPlayerHUD) {
+				playHUD.getViewport().apply();
+				playHUD.act();
+				playHUD.draw();
+			}
 			if (playStage instanceof TownStage) {
 				for (Player player : game.getPlayers()) {
 					player.getCharacter().modifyHP(1);
 					player.getCharacter().addPartialMana(1);
+				}
+				
+				if (((TownStage)playStage).openCharacterMenu()){
+					characterSelectStage.getViewport().apply();
+					characterSelectStage.act();
+					characterSelectStage.draw();
+					noPlayerHUD = true;
+					
+					if (characterSelectStage.allIsReady()) {
+						noPlayerHUD = false;
+						((TownStage)playStage).flagCharacterMenu(false);
+						for (Player player : game.getPlayers()) {
+							PlayerCharacter.getPlayers().add(player.getCharacter());
+							AbstractEntity.getEntities().add(player.getCharacter());
+							player.getCharacter().markForRemoval(false);
+							playStage.addActor(player.getCharacter());
+						}
+						characterSelectStage.resetStatus();
+					}
 				}
 			}
 			else if (playersAreDead()) {
@@ -106,7 +133,7 @@ public class PlayScreen implements Screen{
 	public void resize(int width, int height) {
 		playStage.getViewport().update(width, height);		//Changes the viewport to match the new size
 		playHUD.getViewport().update(width, height);
-		
+		characterSelectStage.getViewport().update(width, height);
 	}
 
 	@Override

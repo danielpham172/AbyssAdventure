@@ -3,6 +3,7 @@ package com.abyad.sprite;
 import java.util.LinkedHashMap;
 
 import com.abyad.actor.tile.AbstractTile;
+import com.abyad.game.Player;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,11 +12,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public abstract class AbstractSpriteSheet {
 	protected LinkedHashMap<String, TextureRegion> sprites;			//A map of sprite regions linked to a string
 	
-	public static LinkedHashMap<String, AbstractSpriteSheet> spriteSheets = new LinkedHashMap<String, AbstractSpriteSheet>();
-	static {
+	public static LinkedHashMap<String, AbstractSpriteSheet> spriteSheets;
+	
+	public static void initializeSpriteSheets() {
+		spriteSheets = new LinkedHashMap<String, AbstractSpriteSheet>();
 		spriteSheets.put("ZOMBIE", new EntitySprite(Assets.manager.get(Assets.zombie)));
-		spriteSheets.put("BOY_1", new PlayerSprite(Assets.manager.get(Assets.boy1), Assets.manager.get(Assets.boy1_icons)));
-		spriteSheets.put("GIRL_1", new PlayerSprite(Assets.manager.get(Assets.girl1), Assets.manager.get(Assets.girl1_icons)));
+		
+		for (String name : Player.characterNames) {
+			spriteSheets.put(name, new PlayerSprite(Assets.manager.get(Assets.characterAssets.get(name).get("SPRITE")),
+					Assets.manager.get(Assets.characterAssets.get(name).get("ICON"))));
+		}
 		
 		spriteSheets.put("WIND_SLASH", new ProjectileSprite(Assets.manager.get(Assets.windSlash), 4, 1, 6));
 		spriteSheets.put("MAGIC_BOLT_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.magicBoltProjectile), 1, 2, 6, true));
@@ -24,8 +30,13 @@ public abstract class AbstractSpriteSheet {
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
 		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames.length, chestNames[0].length, chestNames));
 		
+		String[][] houseNames = { {"CLOSED", "OPEN", "ROOF"} };
+		spriteSheets.put("HOUSE", new BasicSprite(Assets.manager.get(Assets.house), houseNames.length, houseNames[0].length, houseNames));
+		
 		String[][] buttonNames = { {"A", "B"}, {"X", "Y"} };
 		spriteSheets.put("UI_BUTTONS", new BasicSprite(Assets.manager.get(Assets.buttons), 2, 2, buttonNames));
+		String[][] selectionArrowNames = { {"LEFT", "RIGHT"} };
+		spriteSheets.put("SELECTION_ARROWS", new BasicSprite(Assets.manager.get(Assets.selectionArrows), selectionArrowNames.length, selectionArrowNames[0].length, selectionArrowNames));
 		spriteSheets.put("MAGIC_SELECTION", new BasicSprite(Assets.manager.get(Assets.magicSelectCursor), 1, 1, new String[][] {{"SELECTION"}}));
 		spriteSheets.put("HEALTH_CELL", new BarSprite(Assets.manager.get(Assets.healthCell), 5, 11));
 		spriteSheets.put("MANA_CELL", new BarSprite(Assets.manager.get(Assets.manaCell), 5, 11));

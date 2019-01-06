@@ -252,6 +252,14 @@ public abstract class AbstractEntity extends Actor{
 		deathLoot.add(item);
 	}
 	
+	public void markForRemoval() {
+		markForRemoval = true;
+	}
+	
+	public void markForRemoval(boolean b) {
+		markForRemoval = b;
+	}
+	
 	@Override
 	public boolean remove() {
 		entities.remove(this);

@@ -7,6 +7,7 @@ import com.abyad.actor.entity.ZombieCharacter;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.mapdata.MapEnvironment;
 import com.abyad.screen.PlayScreen;
+import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -23,6 +24,7 @@ public class AbyssAdventureGame extends Game {
 	@Override
 	public void create() {
 		Assets.loadAssets();
+		AbstractSpriteSheet.initializeSpriteSheets();
 		AbstractMagic.initializeSprites();
 		MapEnvironment.setupEnvironments();
 		

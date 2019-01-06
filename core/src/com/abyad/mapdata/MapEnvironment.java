@@ -10,6 +10,7 @@ import com.abyad.actor.tile.WallTile;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.utils.FileReads;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class MapEnvironment {
@@ -19,6 +20,7 @@ public class MapEnvironment {
 	
 	private TileDataTree floorTiles = new TileDataTree(0);
 	private TileDataTree wallTiles = new TileDataTree(0);
+	private TileDataTree roadTiles = new TileDataTree(0);
 	
 	private TileData unlockedStairs;
 	private TileData lockedStairs;
@@ -53,41 +55,21 @@ public class MapEnvironment {
 	
 	public FloorTile getFloorTile(int[][] dungeon, int row, int col) {
 		int surroundings = getSurroundings(dungeon, row, col);
-		ArrayList<TileData> tileDatas = floorTiles.getTileDatas(surroundings);
-		int weightSum = 0;
-		for (TileData tileData : tileDatas) {
-			weightSum += tileData.getChoiceWeight();
+		TileData tileData = selectRandomTileData(floorTiles.getTileDatas(surroundings));
+		if (tileData != null) {
+			FloorTile tile = new FloorTile(tileData.getTexture(), row, col, tileData.getRotation());
+			return tile;
 		}
-		
-		int choice = (int)(Math.random() * weightSum);
-		for (TileData tileData : tileDatas) {
-			choice -= tileData.getChoiceWeight();
-			if (choice < 0) {
-				FloorTile tile = new FloorTile(tileData.getTexture(), row, col, tileData.getRotation());
-				return tile;
-			}
-		}
-		
 		return new FloorTile(null, row, col, 0);
 	}
 
 	public WallTile getWallTile(int[][] dungeon, int row, int col) {
 		int surroundings = getSurroundings(dungeon, row, col);
-		ArrayList<TileData> tileDatas = wallTiles.getTileDatas(surroundings);
-		int weightSum = 0;
-		for (TileData tileData : tileDatas) {
-			weightSum += tileData.getChoiceWeight();
+		TileData tileData = selectRandomTileData(wallTiles.getTileDatas(surroundings));
+		if (tileData != null) {
+			WallTile tile = new WallTile(tileData.getTexture(), row, col, tileData.getRotation(), tileData.isFrontWall());
+			return tile;
 		}
-		
-		int choice = (int)(Math.random() * weightSum);
-		for (TileData tileData : tileDatas) {
-			choice -= tileData.getChoiceWeight();
-			if (choice < 0) {
-				WallTile tile = new WallTile(tileData.getTexture(), row, col, tileData.getRotation(), tileData.isFrontWall());
-				return tile;
-			}
-		}
-		
 		return new WallTile(null, row, col, 0, false);
 	}
 	
@@ -95,11 +77,41 @@ public class MapEnvironment {
 		return new StairTile(row, col, locked, unlockedStairs.getTexture(), lockedStairs.getTexture());
 	}
 	
+	public void addRoads(AbstractTile[][] tileMap, int[][] roadMap) {
+		for (int row = 0; row < tileMap.length; row++) {
+			for (int col = 0; col < tileMap[row].length; col++) {
+				if (roadMap[row][col] == 1) {
+					int surroundings = getSurroundings(roadMap, row, col);
+					TileData tileData = selectRandomTileData(roadTiles.getTileDatas(surroundings));
+					if (tileData != null) {
+						tileMap[row][col].addDecoration(tileData.getTexture(), tileData.getRotation());
+					}
+				}
+			}
+		}
+	}
+	
 	public TextureRegion getUnlockedStairsTexture() {
 		return unlockedStairs.getTexture();
 	}
 	public TextureRegion getLockedStairsTexture() {
 		return lockedStairs.getTexture();
+	}
+	
+	public TileData selectRandomTileData(ArrayList<TileData> tileDatas) {
+		int weightSum = 0;
+		for (TileData tileData : tileDatas) {
+			weightSum += tileData.getChoiceWeight();
+		}
+		
+		int choice = (int)(Math.random() * weightSum);
+		for (TileData tileData : tileDatas) {
+			choice -= tileData.getChoiceWeight();
+			if (choice < 0) {
+				return tileData;
+			}
+		}
+		return null;
 	}
 	
 	private int getSurroundings(int[][] dungeon, int row, int col){
@@ -114,6 +126,27 @@ public class MapEnvironment {
 					}
 					else {
 						number += (int)Math.pow(10, count);
+					}
+					count++;
+				}
+			}
+		}
+		
+		return number;
+	}
+	
+	private int getSurroundings(int[][] dungeon, int row, int col, int defaultTile){
+		//int[][] surroundings = new int[3][3];
+		int number = 0;
+		int count = 0;
+		for (int r = -1; r <= 1; r++) {
+			for (int c = 1; c >= -1; c--) {
+				if (r != 0 || c != 0) {
+					if (inBounds(dungeon, row + r, col + c)) {
+						number += (int)Math.pow(10, count) * dungeon[row + r][col + c];
+					}
+					else {
+						number += (int)Math.pow(10, count) * defaultTile;
 					}
 					count++;
 				}
@@ -170,6 +203,7 @@ public class MapEnvironment {
 					else if (number == 1) tileData.setTileType("WALL");
 					else if (number == 2) tileData.setTileType("UNLOCKED_STAIRS");
 					else if (number == 3) tileData.setTileType("LOCKED_STAIRS");
+					else if (number == 4) tileData.setTileType("ROAD");
 				}
 				else if (type.equals("SURROUNDINGS_INDEX")) {
 					//The kind of surroundings it has
@@ -236,6 +270,14 @@ public class MapEnvironment {
 				if (!setUpFixedRotation) tileData.setIsFixedRotation(true);
 				
 				lockedStairs = tileData;
+			}
+			else if (tileData.getTileType().equals("ROAD")) {
+				//Some initial things if not setup yet
+				if (!setUpIndependent) isIndependent = false;
+				if (!setUpFixedRotation) tileData.setIsFixedRotation(true);
+				
+				if (isIndependent) surroundings = 22222222;
+				roadTiles.addTileData(tileData, surroundings);
 			}
 		}
 	}

@@ -62,12 +62,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		super(x, y);
 		
 		this.player = player;
-		if (player.getNumber() == 1) {
-			sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get("GIRL_1");
-		}
-		else {
-			sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get("BOY_1");
-		}
+		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get(player.getCharacterName());
 		weapon = "SWORD";
 		basicAttack = AttackData.basicAttacks.get(weapon);
 		if (player.getNumber() == 1) {
@@ -164,10 +159,9 @@ public class PlayerCharacter extends HumanoidEntity{
 						castingMagic = magicSpells.get(selection);
 						if (getMana() >= castingMagic.getManaCost()) {
 							removeMana(castingMagic.getManaCost());
-							cursor.spawnInCursor();
 							setState("CASTING");
 							casting = true;
-							getStage().addActor(cursor);
+							cursor.spawnInCursor();
 							player.toggleRingMenu();
 						}
 					}
@@ -286,6 +280,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		relics.clear();
 		modifyMaxHP(3 - getMaxHP());
 		modifyMaxMana(3 - getMaxMana());
+		gold = 0;
 	}
 	
 	public boolean isSpawningIn() {
@@ -455,6 +450,10 @@ public class PlayerCharacter extends HumanoidEntity{
 	@Override
 	public String getTeam() {
 		return "PLAYERS";
+	}
+	
+	public void updateSpriteSheet() {
+		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get(player.getCharacterName());
 	}
 	
 	/**

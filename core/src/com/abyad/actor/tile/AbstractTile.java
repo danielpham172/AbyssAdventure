@@ -2,6 +2,7 @@ package com.abyad.actor.tile;
 
 import java.util.ArrayList;
 
+import com.abyad.stage.PlayStage;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -18,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class AbstractTile extends Actor{
 	
 	protected TextureRegion tex;			//The texture of the tile
-	protected ArrayList<TextureRegion> decor;			//Additional decoration on tile to draw
+	protected ArrayList<DecorData> decor;			//Additional decoration on tile to draw
 	private int row;					//What row the tile is in on the map
 	private int col;					//What column the tile is in on the map
 	
@@ -51,7 +52,7 @@ public abstract class AbstractTile extends Actor{
 		hitbox = new Rectangle(col * TILE_LENGTH, row * TILE_LENGTH, TILE_LENGTH, TILE_LENGTH);
 		setX(col * TILE_LENGTH);
 		setY(row * TILE_LENGTH);
-		decor = new ArrayList<TextureRegion>();
+		decor = new ArrayList<DecorData>();
 	}
 	
 	/**
@@ -77,9 +78,10 @@ public abstract class AbstractTile extends Actor{
 			batch.draw(tex, getX() - ((TILE_SIZE - TILE_LENGTH) / 2), getY() - ((TILE_SIZE - TILE_LENGTH) / 2), TILE_SIZE / 2, TILE_SIZE / 2,
 					TILE_SIZE, TILE_SIZE, TILE_SCALE * ADD_TILE_DRAW_SCALE, TILE_SCALE * ADD_TILE_DRAW_SCALE, getRotation());
 			
-			for (TextureRegion d : decor) {
+			for (DecorData data : decor) {
+				TextureRegion d = data.getTex();
 				batch.draw(d, getX() - ((TILE_SIZE - TILE_LENGTH) / 2), getY() - ((TILE_SIZE - TILE_LENGTH) / 2), TILE_SIZE / 2, TILE_SIZE / 2,
-						TILE_SIZE, TILE_SIZE, TILE_SCALE * ADD_TILE_DRAW_SCALE, TILE_SCALE * ADD_TILE_DRAW_SCALE, getRotation());
+						TILE_SIZE, TILE_SIZE, TILE_SCALE * ADD_TILE_DRAW_SCALE, TILE_SCALE * ADD_TILE_DRAW_SCALE, data.getRotation());
 			}
 		}
 		//drawHitbox(batch, a);
@@ -119,6 +121,22 @@ public abstract class AbstractTile extends Actor{
 	 */
 	public Rectangle getBox() {
 		return hitbox;
+	}
+	
+	public void addDecoration(TextureRegion tex) {
+		decor.add(new DecorData(tex));
+	}
+	
+	public void addDecoration(TextureRegion tex, float rotation) {
+		decor.add(new DecorData(tex, rotation));
+	}
+	
+	public AbstractTile getNearbyTile(int deltaRow, int deltaCol) {
+		if (getStage() != null && getStage() instanceof PlayStage) {
+			PlayStage stage = (PlayStage)getStage();
+			return stage.getTileAt(row + deltaRow, col + deltaCol);
+		}
+		return null;
 	}
 	
 	/**

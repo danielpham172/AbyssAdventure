@@ -79,8 +79,10 @@ public class MagicCursor extends Actor{
 		else {
 			direction.set(12, 0);
 		}
-		setX(player.getCenterX() + direction.x);
-		setY(player.getCenterY() + direction.y);
+		setX(player.getCenterX());
+		setY(player.getCenterY() );
+		player.getStage().addActor(this);
+		move(direction.x, direction.y);
 		updateCollideBox();
 	}
 	

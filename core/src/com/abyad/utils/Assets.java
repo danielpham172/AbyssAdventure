@@ -2,6 +2,7 @@ package com.abyad.utils;
 
 import java.util.LinkedHashMap;
 
+import com.abyad.game.Player;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.mapdata.MapEnvironment;
 import com.badlogic.gdx.assets.AssetDescriptor;
@@ -16,10 +17,7 @@ public class Assets {
 	public static final AssetManager manager = new AssetManager();
 	
 	//Characters
-	public static final AssetDescriptor<Texture> boy1 = new AssetDescriptor<Texture>("character/boy1/spriteSheet.png", Texture.class);
-	public static final AssetDescriptor<Texture> boy1_icons = new AssetDescriptor<Texture>("character/boy1/icons.png", Texture.class);
-	public static final AssetDescriptor<Texture> girl1 = new AssetDescriptor<Texture>("character/girl1/spriteSheet.png", Texture.class);
-	public static final AssetDescriptor<Texture> girl1_icons = new AssetDescriptor<Texture>("character/girl1/icons.png", Texture.class);
+	public static final LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>> characterAssets = new LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>>();
 	
 	//Monsters/NPCS
 	public static final AssetDescriptor<Texture> zombie = new AssetDescriptor<Texture>("character/zombie/sprite.png", Texture.class);
@@ -43,15 +41,17 @@ public class Assets {
 	public static final AssetDescriptor<Texture> particles = new AssetDescriptor<Texture>("other/particles.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	
-	//Magic List
-		public static final LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>> tileAssets = new LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>>();
+	//Tiles
+	public static final LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>> tileAssets = new LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>>();
 	public static final LinkedHashMap<String, AssetDescriptor<Texture>> townTiles = new LinkedHashMap<String, AssetDescriptor<Texture>>();
 	
 	//Map Objects
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
+	public static final AssetDescriptor<Texture> house = new AssetDescriptor<Texture>("object/house.png", Texture.class);
 	
 	//UI things
 	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
+	public static final AssetDescriptor<Texture> selectionArrows = new AssetDescriptor<Texture>("ui/selectionArrows.png", Texture.class);
 	public static final AssetDescriptor<Texture> magicSelectCursor = new AssetDescriptor<Texture>("ui/magicSelection.png", Texture.class);
 	public static final AssetDescriptor<Texture> healthCell = new AssetDescriptor<Texture>("ui/health/healthCell.png", Texture.class);
 	public static final AssetDescriptor<Texture> manaCell = new AssetDescriptor<Texture>("ui/mana/manaCell.png", Texture.class);
@@ -72,6 +72,19 @@ public class Assets {
 		greenPix.fill();
 		greenBox = new Texture(greenPix);
 		greenPix.dispose();
+		
+		String[] characterList = FileReads.readFileToArray("character/playerCharacters.txt");
+		for (String line : characterList) {
+			int spaceIndex = line.indexOf(' ');
+			String folder = line.substring(0, spaceIndex);
+			String name = line.substring(spaceIndex + 1);
+			LinkedHashMap<String, AssetDescriptor<Texture>> list = new LinkedHashMap<String, AssetDescriptor<Texture>>();
+			list.put("SPRITE", new AssetDescriptor<Texture>("character/" + folder + "/spriteSheet.png", Texture.class));
+			list.put("ICON", new AssetDescriptor<Texture>("character/" + folder + "/icons.png", Texture.class));
+			characterAssets.put(name, list);
+			
+			Player.characterNames.add(name);
+		}
 		
 		//Adding magic based on the magic list
 		//Probably will do the same thing with relics soon
@@ -116,10 +129,11 @@ public class Assets {
 	
 	public static void loadAssets() {
 		//Player Characters
-		manager.load(boy1);
-		manager.load(boy1_icons);
-		manager.load(girl1);
-		manager.load(girl1_icons);
+		for (String key : characterAssets.keySet()) {
+			for (String imageKey : characterAssets.get(key).keySet()) {
+				manager.load(characterAssets.get(key).get(imageKey));
+			}
+		}
 		//Monsters/NPCS
 		manager.load(zombie);
 		//Magic Stuff
@@ -144,6 +158,7 @@ public class Assets {
 		manager.load(sword);
 		//Dungeon Tiles and Objects
 		manager.load(treasureChest);
+		manager.load(house);
 		for (String key : tileAssets.keySet()) {
 			for (String imageKey : tileAssets.get(key).keySet()) {
 				manager.load(tileAssets.get(key).get(imageKey));
@@ -154,6 +169,7 @@ public class Assets {
 		}
 		//UI Stuff
 		manager.load(buttons);
+		manager.load(selectionArrows);
 		manager.load(magicSelectCursor);
 		manager.load(healthCell);
 		manager.load(manaCell);
