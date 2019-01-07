@@ -37,7 +37,7 @@ public class MagicRingMenu extends RingMenu<AbstractMagic>{
 			AbstractMagic magic = player.getCharacter().getMagicSpells().get(selection);
 			font.getData().setScale(FONT_SCALE);
 			magicName.setText(font, magic.getName());
-			magicDesc.setText(font, "Cost: " + magic.getManaCost());
+			magicDesc.setText(font, "Cost: " + getManaCostText(magic.getManaCost(), magic.getPartialManaCost()));
 			font.getData().setScale(1.0f);
 		}
 	}
@@ -75,7 +75,7 @@ public class MagicRingMenu extends RingMenu<AbstractMagic>{
 		AbstractMagic magic = getList().get(selection);
 		font.getData().setScale(FONT_SCALE);
 		magicName.setText(font, magic.getName());
-		magicDesc.setText(font, "Cost: " + magic.getManaCost());
+		magicDesc.setText(font, "Cost: " + getManaCostText(magic.getManaCost(), magic.getPartialManaCost()));
 		font.getData().setScale(1.0f);
 	}
 	
@@ -91,12 +91,22 @@ public class MagicRingMenu extends RingMenu<AbstractMagic>{
 
 	@Override
 	public boolean blinkIcon(AbstractMagic obj) {
-		return player.getCharacter().getMana() < obj.getManaCost();
+		return (player.getCharacter().getMana() * 4) + player.getCharacter().getPartialMana() < (obj.getManaCost() * 4) + obj.getPartialManaCost();
 	}
 
 	@Override
 	public Vector2 getCenter() {
 		return player.getCharacter().getCenter();
+	}
+	
+	public String getManaCostText(int mana, int partialMana) {
+		if (partialMana == 0) return "" + mana;
+		else {
+			if (partialMana == 1) return mana + ".25";
+			if (partialMana == 2) return mana + ".5";
+			if (partialMana == 3) return mana + ".75";
+		}
+		return null;
 	}
 
 }

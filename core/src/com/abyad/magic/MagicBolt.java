@@ -8,7 +8,7 @@ public class MagicBolt extends AbstractMagic{
 
 	public MagicBolt() {
 		super("MAGIC BOLT", "Fires a large arcane projectile",
-				1, 100, 20, "magicBolt");
+				1, 0, 100, 20, "magicBolt");
 	}
 
 	@Override

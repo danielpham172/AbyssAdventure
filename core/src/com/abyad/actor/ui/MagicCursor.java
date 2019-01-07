@@ -155,6 +155,7 @@ public class MagicCursor extends Actor{
 	
 	@Override
 	public void draw(Batch batch, float a) {
+		cursor = player.getSprite().getSprite("magic_cursor");
 		batch.draw(cursor, getX() - getOriginX(), getY() - getOriginY(),
 				getOriginX(), getOriginY(), cursor.getRegionWidth(), cursor.getRegionHeight(),
 				CURSOR_SCALE, CURSOR_SCALE, getRotation());

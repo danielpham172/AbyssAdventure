@@ -8,7 +8,7 @@ public class HealingField extends AbstractMagic{
 
 	public HealingField() {
 		super("HEALING FIELD", "Creates a field that restores HP to allies who enter it",
-				3, 300, 40, "healingField");
+				3, 0, 300, 40, "healingField");
 	}
 
 	@Override

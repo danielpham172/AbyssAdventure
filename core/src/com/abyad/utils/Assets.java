@@ -40,6 +40,7 @@ public class Assets {
 	public static final AssetDescriptor<Texture> deathAnim = new AssetDescriptor<Texture>("other/deathSprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> particles = new AssetDescriptor<Texture>("other/particles.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
+	public static final AssetDescriptor<Texture> staff = new AssetDescriptor<Texture>("weapon/staff/sprite.png", Texture.class);
 	
 	//Tiles
 	public static final LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>> tileAssets = new LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>>();
@@ -156,6 +157,7 @@ public class Assets {
 		manager.load(particles);
 		//Weapon
 		manager.load(sword);
+		manager.load(staff);
 		//Dungeon Tiles and Objects
 		manager.load(treasureChest);
 		manager.load(house);

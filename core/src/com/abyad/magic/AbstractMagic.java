@@ -21,6 +21,7 @@ public abstract class AbstractMagic {
 	private String name;
 	private String desc;
 	private int manaCost;
+	private int partialManaCost;
 	private int castTime;
 	private int afterCastTime;
 	private String resourceFolder;
@@ -34,10 +35,11 @@ public abstract class AbstractMagic {
 		}
 	}
 	
-	public AbstractMagic(String name, String desc, int manaCost, int castTime, int afterCastTime, String resourceFolder) {
+	public AbstractMagic(String name, String desc, int manaCost, int partialManaCost, int castTime, int afterCastTime, String resourceFolder) {
 		this.name = name;
 		this.desc = desc;
 		this.manaCost = manaCost;
+		this.partialManaCost = partialManaCost;
 		this.castTime = castTime;
 		this.afterCastTime = afterCastTime;
 		
@@ -53,6 +55,10 @@ public abstract class AbstractMagic {
 	
 	public int getManaCost() {
 		return manaCost;
+	}
+	
+	public int getPartialManaCost() {
+		return partialManaCost;
 	}
 	
 	public int getCastTime() {
