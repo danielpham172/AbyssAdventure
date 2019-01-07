@@ -16,6 +16,7 @@ public class CosmeticParticle extends Actor{
 	private float heightVelocity;
 	
 	private int lifetime;
+	private float transparency = 1.0f;
 	
 	public CosmeticParticle(TextureRegion tex, float x, float y, float height, Vector2 velocity, float heightVelocity, int lifetime) {
 		texture = tex;
@@ -56,8 +57,10 @@ public class CosmeticParticle extends Actor{
 	@Override
 	public void draw(Batch batch, float a) {
 		if (inView()) {
+			batch.setColor(1.0f, 1.0f, 1.0f, transparency);
 			batch.draw(texture, getX() - getOriginX(), getY() - getOriginY()+ height, getOriginX(),
 				getOriginY(), texture.getRegionWidth(), texture.getRegionHeight(), getScaleX(), getScaleY(), getRotation());
+			batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 	}
 	
@@ -72,5 +75,9 @@ public class CosmeticParticle extends Actor{
 	
 	public void setHeight(float height) {
 		this.height = height;
+	}
+	
+	public void setTransparency(float transparency) {
+		this.transparency = transparency;
 	}
 }

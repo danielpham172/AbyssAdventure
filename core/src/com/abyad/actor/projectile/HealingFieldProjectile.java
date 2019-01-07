@@ -20,7 +20,7 @@ public class HealingFieldProjectile extends OnGroundProjectile{
 	private static Rectangle baseBox = new Rectangle(0, 0, 18, 14);
 	private static TextureRegion particleTexture = AbstractSpriteSheet.spriteSheets.get("HEALING FIELD").getSprite("particle_0");
 	
-	private static final int LIFETIME = 900;
+	private static final int LIFETIME = 300;
 	
 	public HealingFieldProjectile(float x, float y, AbstractEntity source) {
 		super(x, y, source);
@@ -69,7 +69,7 @@ public class HealingFieldProjectile extends OnGroundProjectile{
 			healParticleEffects(getX(), getY(), 1);
 		}
 		
-		if (framesSinceLast >= 900) {
+		if (framesSinceLast >= LIFETIME) {
 			markForRemoval = true;
 		}
 		
