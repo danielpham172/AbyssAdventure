@@ -6,6 +6,10 @@ public abstract class SpecialAttackData extends AttackData{
 		return 0;
 	}
 	
+	public int getRequiredPartialMana() {
+		return 0;
+	}
+	
 	public boolean isHold() {
 		return false;
 	}

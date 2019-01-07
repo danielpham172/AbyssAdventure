@@ -63,10 +63,10 @@ public class PlayerCharacter extends HumanoidEntity{
 		
 		this.player = player;
 		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get(player.getCharacterName());
-		weapon = "SWORD";
+		weapon = "STAFF";
 		basicAttack = AttackData.basicAttacks.get(weapon);
 		if (player.getNumber() == 1) {
-			specialName = "SPIN_SLASH";
+			specialName = "MEDITATE";
 		}
 		else {
 			specialName = "WIND_BLADE";
@@ -157,21 +157,28 @@ public class PlayerCharacter extends HumanoidEntity{
 					else {
 						int selection = player.getSelectedMagic();
 						castingMagic = magicSpells.get(selection);
-						if (getMana() >= castingMagic.getManaCost()) {
+						if ((getMana() * 4) + getPartialMana() >= (castingMagic.getManaCost() * 4) + castingMagic.getPartialManaCost()) {
 							removeMana(castingMagic.getManaCost());
+							removePartialMana(castingMagic.getPartialManaCost());
 							setState("CASTING");
 							casting = true;
-							cursor.spawnInCursor();
+							if (castingMagic.usesCursor()) {
+								cursor.spawnInCursor();
+							}
 							player.toggleRingMenu();
 						}
 					}
 				}
-				else if (controller.specialPressed() && !specialHeld && !isHoldingItem() && getMana() >= specialAttack.getRequiredMana() && !player.isRingMenuActive()) {
+				else if (controller.specialPressed() && (!specialHeld || specialAttack.isHold()) && !isHoldingItem() &&
+						(getMana() * 4) + getPartialMana() >= (specialAttack.getRequiredMana() * 4) + specialAttack.getRequiredPartialMana() &&
+						!player.isRingMenuActive()) {
 					//This checks to see if the player has pressed the special button
 					attacking = true;
 					specialAttack.initiateAttack(this);
 					setState("SPECIAL_ATTACK - " + specialName);
+					framesSinceLast = 0;
 					removeMana(specialAttack.getRequiredMana());
+					removePartialMana(specialAttack.getRequiredPartialMana());
 				}
 				else {
 					if (xChange == 0 && yChange == 0) {
@@ -368,7 +375,17 @@ public class PlayerCharacter extends HumanoidEntity{
 				addMana(1);
 				partialMP -= 4;
 			}
+			if (mp == maxMP) partialMP = 0;
 		}
+	}
+	
+	public void removePartialMana(int sub) {
+		partialMP -= sub;
+		while (partialMP < 0 && mp >= 0) {
+			removeMana(1);
+			partialMP += 4;
+		}
+		if (partialMP < 0) partialMP = 0;
 	}
 	
 	public boolean isCursorActive() {
