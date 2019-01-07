@@ -12,9 +12,11 @@ public abstract class AttackData {
 	public static LinkedHashMap<String, SpecialAttackData> specialAttacks = new LinkedHashMap<String, SpecialAttackData>();
 	static {
 		basicAttacks.put("SWORD", new BasicSwordAttack());
+		basicAttacks.put("STAFF", new BasicStaffAttack());
 		
 		specialAttacks.put("SPIN_SLASH", new SpinSlash());
 		specialAttacks.put("WIND_BLADE", new WindBlade());
+		specialAttacks.put("MEDITATE", new Meditate());
 	}
 	
 	public abstract void initiateAttack(PlayerCharacter player);
