@@ -7,6 +7,7 @@ import com.abyad.actor.mapobjects.items.GoldItem;
 import com.abyad.actor.mapobjects.items.HeartItem;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
+import com.abyad.actor.mapobjects.items.ManaItem;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.mapobjects.items.RelicLoot;
 import com.abyad.actor.tile.AbstractTile;
@@ -58,7 +59,7 @@ public class TreasureChest extends Actor implements Interactable{
 	}
 	
 	public void generateRandomLoot() {
-		int choice = (int)(Math.random() * 3);
+		int choice = (int)(Math.random() * 4);
 		if (choice == 0) {
 			Vector2 velocity = new Vector2(1, 0);
 			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
@@ -66,15 +67,23 @@ public class TreasureChest extends Actor implements Interactable{
 		}
 		else if (choice == 1){
 			int heartAmount = (int)(Math.random() * 3) + 1;
-			for (int i = 0; i <= heartAmount; i++) {
+			for (int i = 0; i < heartAmount; i++) {
 				Vector2 velocity = new Vector2(1, 0);
 				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
 				items.add(new HeartItem(getX(), getY(), velocity));
 			}
 		}
+		else if (choice == 2) {
+			int manaAmount = (int)(Math.random() * 5) + 4;
+			for (int i = 0; i < manaAmount; i++) {
+				Vector2 velocity = new Vector2(1, 0);
+				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
+				items.add(new ManaItem(getX(), getY(), velocity));
+			}
+		}
 		else{
-			int goldAmount = (int)(Math.random() * 11) + 5;
-			for (int i = 0; i <= goldAmount; i++) {
+			int goldAmount = (int)(Math.random() * 5) + 5;
+			for (int i = 0; i < goldAmount; i++) {
 				Vector2 velocity = new Vector2(1, 0);
 				velocity.setLength((float)(Math.random() * 2.0f) + 2.0f).setAngle((float)(Math.random() * 360.0f));
 				items.add(new GoldItem(getX(), getY(), velocity));
