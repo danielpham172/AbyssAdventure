@@ -270,6 +270,8 @@ public class PlayerCharacter extends HumanoidEntity{
 		if (!players.contains(this)) players.add(this);
 		if (!getEntities().contains(this)) getEntities().add(this);
 		setState("IDLE");
+		attacking = false;
+		casting = false;
 		knockbackLength = 0;
 		invulnLength = 0;
 		velocity.setToRandomDirection();
