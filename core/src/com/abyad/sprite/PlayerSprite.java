@@ -15,22 +15,35 @@ public class PlayerSprite extends EntitySprite{
 	private static String[] weaponColNames = {"start", "swing", "follow", "end", "start-swing", "end-swing"};			//The column names for the weapon
 	private static String[] rowNames = {"f", "r", "l", "b"};															//The row names for the weapon
 	
+	private static String[] staffColNames = {"start", "swing", "follow", "end", "low-hold", "high-hold"};
+	
 	public static LinkedHashMap<String, TextureRegion> swordSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the sword sprites
+	public static LinkedHashMap<String, TextureRegion> staffSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the sword sprites
 	static {
 		//Splicing and adding sword sprites
 		int swordRows = 4;
 		int swordCols = 6;
 		Texture sword = Assets.manager.get(Assets.sword);
-		TextureRegion[][] weaponRegions = TextureRegion.split(sword, sword.getWidth() / swordCols, sword.getHeight() / swordRows);
+		TextureRegion[][] swordRegions = TextureRegion.split(sword, sword.getWidth() / swordCols, sword.getHeight() / swordRows);
 		for (int r = 0; r < swordRows; r++) {
 			for (int c = 0; c < swordCols; c++) {
-				swordSprites.put("weapon_" + rowNames[r] + "_" + weaponColNames[c], weaponRegions[r][c]);
+				swordSprites.put("weapon_" + rowNames[r] + "_" + weaponColNames[c], swordRegions[r][c]);
+			}
+		}
+		
+		int staffRows = 4;
+		int staffCols = 6;
+		Texture staff = Assets.manager.get(Assets.staff);
+		TextureRegion[][] staffRegions = TextureRegion.split(staff, staff.getWidth() / staffCols, staff.getHeight() / staffRows);
+		for (int r = 0; r < staffRows; r++) {
+			for (int c = 0; c < staffCols; c++) {
+				staffSprites.put("weapon_" + rowNames[r] + "_" + staffColNames[c], staffRegions[r][c]);
 			}
 		}
 	}
 	
 	private static final int SHEET_ROWS = 4;
-	private static final int SHEET_COLS = 12;
+	private static final int SHEET_COLS = 14;
 	
 	/**
 	 * Constructor for creating the sprite for a player.
@@ -48,6 +61,11 @@ public class PlayerSprite extends EntitySprite{
 		for (int r = 0; r < 4; r++) {
 			for (int c = 8; c < 12; c++) {
 				sprites.put("char_" + rowNames[r] + "_" + weaponColNames[c - 8], charRegions[r][c]);
+			}
+		}
+		for (int r = 0; r < 4; r++) {
+			for (int c = 12; c < 14; c++) {
+				sprites.put("char_" + rowNames[r] + "_" + staffColNames[c - 8], charRegions[r][c]);
 			}
 		}
 		TextureRegion[][] iconRegions = TextureRegion.split(icons, icons.getWidth() / 2, icons.getHeight());
@@ -130,6 +148,25 @@ public class PlayerSprite extends EntitySprite{
 				frames.add(weapon);
 			}
 		}
+		else if (state.contains("STAFF")) {
+			int frame = 0;
+			int[] attackLengths = {10, 16, 22, 34};				//The frame thresholds for the attack
+			String dir = getDirection(direction);
+			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
+				frame++;
+			}
+			if (frame >= 4) frame = 3;
+			TextureRegion weapon = staffSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
+			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
+			if (isWeaponBehind(dir, frame, "STAFF")) {
+				frames.add(weapon);
+				frames.add(character);
+			}
+			else {
+				frames.add(character);
+				frames.add(weapon);
+			}
+		}
 		return frames;
 	}
 	
@@ -189,6 +226,25 @@ public class PlayerSprite extends EntitySprite{
 				frames.add(weapon);
 			}
 		}
+		if (state.contains("MEDITATE")) {
+			int frame = 0;
+			int[] attackLengths = {30, 40};				//The frame thresholds for the attack
+			String dir = getDirection(direction);
+			while (frame < 2 && framesSinceLast >= attackLengths[frame]) {
+				frame++;
+			}
+			if (frame >= 2) frame = 1;
+			TextureRegion weapon = staffSprites.get("weapon_" + dir + "_" + staffColNames[frame + 4]);
+			TextureRegion character = sprites.get("char_" + dir + "_" + staffColNames[frame + 4]);
+			if (isWeaponBehind(dir, frame, "STAFF")) {
+				frames.add(weapon);
+				frames.add(character);
+			}
+			else {
+				frames.add(character);
+				frames.add(weapon);
+			}
+		}
 		return frames;
 	}
 	
@@ -200,6 +256,11 @@ public class PlayerSprite extends EntitySprite{
 	 */
 	private boolean isWeaponBehind (String dir, int frame, String type) {
 		if (type.equals("SWORD")) {
+			if (dir.equals("b")) return true;
+			else if (dir.equals("r") && frame >= 2) return true;
+			else if (dir.equals("l") && frame <= 1) return true;
+		}
+		else if (type.equals("STAFF")) {
 			if (dir.equals("b")) return true;
 			else if (dir.equals("r") && frame >= 2) return true;
 			else if (dir.equals("l") && frame <= 1) return true;
