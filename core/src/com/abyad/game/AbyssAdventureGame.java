@@ -31,8 +31,12 @@ public class AbyssAdventureGame extends Game {
 		//Generate Players
 		Player player1 = new Player(1, this);
 		players.add(player1);
-		//Player player2 = new Player(2, this);
-		//players.add(player2);
+		Player player2 = new Player(2, this);
+		players.add(player2);
+		Player player3 = new Player(3, this);
+		players.add(player3);
+		Player player4 = new Player(4, this);
+		players.add(player4);
 		
 		PlayScreen playScreen = new PlayScreen(this);
 		screens.put("Play", playScreen);

@@ -72,49 +72,53 @@ public class WeaponSelectMenu extends ScrollSelectionMenu<String>{
 	
 	@Override
 	public void act(float delta) {
-		if (isReady) {
-			readyTime++;
-		}
-		else {
-			readyTime = 0;
-		}
-		
-		if (player.getController().rightSwapPressed() && !rSwapHeld && !isReady) {
-			select(1);
+		if (player.isActive()) {
+			if (isReady) {
+				readyTime++;
+			}
+			else {
+				readyTime = 0;
+			}
 			
+			if (player.getController().rightSwapPressed() && !rSwapHeld && !isReady) {
+				select(1);
+				
+			}
+			else if (player.getController().leftSwapPressed() && !lSwapHeld && !isReady) {
+				select(-1);
+			}
+			else if (player.getController().attackPressed() && !attackHeld) {
+				isReady = !isReady;
+			}
+			
+			rSwapHeld = player.getController().rightSwapPressed();
+			lSwapHeld = player.getController().leftSwapPressed();
+			attackHeld = player.getController().attackPressed();
+			specialSelect.act(delta);
+			super.act(delta);
 		}
-		else if (player.getController().leftSwapPressed() && !lSwapHeld && !isReady) {
-			select(-1);
-		}
-		else if (player.getController().attackPressed() && !attackHeld) {
-			isReady = !isReady;
-		}
-		
-		rSwapHeld = player.getController().rightSwapPressed();
-		lSwapHeld = player.getController().leftSwapPressed();
-		attackHeld = player.getController().attackPressed();
-		specialSelect.act(delta);
-		super.act(delta);
 	}
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		super.draw(batch, a);
-		if (inView()) {
-			specialSelect.draw(batch, a);
-			Vector2 center = getCenter();
-			
-			font.getData().setScale(FONT_SCALE);
-			float fontX = center.x - (weaponName.width / 2);
-			float fontY = center.y - SPACING + (weaponName.height / 2);
-			font.draw(batch, weaponName, fontX, fontY);
-			font.getData().setScale(1.0f);
-			if (isReady) {
-				font.getData().setScale(FONT_SCALE * 2.0f);
-				float readyX = center.x - (readyText.width / 2);
-				float readyY = center.y + (readyText.height / 2) - OFFSET;
-				font.draw(batch, readyText, readyX, readyY);
+		if (player.isActive()) {
+			super.draw(batch, a);
+			if (inView()) {
+				specialSelect.draw(batch, a);
+				Vector2 center = getCenter();
+				
+				font.getData().setScale(FONT_SCALE);
+				float fontX = center.x - (weaponName.width / 2);
+				float fontY = center.y - SPACING + (weaponName.height / 2);
+				font.draw(batch, weaponName, fontX, fontY);
 				font.getData().setScale(1.0f);
+				if (isReady) {
+					font.getData().setScale(FONT_SCALE * 2.0f);
+					float readyX = center.x - (readyText.width / 2);
+					float readyY = center.y + (readyText.height / 2) - OFFSET;
+					font.draw(batch, readyText, readyX, readyY);
+					font.getData().setScale(1.0f);
+				}
 			}
 		}
 	}
@@ -144,7 +148,13 @@ public class WeaponSelectMenu extends ScrollSelectionMenu<String>{
 			return new Vector2((midX + minX) / 2, (midY + maxY) / 2 + OFFSET); 
 		}
 		else if (player.getNumber() == 2) {
+			return new Vector2((midX + maxX) / 2, (midY + maxY) / 2 + OFFSET); 
+		}
+		else if (player.getNumber() == 3) {
 			return new Vector2((midX + minX) / 2, (midY + minY) / 2 + OFFSET); 
+		}
+		else if (player.getNumber() == 4) {
+			return new Vector2((midX + maxX) / 2, (midY + minY) / 2 + OFFSET); 
 		}
 		return null;
 	}
@@ -160,7 +170,7 @@ public class WeaponSelectMenu extends ScrollSelectionMenu<String>{
 	}
 	
 	public boolean isReady() {
-		return isReady && readyTime > 60;
+		return (isReady && readyTime > 60) || (!player.isActive());
 	}
 	
 	public void resetStatus() {

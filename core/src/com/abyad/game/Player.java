@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.ui.MagicRingMenu;
 import com.abyad.actor.ui.PlayerDisplay;
+import com.abyad.controls.DisabledController;
 import com.abyad.controls.GamepadController;
 import com.abyad.controls.KeyboardController;
 import com.abyad.controls.PlayerController;
@@ -18,25 +19,24 @@ public class Player {
 	private MagicRingMenu ringMenu;
 	private int number;								//The player number
 	private int selectedName;
+	private boolean isActive;
+	
+	private static boolean haveKeyboardController;
 	
 	public Player(int num, AbyssAdventureGame game) {
 		number = num;
 		try {
-			switch (num)
-			{
-				case 2:
-					controller = new KeyboardController();	//This tries to make the player have the keyboard controller
-					break;
-				case 1:
-					controller = new GamepadController();	//This tries to make the player have the gamepad controller
-					break;
-				default:
-					controller = new KeyboardController();
-					break;
-			}
+			controller = new GamepadController();	//This tries to make the player have the gamepad controller
 		} catch (Exception e) {
-			
+			if (!haveKeyboardController) {
+				controller = new KeyboardController();
+				haveKeyboardController = true;
+			}
+			else {
+				controller = new DisabledController();
+			}
 		}
+		if (num == 1) isActive = true;
 		selectedName = num % characterNames.size();
 		character = new PlayerCharacter(this, 0, 0);
 		display = new PlayerDisplay(this);
@@ -44,8 +44,13 @@ public class Player {
 	}
 	
 	public boolean isActive() {
-		return (character.getStage() != null);
+		return isActive;
 	}
+	
+	public void setActive(boolean active) {
+		isActive = active;
+	}
+	
 	
 	public PlayerController getController() {
 		return controller;

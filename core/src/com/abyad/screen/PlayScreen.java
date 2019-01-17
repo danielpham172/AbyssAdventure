@@ -59,8 +59,10 @@ public class PlayScreen implements Screen{
 				playStage.dispose();
 				floor = 1;
 				for (Player player : game.getPlayers()) {
-					player.getCharacter().setSpawnInLength(100);
-					PlayerCharacter.getPlayers().add(player.getCharacter());
+						player.getCharacter().setSpawnInLength(100);
+					if (player.isActive()) {
+						PlayerCharacter.getPlayers().add(player.getCharacter());
+					}
 				}
 				PlayStage nextStage = new PlayStage(game);
 				
@@ -69,8 +71,10 @@ public class PlayScreen implements Screen{
 			else {
 				playStage.dispose();
 				for (Player player : game.getPlayers()) {
-					player.getCharacter().setSpawnInLength(100);
-					PlayerCharacter.getPlayers().add(player.getCharacter());
+					if (player.isActive()) {
+						player.getCharacter().setSpawnInLength(100);
+						PlayerCharacter.getPlayers().add(player.getCharacter());
+					}
 				}
 				floor++;
 				PlayStage nextStage = new PlayStage(game);
@@ -89,8 +93,10 @@ public class PlayScreen implements Screen{
 			}
 			if (playStage instanceof TownStage) {
 				for (Player player : game.getPlayers()) {
-					player.getCharacter().modifyHP(1);
-					player.getCharacter().addPartialMana(1);
+					if (player.isActive()) {
+						player.getCharacter().modifyHP(1);
+						player.getCharacter().addPartialMana(1);
+					}
 				}
 				
 				if (((TownStage)playStage).openCharacterMenu()){
@@ -103,10 +109,12 @@ public class PlayScreen implements Screen{
 						noPlayerHUD = false;
 						((TownStage)playStage).flagCharacterMenu(false);
 						for (Player player : game.getPlayers()) {
-							PlayerCharacter.getPlayers().add(player.getCharacter());
-							AbstractEntity.getEntities().add(player.getCharacter());
-							player.getCharacter().markForRemoval(false);
-							playStage.addActor(player.getCharacter());
+							if (player.isActive()) {
+								PlayerCharacter.getPlayers().add(player.getCharacter());
+								AbstractEntity.getEntities().add(player.getCharacter());
+								player.getCharacter().markForRemoval(false);
+								playStage.addActor(player.getCharacter());
+							}
 						}
 						characterSelectStage.resetStatus();
 					}
@@ -121,10 +129,12 @@ public class PlayScreen implements Screen{
 						noPlayerHUD = false;
 						((TownStage)playStage).flagWeaponMenu(false);
 						for (Player player : game.getPlayers()) {
-							PlayerCharacter.getPlayers().add(player.getCharacter());
-							AbstractEntity.getEntities().add(player.getCharacter());
-							player.getCharacter().markForRemoval(false);
-							playStage.addActor(player.getCharacter());
+							if (player.isActive()) {
+								PlayerCharacter.getPlayers().add(player.getCharacter());
+								AbstractEntity.getEntities().add(player.getCharacter());
+								player.getCharacter().markForRemoval(false);
+								playStage.addActor(player.getCharacter());
+							}
 						}
 						weaponSelectStage.resetStatus();
 					}
@@ -133,9 +143,11 @@ public class PlayScreen implements Screen{
 			else if (playersAreDead()) {
 				playStage.dispose();
 				for (Player player : game.getPlayers()) {
-					player.getCharacter().setSpawnInLength(100);
-					player.getCharacter().resetCharacter();
-					PlayerCharacter.getPlayers().add(player.getCharacter());
+					if (player.isActive()) {
+						player.getCharacter().setSpawnInLength(100);
+						player.getCharacter().resetCharacter();
+						PlayerCharacter.getPlayers().add(player.getCharacter());
+					}
 				}
 				
 				playStage = new TownStage(game);
@@ -145,7 +157,7 @@ public class PlayScreen implements Screen{
 	
 	public boolean playersAreDead() {
 		for (Player player : game.getPlayers()) {
-			if (!player.getCharacter().isDead()) return false;
+			if (!player.getCharacter().isDead() && player.isActive()) return false;
 		}
 		return true;
 	}

@@ -2,6 +2,7 @@ package com.abyad.actor.ui;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.tile.AbstractTile;
 import com.abyad.game.Player;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.sprite.AbstractSpriteSheet;
@@ -20,6 +21,7 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 	private boolean rSwapHeld = true;
 	private boolean lSwapHeld = true;
 	private boolean attackHeld = true;
+	private boolean specialHeld = true;
 	
 	private boolean isReady;
 	private int readyTime;
@@ -54,46 +56,66 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 	
 	@Override
 	public void act(float delta) {
-		if (isReady) {
+		if (isReady || !player.isActive()) {
 			readyTime++;
 		}
 		else {
 			readyTime = 0;
 		}
 		
-		if (player.getController().rightSwapPressed() && !rSwapHeld && !isReady) {
-			select(1);
+		if (player.isActive()) {
+			if (player.getController().rightSwapPressed() && !rSwapHeld && !isReady) {
+				select(1);
+			}
+			else if (player.getController().leftSwapPressed() && !lSwapHeld && !isReady) {
+				select(-1);
+			}
+			else if (player.getController().attackPressed() && !attackHeld) {
+				isReady = !isReady;
+			}
+			else if (player.getController().specialPressed() && !specialHeld) {
+				player.setActive(false);
+			}
 		}
-		else if (player.getController().leftSwapPressed() && !lSwapHeld && !isReady) {
-			select(-1);
-		}
-		else if (player.getController().attackPressed() && !attackHeld) {
-			isReady = !isReady;
+		else {
+			if (player.getController().attackPressed() && !attackHeld) {
+				player.setActive(true);
+			}
 		}
 		
 		rSwapHeld = player.getController().rightSwapPressed();
 		lSwapHeld = player.getController().leftSwapPressed();
 		attackHeld = player.getController().attackPressed();
+		specialHeld = player.getController().specialPressed();
 		super.act(delta);
 	}
 	
 	@Override
 	public void draw(Batch batch, float a) {
-		super.draw(batch, a);
 		if (inView()) {
 			Vector2 center = getCenter();
 			
-			font.getData().setScale(FONT_SCALE);
-			float fontX = center.x - (characterName.width / 2);
-			float fontY = center.y - SPACING + (characterName.height / 2);
-			font.draw(batch, characterName, fontX, fontY);
-			font.getData().setScale(1.0f);
-			if (isReady) {
-				font.getData().setScale(FONT_SCALE * 2.0f);
-				float readyX = center.x - (readyText.width / 2);
-				float readyY = center.y + (readyText.height / 2);
-				font.draw(batch, readyText, readyX, readyY);
+			if (player.isActive()) {
+				super.draw(batch, a);
+				font.getData().setScale(FONT_SCALE);
+				float fontX = center.x - (characterName.width / 2);
+				float fontY = center.y - SPACING + (characterName.height / 2);
+				font.draw(batch, characterName, fontX, fontY);
 				font.getData().setScale(1.0f);
+				if (isReady) {
+					font.getData().setScale(FONT_SCALE * 2.0f);
+					float readyX = center.x - (readyText.width / 2);
+					float readyY = center.y + (readyText.height / 2);
+					font.draw(batch, readyText, readyX, readyY);
+					font.getData().setScale(1.0f);
+				}
+			}
+			else {
+				TextureRegion aButton = AbstractSpriteSheet.spriteSheets.get("UI_BUTTONS").getSprite("A");
+				float xOrigin = aButton.getRegionWidth() / 2;
+				float yOrigin = aButton.getRegionHeight() / 2;
+				batch.draw(aButton, center.x - xOrigin, center.y - yOrigin, xOrigin, yOrigin, aButton.getRegionHeight(),
+						aButton.getRegionWidth(), ICON_SCALE, ICON_SCALE, 0);
 			}
 		}
 	}
@@ -123,7 +145,13 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 			return new Vector2((midX + minX) / 2, (midY + maxY) / 2); 
 		}
 		else if (player.getNumber() == 2) {
+			return new Vector2((midX + maxX) / 2, (midY + maxY) / 2); 
+		}
+		else if (player.getNumber() == 3) {
 			return new Vector2((midX + minX) / 2, (midY + minY) / 2); 
+		}
+		else if (player.getNumber() == 4) {
+			return new Vector2((midX + maxX) / 2, (midY + minY) / 2); 
 		}
 		return null;
 	}
@@ -138,13 +166,14 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 	}
 	
 	public boolean isReady() {
-		return isReady && readyTime > 60;
+		return (isReady || !player.isActive()) && readyTime > 60;
 	}
 	
 	public void resetStatus() {
 		rSwapHeld = true;
 		lSwapHeld = true;
 		attackHeld = true;
+		specialHeld = true;
 		isReady = false;
 		readyTime = 0;
 	}

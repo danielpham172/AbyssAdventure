@@ -8,6 +8,7 @@ import com.abyad.actor.tile.EnterDungeonTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.actor.tile.WallTile;
 import com.abyad.game.AbyssAdventureGame;
+import com.abyad.game.Player;
 import com.abyad.mapdata.MapEnvironment;
 
 public class TownStage extends PlayStage{
@@ -94,11 +95,14 @@ public class TownStage extends PlayStage{
 		doorTile.interactables.add(doorTile);
 		
 		//Spawn in the players
-		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
-			player.setPosition(tileMap[spawnRow][spawnCol].getCenter().x, tileMap[spawnRow][spawnCol].getCenter().y);
-			player.getVelocity().setLength(0);
-			player.removeHeldItem();
-			addActor(player);
+		for (Player player : game.getPlayers()) {
+				PlayerCharacter character = player.getCharacter();
+				character.setPosition(tileMap[spawnRow][spawnCol].getCenter().x, tileMap[spawnRow][spawnCol].getCenter().y);
+				character.getVelocity().setLength(0);
+				character.removeHeldItem();
+			if (player.isActive()) {
+				addActor(character);
+			}
 		}
 		addActor(house);
 		addActor(blacksmith);

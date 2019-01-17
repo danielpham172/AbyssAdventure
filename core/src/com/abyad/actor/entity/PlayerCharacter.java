@@ -63,14 +63,9 @@ public class PlayerCharacter extends HumanoidEntity{
 		
 		this.player = player;
 		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get(player.getCharacterName());
-		weapon = "STAFF";
+		weapon = "SWORD";
 		basicAttack = AttackData.basicAttacks.get(weapon);
-		if (player.getNumber() == 1) {
-			specialName = "MEDITATE";
-		}
-		else {
-			specialName = "WIND_BLADE";
-		}
+		specialName = "SPIN_SLASH";
 		specialAttack = AttackData.specialAttacks.get(specialName);
 		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
 		magicSpells.add(AbstractMagic.magicList.get("HEALING FIELD"));
@@ -79,7 +74,9 @@ public class PlayerCharacter extends HumanoidEntity{
 		updateHitbox();
 		maxHP = hp = 3;
 		maxMP = mp = 3;
-		players.add(this);
+		if (player.isActive()) {
+			players.add(this);
+		}
 	}
 	
 	/**

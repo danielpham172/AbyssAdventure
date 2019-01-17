@@ -112,8 +112,8 @@ public class WeaponHouse extends Actor implements Interactable{
 	public boolean interact(PlayerCharacter source) {
 		for (PlayerCharacter player : PlayerCharacter.getPlayers()) {
 			DeathAnimation deathAnim = new DeathAnimation(player.getCenterX(), player.getCenterY());
-			source.getStage().addActor(deathAnim);
-			source.markForRemoval();
+			player.getStage().addActor(deathAnim);
+			player.markForRemoval();
 		}
 		((TownStage)getStage()).flagWeaponMenu(true);
 		return true;
