@@ -8,6 +8,7 @@ import com.abyad.stage.CharacterSelectStage;
 import com.abyad.stage.PlayHUD;
 import com.abyad.stage.PlayStage;
 import com.abyad.stage.TownStage;
+import com.abyad.stage.WeaponSelectStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,6 +21,7 @@ public class PlayScreen implements Screen{
 	private int floor;
 	
 	private CharacterSelectStage characterSelectStage;
+	private WeaponSelectStage weaponSelectStage;
 	private boolean noPlayerHUD;
 	
 	public PlayScreen(AbyssAdventureGame game) {
@@ -28,6 +30,7 @@ public class PlayScreen implements Screen{
 		playStage = new TownStage(game);
 		playHUD = new PlayHUD(game);
 		characterSelectStage = new CharacterSelectStage(game);
+		weaponSelectStage = new WeaponSelectStage(game);
 		floor = 1;
 	}
 	
@@ -106,6 +109,24 @@ public class PlayScreen implements Screen{
 							playStage.addActor(player.getCharacter());
 						}
 						characterSelectStage.resetStatus();
+					}
+				}
+				if (((TownStage)playStage).openWeaponMenu()){
+					weaponSelectStage.getViewport().apply();
+					weaponSelectStage.act();
+					weaponSelectStage.draw();
+					noPlayerHUD = true;
+					
+					if (weaponSelectStage.allIsReady()) {
+						noPlayerHUD = false;
+						((TownStage)playStage).flagWeaponMenu(false);
+						for (Player player : game.getPlayers()) {
+							PlayerCharacter.getPlayers().add(player.getCharacter());
+							AbstractEntity.getEntities().add(player.getCharacter());
+							player.getCharacter().markForRemoval(false);
+							playStage.addActor(player.getCharacter());
+						}
+						weaponSelectStage.resetStatus();
 					}
 				}
 			}

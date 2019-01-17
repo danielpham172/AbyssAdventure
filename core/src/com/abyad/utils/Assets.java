@@ -41,6 +41,7 @@ public class Assets {
 	public static final AssetDescriptor<Texture> particles = new AssetDescriptor<Texture>("other/particles.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> staff = new AssetDescriptor<Texture>("weapon/staff/sprite.png", Texture.class);
+	public static final AssetDescriptor<Texture> weaponIcons = new AssetDescriptor<Texture>("weapon/weaponIcons.png", Texture.class);
 	
 	//Tiles
 	public static final LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>> tileAssets = new LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>>();
@@ -49,6 +50,7 @@ public class Assets {
 	//Map Objects
 	public static final AssetDescriptor<Texture> treasureChest = new AssetDescriptor<Texture>("object/treasureChest.png", Texture.class);
 	public static final AssetDescriptor<Texture> house = new AssetDescriptor<Texture>("object/house.png", Texture.class);
+	public static final AssetDescriptor<Texture> blacksmith = new AssetDescriptor<Texture>("object/blacksmith.png", Texture.class);
 	
 	//UI things
 	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
@@ -158,9 +160,11 @@ public class Assets {
 		//Weapon
 		manager.load(sword);
 		manager.load(staff);
+		manager.load(weaponIcons);
 		//Dungeon Tiles and Objects
 		manager.load(treasureChest);
 		manager.load(house);
+		manager.load(blacksmith);
 		for (String key : tileAssets.keySet()) {
 			for (String imageKey : tileAssets.get(key).keySet()) {
 				manager.load(tileAssets.get(key).get(imageKey));

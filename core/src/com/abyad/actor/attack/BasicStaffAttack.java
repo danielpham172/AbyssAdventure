@@ -14,6 +14,10 @@ public class BasicStaffAttack extends AttackData{
 	private int[] attackLengths = {10, 16, 22, 34};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
 	
 	@Override
+	public String getName() {
+		return "STAFF";
+	}
+	@Override
 	public void initiateAttack(PlayerCharacter player) {
 		if (player.getState().equals("IDLE")) {
 			//If the player was in idle, give a small forward movement. May remove or lower this.

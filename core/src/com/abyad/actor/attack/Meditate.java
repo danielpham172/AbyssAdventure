@@ -13,6 +13,10 @@ public class Meditate extends SpecialAttackData {
 	private int[] attackLengths = {30, 40};
 	
 	@Override
+	public String getName() {
+		return "MEDITATE";
+	}
+	@Override
 	public void initiateAttack(PlayerCharacter player) {
 		
 	}

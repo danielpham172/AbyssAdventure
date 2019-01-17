@@ -11,8 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class ScrollSelectionMenu<E> extends Actor {
 
 	protected final float ICON_SCALE;
+	protected final float ARROWS_DISTANCE;
 	
-	private static final float ARROWS_DISTANCE = 18;
 	private static final float ARROWS_OFFSET_Y = 0.5f;
 	
 	private static TextureRegion leftArrow = AbstractSpriteSheet.spriteSheets.get("SELECTION_ARROWS").getSprite("LEFT");
@@ -24,10 +24,12 @@ public abstract class ScrollSelectionMenu<E> extends Actor {
 	
 	public ScrollSelectionMenu() {
 		ICON_SCALE = 1.0f;
+		ARROWS_DISTANCE = 18;
 	}
 	
-	public ScrollSelectionMenu(float iconScale) {
+	public ScrollSelectionMenu(float iconScale, float arrowsDistance) {
 		ICON_SCALE = iconScale;
+		ARROWS_DISTANCE = arrowsDistance;
 		
 	}
 	
@@ -45,9 +47,11 @@ public abstract class ScrollSelectionMenu<E> extends Actor {
 			Vector2 center = getCenter();
 			
 			TextureRegion icon = getIcon(list.get(selection));
-			batch.draw(icon, center.x - (icon.getRegionWidth() / 2), center.y - (icon.getRegionHeight() / 2),
-					icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
-					ICON_SCALE, ICON_SCALE, 0);
+			if (icon != null) {
+				batch.draw(icon, center.x - (icon.getRegionWidth() / 2), center.y - (icon.getRegionHeight() / 2),
+						icon.getRegionWidth() / 2, icon.getRegionHeight() / 2, icon.getRegionWidth(), icon.getRegionHeight(),
+						ICON_SCALE, ICON_SCALE, 0);
+			}
 			batch.draw(leftArrow, center.x - (leftArrow.getRegionWidth() / 2) - (ARROWS_DISTANCE * ICON_SCALE), center.y - (leftArrow.getRegionHeight() / 2) + (ARROWS_OFFSET_Y * ICON_SCALE),
 					leftArrow.getRegionWidth() / 2, leftArrow.getRegionHeight() / 2, leftArrow.getRegionWidth(), leftArrow.getRegionHeight(),
 					ICON_SCALE, ICON_SCALE, 0);
@@ -64,10 +68,10 @@ public abstract class ScrollSelectionMenu<E> extends Actor {
 	public void select(int direction) {
 		int listSize = getList().size();
 		if (direction < 0) {
-			selection = (selection + 1) % listSize;
+			setSelection((selection + 1) % listSize);
 		}
 		else if (direction > 0) {
-			selection = (selection + listSize - 1) % listSize;
+			setSelection((selection + listSize - 1) % listSize);
 		}
 	}
 	
@@ -91,6 +95,10 @@ public abstract class ScrollSelectionMenu<E> extends Actor {
 	
 	public boolean isMenuActive() {
 		return (getStage() != null);
+	}
+	
+	public void setSelection(int selection) {
+		this.selection = selection;
 	}
 	
 	public int getSelection() {

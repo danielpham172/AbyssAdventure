@@ -28,6 +28,10 @@ public class BasicSprite extends AbstractSpriteSheet{
 		}
 	}
 	
+	public BasicSprite(Texture sheet, String[][] names) {
+		this(sheet, names.length, names[0].length, names);
+	}
+	
 	public BasicSprite(Texture sheet, int rows, int cols, String prefix) {
 		super();
 		

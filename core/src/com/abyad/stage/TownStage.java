@@ -2,6 +2,7 @@ package com.abyad.stage;
 
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.mapobjects.CharacterHouse;
+import com.abyad.actor.mapobjects.WeaponHouse;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.EnterDungeonTile;
 import com.abyad.actor.tile.FloorTile;
@@ -27,7 +28,12 @@ public class TownStage extends PlayStage{
 	private static int houseRow = spawnRow + 3;
 	private static int houseCol = spawnCol - centerSquareRadius;
 	
+	private static WeaponHouse blacksmith;
+	private static int blacksmithRow = spawnRow + 3;
+	private static int blacksmithCol = spawnCol + centerSquareRadius;
+	
 	private boolean characterMenuFlag;
+	private boolean weaponMenuFlag;
 	
 	static {
 		for (int row = 0; row < townMap.length; row++) {
@@ -71,6 +77,7 @@ public class TownStage extends PlayStage{
 		doorTile.interactables.remove(doorTile);
 		townTileMap[doorRow][doorCol] = doorTile;
 		house = new CharacterHouse((FloorTile)townTileMap[houseRow][houseCol]);
+		blacksmith = new WeaponHouse((FloorTile)townTileMap[blacksmithRow][blacksmithCol]);
 	}
 	
 	public TownStage(AbyssAdventureGame game) {
@@ -94,7 +101,9 @@ public class TownStage extends PlayStage{
 			addActor(player);
 		}
 		addActor(house);
+		addActor(blacksmith);
 		house.initialize();
+		blacksmith.initialize();
 	}
 	
 	public void flagCharacterMenu(boolean flag) {
@@ -103,6 +112,14 @@ public class TownStage extends PlayStage{
 	
 	public boolean openCharacterMenu() {
 		return characterMenuFlag;
+	}
+
+	public void flagWeaponMenu(boolean flag) {
+		weaponMenuFlag = flag;
+	}
+	
+	public boolean openWeaponMenu() {
+		return weaponMenuFlag;
 	}
 
 }

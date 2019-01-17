@@ -17,4 +17,7 @@ public abstract class SpecialAttackData extends AttackData{
 	public int getHoldLength() {
 		return 0;
 	}
+	public String getDesc() {
+		return "";
+	}
 }

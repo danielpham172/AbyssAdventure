@@ -475,6 +475,24 @@ public class PlayerCharacter extends HumanoidEntity{
 		sprite = (EntitySprite)AbstractSpriteSheet.spriteSheets.get(player.getCharacterName());
 	}
 	
+	public String getWeapon() {
+		return weapon;
+	}
+	
+	public void changeWeapon(String weapon) {
+		this.weapon = weapon;
+		basicAttack = AttackData.basicAttacks.get(weapon);
+	}
+	
+	public String getSpecial() {
+		return specialName;
+	}
+	
+	public void changeSpecial(String specialName) {
+		this.specialName = specialName;
+		specialAttack = AttackData.specialAttacks.get(specialName);
+	}
+	
 	/**
 	 * Method overriden to set knockback and invuln period for the player. Also to lower hp
 	 */

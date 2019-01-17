@@ -14,6 +14,10 @@ public class SpinSlash extends SpecialAttackData{
 	private int[] attackLengths = {4, 10, 16, 22, 28, 34};
 	
 	@Override
+	public String getName() {
+		return "SPIN SLASH";
+	}
+	@Override
 	public void initiateAttack(PlayerCharacter player) {
 		if (player.getState().equals("IDLE")) {
 			//If the player was in idle, give a small forward movement. May remove or lower this.

@@ -28,33 +28,39 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("HEALING_FIELD_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.healingFieldProjectile), 1, 2, 6, true));
 		
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
-		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames.length, chestNames[0].length, chestNames));
+		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames));
 		
 		String[][] houseNames = { {"CLOSED", "OPEN", "ROOF"} };
-		spriteSheets.put("HOUSE", new BasicSprite(Assets.manager.get(Assets.house), houseNames.length, houseNames[0].length, houseNames));
+		spriteSheets.put("HOUSE", new BasicSprite(Assets.manager.get(Assets.house), houseNames));
+		
+		String[][] blacksmithNames = { {"CLOSED", "OPEN"} };
+		spriteSheets.put("BLACKSMITH", new BasicSprite(Assets.manager.get(Assets.blacksmith), blacksmithNames));
 		
 		String[][] buttonNames = { {"A", "B"}, {"X", "Y"} };
-		spriteSheets.put("UI_BUTTONS", new BasicSprite(Assets.manager.get(Assets.buttons), 2, 2, buttonNames));
+		spriteSheets.put("UI_BUTTONS", new BasicSprite(Assets.manager.get(Assets.buttons), buttonNames));
 		String[][] selectionArrowNames = { {"LEFT", "RIGHT"} };
-		spriteSheets.put("SELECTION_ARROWS", new BasicSprite(Assets.manager.get(Assets.selectionArrows), selectionArrowNames.length, selectionArrowNames[0].length, selectionArrowNames));
-		spriteSheets.put("MAGIC_SELECTION", new BasicSprite(Assets.manager.get(Assets.magicSelectCursor), 1, 1, new String[][] {{"SELECTION"}}));
+		spriteSheets.put("SELECTION_ARROWS", new BasicSprite(Assets.manager.get(Assets.selectionArrows), selectionArrowNames));
+		spriteSheets.put("MAGIC_SELECTION", new BasicSprite(Assets.manager.get(Assets.magicSelectCursor), new String[][] {{"SELECTION"}}));
 		spriteSheets.put("HEALTH_CELL", new BarSprite(Assets.manager.get(Assets.healthCell), 5, 11));
 		spriteSheets.put("MANA_CELL", new BarSprite(Assets.manager.get(Assets.manaCell), 5, 11));
 		
+		String[][] weaponIconNames = { {"SWORD", "STAFF"} };
+		spriteSheets.put("WEAPON_ICONS", new BasicSprite(Assets.manager.get(Assets.weaponIcons), weaponIconNames));
+		
 		String[][] relicNames = { {"TON_WEIGHT"} };
-		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames.length, relicNames[0].length, relicNames));
+		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames));
 		
 		String[][] pickupsNames = { {"HEART", "GOLD", "MANA"} };
-		spriteSheets.put("PICKUPS", new BasicSprite(Assets.manager.get(Assets.pickups), pickupsNames.length, pickupsNames[0].length, pickupsNames));
+		spriteSheets.put("PICKUPS", new BasicSprite(Assets.manager.get(Assets.pickups), pickupsNames));
 		
 		String[][] carryingNames = { {"KEY"} };
-		spriteSheets.put("CARRY", new BasicSprite(Assets.manager.get(Assets.carrying), carryingNames.length, carryingNames[0].length, carryingNames));
+		spriteSheets.put("CARRY", new BasicSprite(Assets.manager.get(Assets.carrying), carryingNames));
 		
 		String[][] capsuleNames = { {"LIFE_CAPSULE", "MANA_CAPSULE"} };
-		spriteSheets.put("CAPSULES", new BasicSprite(Assets.manager.get(Assets.capsules), capsuleNames.length, capsuleNames[0].length, capsuleNames));
+		spriteSheets.put("CAPSULES", new BasicSprite(Assets.manager.get(Assets.capsules), capsuleNames));
 		
 		String[][] particleNames = { {"RED", "ORANGE", "YELLOW", "GREEN"}, {"CYAN", "BLUE", "PURPLE", "PINK"} };
-		spriteSheets.put("PARTICLES",  new BasicSprite(Assets.manager.get(Assets.particles), particleNames.length, particleNames[0].length, particleNames));
+		spriteSheets.put("PARTICLES",  new BasicSprite(Assets.manager.get(Assets.particles), particleNames));
 		
 		
 		//Magic

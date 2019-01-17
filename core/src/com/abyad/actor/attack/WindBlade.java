@@ -16,6 +16,10 @@ public class WindBlade extends SpecialAttackData{
 	private int[] attackLengths = {6, 10, 14, 24};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
 	
 	@Override
+	public String getName() {
+		return "WIND BLADE";
+	}
+	@Override
 	public void initiateAttack(PlayerCharacter player) {
 		if (player.getState().equals("IDLE")) {
 			//If the player was in idle, give a small forward movement. May remove or lower this.

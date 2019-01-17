@@ -93,4 +93,20 @@ public class Player {
 		selectedName = newSelectedName;
 		character.updateSpriteSheet();
 	}
+	
+	public void changeSelectedWeapon(String newWeapon) {
+		character.changeWeapon(newWeapon);
+	}
+	
+	public String getWeapon() {
+		return character.getWeapon();
+	}
+	
+	public void changeSelectedSpecial(String newSpecial) {
+		character.changeSpecial(newSpecial);
+	}
+	
+	public String getSpecial() {
+		return character.getSpecial();
+	}
 }

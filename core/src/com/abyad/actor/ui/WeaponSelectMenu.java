@@ -1,9 +1,9 @@
 package com.abyad.actor.ui;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.abyad.game.Player;
-import com.abyad.magic.AbstractMagic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,9 +13,24 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Vector2;
 
-public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
+public class WeaponSelectMenu extends ScrollSelectionMenu<String>{
 
+	public static ArrayList<String> weapons = new ArrayList<String>();
+	public static LinkedHashMap<String, ArrayList<String>> weaponsToSpecials = new LinkedHashMap<String, ArrayList<String>>();
+	
+	static {
+		weapons.add("SWORD");
+		weaponsToSpecials.put("SWORD", new ArrayList<String>());
+		weaponsToSpecials.get("SWORD").add("SPIN_SLASH");
+		weaponsToSpecials.get("SWORD").add("WIND_BLADE");
+		
+		weapons.add("STAFF");
+		weaponsToSpecials.put("STAFF", new ArrayList<String>());
+		weaponsToSpecials.get("STAFF").add("MEDITATE");
+	}
+	
 	private Player player;
+	private SpecialSelectMenu specialSelect;
 	
 	private boolean rSwapHeld = true;
 	private boolean lSwapHeld = true;
@@ -24,12 +39,14 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 	private boolean isReady;
 	private int readyTime;
 	
+	private static final float OFFSET = 30f;
+	
 	private static final float FONT_SCALE = 1.0f;
 	private static final float SPACING = 60f;
 	
 	private static BitmapFont font = Assets.manager.get(Assets.font);
 	
-	private GlyphLayout characterName;
+	private GlyphLayout weaponName;
 	private static GlyphLayout readyText;
 	
 	static {
@@ -41,14 +58,15 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 		font.getData().setScale(1.0f);
 	}
 	
-	public CharacterSelectMenu(Player player) {
+	public WeaponSelectMenu(Player player) {
 		super(6.0f, 18);
 		this.player = player;
-		characterName = new GlyphLayout();
-		selection = Player.characterNames.indexOf(player.getCharacterName());
+		weaponName = new GlyphLayout();
+		selection = weapons.indexOf(player.getWeapon());
+		specialSelect = new SpecialSelectMenu(player, this);
 		
 		font.getData().setScale(FONT_SCALE);
-		characterName.setText(font, getList().get(selection));
+		weaponName.setText(font, getList().get(selection));
 		font.getData().setScale(1.0f);
 	}
 	
@@ -63,6 +81,7 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 		
 		if (player.getController().rightSwapPressed() && !rSwapHeld && !isReady) {
 			select(1);
+			
 		}
 		else if (player.getController().leftSwapPressed() && !lSwapHeld && !isReady) {
 			select(-1);
@@ -74,6 +93,7 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 		rSwapHeld = player.getController().rightSwapPressed();
 		lSwapHeld = player.getController().leftSwapPressed();
 		attackHeld = player.getController().attackPressed();
+		specialSelect.act(delta);
 		super.act(delta);
 	}
 	
@@ -81,17 +101,18 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 	public void draw(Batch batch, float a) {
 		super.draw(batch, a);
 		if (inView()) {
+			specialSelect.draw(batch, a);
 			Vector2 center = getCenter();
 			
 			font.getData().setScale(FONT_SCALE);
-			float fontX = center.x - (characterName.width / 2);
-			float fontY = center.y - SPACING + (characterName.height / 2);
-			font.draw(batch, characterName, fontX, fontY);
+			float fontX = center.x - (weaponName.width / 2);
+			float fontY = center.y - SPACING + (weaponName.height / 2);
+			font.draw(batch, weaponName, fontX, fontY);
 			font.getData().setScale(1.0f);
 			if (isReady) {
 				font.getData().setScale(FONT_SCALE * 2.0f);
 				float readyX = center.x - (readyText.width / 2);
-				float readyY = center.y + (readyText.height / 2);
+				float readyY = center.y + (readyText.height / 2) - OFFSET;
 				font.draw(batch, readyText, readyX, readyY);
 				font.getData().setScale(1.0f);
 			}
@@ -100,12 +121,12 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 	
 	@Override
 	public TextureRegion getIcon(String obj) {
-		return AbstractSpriteSheet.spriteSheets.get(obj).getSprite("head");
+		return AbstractSpriteSheet.spriteSheets.get("WEAPON_ICONS").getSprite(obj);
 	}
 
 	@Override
 	public ArrayList<String> getList() {
-		return Player.characterNames;
+		return weapons;
 	}
 
 	@Override
@@ -120,10 +141,10 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 		float midY = (minY + maxY) / 2;
 		
 		if (player.getNumber() == 1) {
-			return new Vector2((midX + minX) / 2, (midY + maxY) / 2); 
+			return new Vector2((midX + minX) / 2, (midY + maxY) / 2 + OFFSET); 
 		}
 		else if (player.getNumber() == 2) {
-			return new Vector2((midX + minX) / 2, (midY + minY) / 2); 
+			return new Vector2((midX + minX) / 2, (midY + minY) / 2 + OFFSET); 
 		}
 		return null;
 	}
@@ -132,9 +153,10 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 	public void setSelection(int selection) {
 		super.setSelection(selection);
 		font.getData().setScale(FONT_SCALE);
-		characterName.setText(font, getList().get(selection));
+		weaponName.setText(font, getList().get(selection));
 		font.getData().setScale(1.0f);
-		player.changeSelectedCharacter(selection);
+		player.changeSelectedWeapon(weapons.get(selection));
+		specialSelect.setSelection(0);
 	}
 	
 	public boolean isReady() {
@@ -147,6 +169,6 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 		attackHeld = true;
 		isReady = false;
 		readyTime = 0;
+		specialSelect.resetStatus();
 	}
-
 }

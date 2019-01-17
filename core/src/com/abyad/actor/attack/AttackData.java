@@ -23,4 +23,5 @@ public abstract class AttackData {
 	public abstract void useAttack(PlayerCharacter player, int framesSinceLast);
 	public abstract ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast);
 	public abstract boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast);
+	public abstract String getName();
 }
