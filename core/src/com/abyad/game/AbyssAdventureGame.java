@@ -42,6 +42,7 @@ public class AbyssAdventureGame extends Game {
 		screens.put("Play", playScreen);
 		setScreen(playScreen);
 		Gdx.input.setInputProcessor(inputMultiplexer);
+		Gdx.input.setCursorCatched(true);
 	}
 	
 	public ArrayList<Player> getPlayers(){

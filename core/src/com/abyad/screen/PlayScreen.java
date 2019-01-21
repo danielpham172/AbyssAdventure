@@ -10,6 +10,7 @@ import com.abyad.stage.PlayStage;
 import com.abyad.stage.TownStage;
 import com.abyad.stage.WeaponSelectStage;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 
@@ -67,6 +68,7 @@ public class PlayScreen implements Screen{
 				PlayStage nextStage = new PlayStage(game);
 				
 				playStage = nextStage;
+				playHUD.setTitle("FLOOR " + floor);
 			}
 			else {
 				playStage.dispose();
@@ -80,6 +82,7 @@ public class PlayScreen implements Screen{
 				PlayStage nextStage = new PlayStage(game);
 				
 				playStage = nextStage;
+				playHUD.setTitle("FLOOR " + floor);
 			}
 		}
 		else {
@@ -151,8 +154,12 @@ public class PlayScreen implements Screen{
 				}
 				
 				playStage = new TownStage(game);
+				floor = 0;
+				playHUD.setTitle("TOWN");
 			}
 		}
+		
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
 	}
 	
 	public boolean playersAreDead() {

@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		
 		config.title = "Abyss Adventure";
-		//config.fullscreen = true;
+		config.fullscreen = true;
 		config.width = 1920;
 		config.height = 1080;
 		//config.resizable = false;	// cannot resize window manually
