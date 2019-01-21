@@ -59,6 +59,8 @@ public abstract class AbstractSpriteSheet {
 		String[][] capsuleNames = { {"LIFE_CAPSULE", "MANA_CAPSULE"} };
 		spriteSheets.put("CAPSULES", new BasicSprite(Assets.manager.get(Assets.capsules), capsuleNames));
 		
+		spriteSheets.put("SCROLL", new BasicSprite(Assets.manager.get(Assets.scroll),  new String[][]{{ "SCROLL"}}));
+		
 		String[][] particleNames = { {"RED", "ORANGE", "YELLOW", "GREEN"}, {"CYAN", "BLUE", "PURPLE", "PINK"} };
 		spriteSheets.put("PARTICLES",  new BasicSprite(Assets.manager.get(Assets.particles), particleNames));
 		

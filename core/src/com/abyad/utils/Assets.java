@@ -34,7 +34,8 @@ public class Assets {
 	public static final AssetDescriptor<Texture> relics = new AssetDescriptor<Texture>("items/relics.png", Texture.class); 
 	public static final AssetDescriptor<Texture> pickups = new AssetDescriptor<Texture>("items/pickups.png", Texture.class); 
 	public static final AssetDescriptor<Texture> carrying = new AssetDescriptor<Texture>("items/carrying.png", Texture.class); 
-	public static final AssetDescriptor<Texture> capsules = new AssetDescriptor<Texture>("items/capsules.png", Texture.class); 
+	public static final AssetDescriptor<Texture> capsules = new AssetDescriptor<Texture>("items/capsules.png", Texture.class);
+	public static final AssetDescriptor<Texture> scroll = new AssetDescriptor<Texture>("items/scroll.png", Texture.class); 
 	
 	//Animation Stuffs/Weapons
 	public static final AssetDescriptor<Texture> deathAnim = new AssetDescriptor<Texture>("other/deathSprite.png", Texture.class);
@@ -154,6 +155,7 @@ public class Assets {
 		manager.load(pickups);
 		manager.load(carrying);
 		manager.load(capsules);
+		manager.load(scroll);
 		//Animation
 		manager.load(deathAnim);
 		manager.load(particles);

@@ -3,6 +3,7 @@ package com.abyad.stage;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import com.abyad.actor.cosmetic.BattleText;
 import com.abyad.actor.cosmetic.DeathAnimation;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
@@ -384,6 +385,8 @@ class ActorComparator implements Comparator<Actor>{
 			return (int)((o2.getY() - o1.getY()));
 		}
 		
+		if (o1 instanceof BattleText) return 1;
+		if (o2 instanceof BattleText) return -1;
 		if (o1 instanceof MagicCursor) return 1;
 		if (o2 instanceof MagicCursor) return -1;
 		if (o1 instanceof MagicRingMenu) return 1;

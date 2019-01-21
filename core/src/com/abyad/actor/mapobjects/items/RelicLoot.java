@@ -2,6 +2,7 @@ package com.abyad.actor.mapobjects.items;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.cosmetic.BattleText;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.relic.Relic;
 import com.badlogic.gdx.math.Rectangle;
@@ -45,7 +46,16 @@ public class RelicLoot extends LootItem{
 
 	@Override
 	public boolean interact(PlayerCharacter source) {
-		if (!markForRemoval) source.pickupRelic(relic);
+		if (!markForRemoval) {
+			source.pickupRelic(relic);
+			Vector2 upVelocity = new Vector2(0, 1);
+			BattleText nameText = new BattleText(relic.getName(), getX(), getY() + 8f, upVelocity.cpy(), 0.98f, 180, true);
+			nameText.setScale(0.4f);
+			BattleText descText = new BattleText(relic.getDescription(), getX(), getY() - 8f, upVelocity.cpy(), 0.98f, 180, true);
+			descText.setScale(0.2f);
+			getStage().addActor(nameText);
+			getStage().addActor(descText);
+		}
 		markForRemoval = true;
 		return true;
 	}

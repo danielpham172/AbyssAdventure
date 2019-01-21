@@ -7,12 +7,14 @@ import com.abyad.actor.mapobjects.items.GoldItem;
 import com.abyad.actor.mapobjects.items.HeartItem;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.LootItem;
+import com.abyad.actor.mapobjects.items.MagicScroll;
 import com.abyad.actor.mapobjects.items.ManaItem;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.mapobjects.items.RelicLoot;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.interfaces.Interactable;
+import com.abyad.magic.AbstractMagic;
 import com.abyad.relic.TonWeightRelic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.utils.Assets;
@@ -59,7 +61,7 @@ public class TreasureChest extends Actor implements Interactable{
 	}
 	
 	public void generateRandomLoot() {
-		int choice = (int)(Math.random() * 4);
+		int choice = (int)(Math.random() * 5);
 		if (choice == 0) {
 			Vector2 velocity = new Vector2(1, 0);
 			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
@@ -79,6 +81,20 @@ public class TreasureChest extends Actor implements Interactable{
 				Vector2 velocity = new Vector2(1, 0);
 				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
 				items.add(new ManaItem(getX(), getY(), velocity));
+			}
+		}
+		else if (choice == 3){
+			int count = 0;
+			Vector2 velocity = new Vector2(1, 0);
+			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
+			for (String key : AbstractMagic.magicList.keySet()) {
+				if (Math.random() < 1.0f / (AbstractMagic.magicList.keySet().size() - count)) {
+					items.add(new MagicScroll(getX(), getY(), velocity, key));
+					break;
+				}
+				else {
+					count++;
+				}
 			}
 		}
 		else{

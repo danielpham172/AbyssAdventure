@@ -15,7 +15,12 @@ public abstract class Relic {
 	private int cooldown;
 	private TextureRegion tex;
 	
-	public Relic(float activationRate, TextureRegion tex) {
+	private String name;
+	private String desc;
+	
+	public Relic(String name, String desc, float activationRate, TextureRegion tex) {
+		this.name = name;
+		this.desc = desc;
 		this.activationRate = activationRate;
 		this.tex = tex;
 		cooldown = 0;
@@ -23,6 +28,14 @@ public abstract class Relic {
 	
 	public float getActivationRate() {
 		return activationRate;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getDescription() {
+		return desc;
 	}
 	
 	public void goOnCooldown() {

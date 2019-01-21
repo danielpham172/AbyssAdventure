@@ -7,7 +7,7 @@ import com.abyad.sprite.AbstractSpriteSheet;
 public class TonWeightRelic extends Relic{
 
 	public TonWeightRelic() {
-		super(1.0f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("TON_WEIGHT"));
+		super("TON WEIGHT", "Lower knockback by 15%", 1.0f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("TON_WEIGHT"));
 	}
 
 	@Override

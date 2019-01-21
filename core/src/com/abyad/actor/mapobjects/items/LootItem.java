@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class LootItem extends MapItem implements Interactable{
 	
-	private boolean isInteractable;
+	protected boolean isInteractable;
 	
 	public LootItem(float x, float y, Vector2 velocity, TextureRegion tex) {
 		super(tex, 0);

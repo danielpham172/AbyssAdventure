@@ -67,8 +67,8 @@ public class PlayerCharacter extends HumanoidEntity{
 		basicAttack = AttackData.basicAttacks.get(weapon);
 		specialName = "SPIN_SLASH";
 		specialAttack = AttackData.specialAttacks.get(specialName);
-		magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
-		magicSpells.add(AbstractMagic.magicList.get("HEALING FIELD"));
+		//magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
+		//magicSpells.add(AbstractMagic.magicList.get("HEALING FIELD"));
 		cursor = new MagicCursor(this);
 		
 		updateHitbox();
@@ -406,6 +406,16 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	public ArrayList<AbstractMagic> getMagicSpells(){
 		return magicSpells;
+	}
+	
+	public boolean hasSpell(AbstractMagic magic) {
+		return (magicSpells.contains(magic));
+	}
+	
+	public void addSpell(AbstractMagic magic) {
+		if (!hasSpell(magic)) {
+			magicSpells.add(magic);
+		}
 	}
 	
 	public int getGold() {
