@@ -32,10 +32,12 @@ public class CharacterSelectStage extends Stage{
 	}
 	
 	public boolean allIsReady() {
+		boolean atleastOneActive = false;
 		for (CharacterSelectMenu menu : menus) {
+			if (menu.getPlayer().isActive()) atleastOneActive = true;
 			if (!menu.isReady()) return false;
 		}
-		return true;
+		return true && (atleastOneActive);
 	}
 	
 	public void resetStatus() {

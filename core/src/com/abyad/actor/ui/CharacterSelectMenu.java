@@ -165,6 +165,10 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 		player.changeSelectedCharacter(selection);
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+	
 	public boolean isReady() {
 		return (isReady || !player.isActive()) && readyTime > 60;
 	}

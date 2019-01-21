@@ -40,10 +40,10 @@ public class SpecialSelectMenu extends ScrollSelectionMenu<String>{
 	
 	@Override
 	public void act(float delta) {
-		if (player.getController().rightPressed() > 0.75 && !rSwapHeld && !weaponSelect.isReady()) {
+		if (player.getController().rightPressed() > 0.75 && !rSwapHeld && !weaponSelect.isReadying()) {
 			select(1);
 		}
-		else if (player.getController().leftPressed() > 0.75 && !lSwapHeld && !weaponSelect.isReady()) {
+		else if (player.getController().leftPressed() > 0.75 && !lSwapHeld && !weaponSelect.isReadying()) {
 			select(-1);
 		}
 		

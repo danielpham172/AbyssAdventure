@@ -173,6 +173,10 @@ public class WeaponSelectMenu extends ScrollSelectionMenu<String>{
 		return (isReady && readyTime > 60) || (!player.isActive());
 	}
 	
+	public boolean isReadying() {
+		return isReady || (!player.isActive());
+	}
+	
 	public void resetStatus() {
 		rSwapHeld = true;
 		lSwapHeld = true;

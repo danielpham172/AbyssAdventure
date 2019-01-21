@@ -40,6 +40,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	private ArrayList<Relic> relics = new ArrayList<Relic>();
 	private CarryingItem heldItem;
 	
+	private AbstractMagic startingSpell;
+	
 	private boolean magicHeld = false;
 	private boolean rSwapHeld = false;
 	private boolean lSwapHeld = false;
@@ -67,8 +69,8 @@ public class PlayerCharacter extends HumanoidEntity{
 		basicAttack = AttackData.basicAttacks.get(weapon);
 		specialName = "SPIN_SLASH";
 		specialAttack = AttackData.specialAttacks.get(specialName);
-		//magicSpells.add(AbstractMagic.magicList.get("MAGIC BOLT"));
-		//magicSpells.add(AbstractMagic.magicList.get("HEALING FIELD"));
+		startingSpell = AbstractMagic.magicList.get("MAGIC BOLT");
+		magicSpells.add(startingSpell);
 		cursor = new MagicCursor(this);
 		
 		updateHitbox();
@@ -284,6 +286,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	public void resetCharacter() {
 		relics.clear();
+		magicSpells.clear();
+		magicSpells.add(startingSpell);
 		modifyMaxHP(3 - getMaxHP());
 		modifyMaxMana(3 - getMaxMana());
 		gold = 0;

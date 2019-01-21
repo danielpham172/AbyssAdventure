@@ -9,7 +9,10 @@ import com.abyad.actor.tile.FloorTile;
 import com.abyad.interfaces.Interactable;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.stage.TownStage;
+import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -43,6 +46,16 @@ public class CharacterHouse extends Actor implements Interactable{
 	private static float[] heights = {29, 32, 12};
 	private static TextureRegion closedHouse = AbstractSpriteSheet.spriteSheets.get("HOUSE").getSprite("CLOSED");
 	private static TextureRegion openHouse = AbstractSpriteSheet.spriteSheets.get("HOUSE").getSprite("OPEN");
+	
+	private static final float FONT_SCALE = 0.25f;
+	private static BitmapFont font = Assets.manager.get(Assets.font);
+	private static GlyphLayout descText = new GlyphLayout();
+	
+	static {
+		font.getData().setScale(FONT_SCALE);
+		descText.setText(font, "ADD OR CHANGE CHARACTERS!");
+		font.getData().setScale(1.0f);
+	}
 	
 	public CharacterHouse(FloorTile floor) {
 		this.floor = floor;
@@ -88,6 +101,13 @@ public class CharacterHouse extends Actor implements Interactable{
 		batch.draw(tex, getX() - getOriginX(), super.getY() - getOriginY(),
 				getOriginX(), getOriginY(), tex.getRegionWidth(), tex.getRegionHeight(),
 				AbstractTile.TILE_SCALE, AbstractTile.TILE_SCALE, getRotation());
+		if (isInteractable) {
+			font.getData().setScale(FONT_SCALE);
+			float fontX = floor.getCenter().x - (descText.width / 2);
+			float fontY = floor.getCenter().y + (AbstractTile.TILE_SIZE / 2) - (descText.height / 2);
+			font.draw(batch, descText, fontX, fontY);
+			font.getData().setScale(1.0f);
+		}
 		
 		isInteractable = false;
 	}
