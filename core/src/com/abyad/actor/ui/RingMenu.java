@@ -118,11 +118,11 @@ public abstract class RingMenu<E> extends Actor{
 			int listSize = getList().size();
 			if (direction < 0) {
 				rotating = (int)Math.min(ROTATING_TIME, ROTATING_TIME * ((360f / listSize) / MIN_SCALE_ANGLE));
-				selection = (selection + 1) % listSize;
+				setSelection((selection + 1) % listSize);
 			}
 			else if (direction > 0) {
 				rotating = -(int)Math.min(ROTATING_TIME, ROTATING_TIME * ((360f / listSize) / MIN_SCALE_ANGLE));
-				selection = (selection + listSize - 1) % listSize;
+				setSelection((selection + listSize - 1) % listSize);
 			}
 		}
 	}
@@ -158,6 +158,10 @@ public abstract class RingMenu<E> extends Actor{
 	
 	public int getSelection() {
 		return selection;
+	}
+	
+	public void setSelection(int selection) {
+		this.selection = selection;
 	}
 	
 	public boolean isExpanding() {

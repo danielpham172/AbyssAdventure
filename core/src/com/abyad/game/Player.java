@@ -89,6 +89,10 @@ public class Player {
 	public void rotateRingMenu(int direction) {
 		ringMenu.rotate(direction);
 	}
+	
+	public void resetRingMenu() {
+		ringMenu.setSelection(0);
+	}
 
 	public int getSelectedMagic() {
 		return ringMenu.getSelection();

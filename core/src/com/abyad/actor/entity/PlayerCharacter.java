@@ -293,6 +293,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		modifyMaxMana(3 - getMaxMana());
 		gold = 0;
 		speedChangeFactor = 0;
+		player.resetRingMenu();
 	}
 	
 	public boolean isSpawningIn() {
