@@ -169,6 +169,11 @@ public abstract class HumanoidEntity extends AbstractEntity{
 	}
 	
 	@Override
+	public float getSize() {
+		return 16;
+	}
+	
+	@Override
 	public void updateHitbox() {
 		int direction = (int)((getVelocity().angle() + 45) / 90) % 4;	//Unused, but may be necessary if direction changes hitbox
 		int xCorrection = 0;

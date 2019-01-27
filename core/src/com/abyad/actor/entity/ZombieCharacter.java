@@ -8,6 +8,7 @@ import com.abyad.actor.mapobjects.items.HeartItem;
 import com.abyad.actor.mapobjects.items.LootItem;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.data.HitEvent;
+import com.abyad.data.StatusEffectData;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
 import com.abyad.utils.Assets;
@@ -20,9 +21,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class ZombieCharacter extends HumanoidEntity{
-	
-	private Vector2 knockbackVelocity = new Vector2();		//Knockback velocity
-	private int knockbackLength = 0;						//How long the zombie is getting knocked back
 
 	private String task = "WANDER";							//The current thing the zombie is doing (like CHASE or WANDER)
 	private int timeSinceTask = 0;							//How long they have doing this task
@@ -64,18 +62,18 @@ public class ZombieCharacter extends HumanoidEntity{
 				if (task.equals("CHASE")) {
 					//If chasing, have the velocity point towards the player then set the speed by using the length
 					getVelocity().set(player.getCenterX() - getCenterX(), player.getCenterY() - getCenterY());
-					getVelocity().setLength(SPEED);
+					getVelocity().setLength(getCurrentMaxSpeed());
 					//Also set the wander direction to be the same so they don't just randomly splay off
 					wanderDirection.setAngle(getVelocity().angle());
 					move(getVelocity());
-					setState("MOVE", SPEED/2.0f);		//Sets the state for animation. The fraction is the slow down the animation to match the speed
+					setState("MOVE", getCurrentMaxSpeed()/2.0f);		//Sets the state for animation. The fraction is the slow down the animation to match the speed
 					if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
 					checkCollisions();
 				}
 				else if (task.equals("WANDER")){
 					//If wandering, just move in the same direction as the wander with a length change
 					getVelocity().set(wanderDirection.x, wanderDirection.y).setLength(0.3f);
-					setState("MOVE", SPEED/2.0f);
+					setState("MOVE", getCurrentMaxSpeed()/2.0f);
 					if (framesSinceLast == 0) frameFraction = (float)(Math.random() * 240);		//Modifies the starting cycle so not all zombies do the same walk
 					if (Math.random() * timeSinceTask / 120.0 > 1.0) {
 						//Randomly change the direction slightly after a certain amount of time
@@ -97,6 +95,10 @@ public class ZombieCharacter extends HumanoidEntity{
 				knockbackLength--;
 			}
 		}
+	}
+	
+	public float getMaxSpeed() {
+		return SPEED;
 	}
 	
 	public void setDeathLoot() {
@@ -156,11 +158,13 @@ public class ZombieCharacter extends HumanoidEntity{
 			ArrayList<Rectangle> otherHitbox = entity.getHitbox();
 			if (!isSameTeam(entity) && isOverlapping(hitboxes, otherHitbox)) {
 				//If the other entity was a player (or non-ally to the zombie) and is in collision, deal damage to it
-				Vector2 knockback = new Vector2(entity.getCenterX() - getCenterX(), entity.getCenterY() - getCenterY());
-				knockback.setLength(4.0f);
-				int damage = 1;
-				int knockbackLength = 8;
-				entity.takeDamage(new HitEvent(this, entity, damage, knockback, knockbackLength));
+				if (!entity.isInvuln()) {
+					Vector2 knockback = new Vector2(entity.getCenterX() - getCenterX(), entity.getCenterY() - getCenterY());
+					knockback.setLength(4.0f);
+					int damage = 1;
+					int knockbackLength = 8;
+					entity.takeDamage(new HitEvent(this, entity, damage, knockback, knockbackLength, new StatusEffectData("SLOW", 0.2f)));
+				}
 			}
 			else if (isSameTeam(entity) && isOverlapping(hitboxes, otherHitbox)) {
 				//If it is on the same team and colliding, do a small collision to shift it out of each other
@@ -195,9 +199,7 @@ public class ZombieCharacter extends HumanoidEntity{
 	@Override
 	public void takeDamage(HitEvent event) {
 		if (!isInvuln()) {
-			knockbackVelocity = event.getKnockbackVelocity();
-			knockbackLength = event.getKnockbackLength();
-			hp -= event.getDamage();
+			super.takeDamage(event);
 			if (isDead()) {
 				DeathAnimation deathAnimation = new DeathAnimation(getCenterX(), getCenterY());
 				getStage().addActor(deathAnimation);
@@ -207,9 +209,6 @@ public class ZombieCharacter extends HumanoidEntity{
 					getStage().addActor(item);
 				}
 				markForRemoval = true;
-			}
-			else {
-				invulnLength = 40;
 			}
 		}
 	}

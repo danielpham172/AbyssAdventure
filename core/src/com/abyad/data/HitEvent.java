@@ -1,5 +1,7 @@
 package com.abyad.data;
 
+import java.util.ArrayList;
+
 import com.abyad.actor.entity.AbstractEntity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -12,6 +14,7 @@ public class HitEvent {
 	private int damage;
 	private Vector2 knockbackVelocity;
 	private int knockbackLength;
+	private ArrayList<StatusEffectData> statusEffects;
 	
 	public HitEvent(Actor source, AbstractEntity victim, int damage, Vector2 knockbackVelocity, int knockbackLength) {
 		this.source = source;
@@ -19,6 +22,14 @@ public class HitEvent {
 		this.damage = damage;
 		this.knockbackVelocity = knockbackVelocity;
 		this.knockbackLength = knockbackLength;
+		this.statusEffects = new ArrayList<StatusEffectData>();
+	}
+	
+	public HitEvent(Actor source, AbstractEntity victim, int damage, Vector2 knockbackVelocity, int knockbackLength, StatusEffectData...statusEffects) {
+		this(source, victim, damage, knockbackVelocity, knockbackLength);
+		for (StatusEffectData statusEffect : statusEffects) {
+			this.statusEffects.add(statusEffect);
+		}
 	}
 	
 	public Actor getAttacker() {
@@ -41,6 +52,10 @@ public class HitEvent {
 		return knockbackLength;
 	}
 	
+	public ArrayList<StatusEffectData> getStatusEffects(){
+		return statusEffects;
+	}
+	
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
@@ -51,5 +66,17 @@ public class HitEvent {
 	
 	public void setKnockbackLength(int knockbackLength) {
 		this.knockbackLength = knockbackLength;
+	}
+	
+	public void addStatusEffect(StatusEffectData data) {
+		statusEffects.add(data);
+	}
+	
+	public void addStatusEffect(String name, float potency, int time) {
+		addStatusEffect(new StatusEffectData(name, potency, time));
+	}
+	
+	public void addStatusEffect(String name, float potency) {
+		addStatusEffect(new StatusEffectData(name, potency));
 	}
 }

@@ -25,9 +25,6 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	private Player player;			//The player object this character is associated to
 	
-	private Vector2 knockbackVelocity = new Vector2(0, 0);		//Velocity of knockback
-	private int knockbackLength = 0;							//Length of knockback
-	
 	private boolean attackHeld = false;							//Boolean to check if the attack button is held
 	private boolean specialHeld = false;						//Boolean to check if the special button is held
 	private boolean attacking;									//Boolean to check if the character is in the middle of attacking
@@ -192,15 +189,15 @@ public class PlayerCharacter extends HumanoidEntity{
 					else {
 						//This happens if the character is moving, scale the change to match velocity
 						if (!isHoldingItem()) {
-							velocity.x = xChange * MAX_SPEED;
-							velocity.y = yChange * MAX_SPEED;
-							if (velocity.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);	//Sometimes the velocity is over the actual max speed, so set it back
+							velocity.x = xChange * getCurrentMaxSpeed();
+							velocity.y = yChange * getCurrentMaxSpeed();
+							if (velocity.len() > getCurrentMaxSpeed()) velocity.setLength(getCurrentMaxSpeed());	//Sometimes the velocity is over the actual max speed, so set it back
 							setState("MOVE", velocity.len() / 2.0f);		//Set the state and use partial frames if the character is moving slow
 							move(velocity);
 						}
 						else {
 							//If carrying an item, slow by weight, a set correct state
-							float slowedSpeed =  MAX_SPEED / (heldItem.getWeight() + 1.0f);
+							float slowedSpeed =  getCurrentMaxSpeed() / (heldItem.getWeight() + 1.0f);
 							velocity.x = xChange * slowedSpeed;
 							velocity.y = yChange * slowedSpeed;
 							if (velocity.len() > slowedSpeed) velocity.setLength(slowedSpeed);
@@ -268,6 +265,10 @@ public class PlayerCharacter extends HumanoidEntity{
 		}
 	}
 	
+	public float getMaxSpeed() {
+		return MAX_SPEED;
+	}
+	
 	public void setSpawnInLength(int length) {
 		spawnInLength = length;
 	}
@@ -291,6 +292,7 @@ public class PlayerCharacter extends HumanoidEntity{
 		modifyMaxHP(3 - getMaxHP());
 		modifyMaxMana(3 - getMaxMana());
 		gold = 0;
+		speedChangeFactor = 0;
 	}
 	
 	public boolean isSpawningIn() {
@@ -511,6 +513,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	public void takeDamage(HitEvent event) {
 		if (!isInvuln()) {
 			
+			super.takeDamage(event);
 			//Activate relic defense effects (modifies the event)
 			for (Relic relic : relics) {
 				if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
@@ -520,11 +523,6 @@ public class PlayerCharacter extends HumanoidEntity{
 			if (isHoldingItem()) {
 				dropItemOnGround();
 			}
-			
-			knockbackVelocity = event.getKnockbackVelocity();
-			knockbackLength = event.getKnockbackLength();
-			modifyHP(-event.getDamage());
-			invulnLength = 40;
 			
 			if (casting) {
 				casting = false;

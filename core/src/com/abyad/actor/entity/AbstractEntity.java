@@ -2,8 +2,11 @@ package com.abyad.actor.entity;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.cosmetic.CosmeticParticle;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.data.HitEvent;
+import com.abyad.data.StatusEffectData;
+import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +24,9 @@ public abstract class AbstractEntity extends Actor{
 	protected Vector2 velocity;			//The velocity (speed and direction) the entity is going in
 	protected int invulnLength;			//The current length of their invuln period. Blinks in animation
 	
+	protected Vector2 knockbackVelocity = new Vector2(0, 0);		//Velocity of knockback
+	protected int knockbackLength = 0;							//Length of knockback
+	
 	protected String state;				//String used to figure out what the entity is doing (ie. Walking or Idle)
 	protected int framesSinceLast;		//The amount of frames that have passed since it changed state (used for animation)
 	protected float frameFraction;		//The amount of partial frames that have passed, mainly used for walking slowly and such
@@ -29,6 +35,9 @@ public abstract class AbstractEntity extends Actor{
 	protected ArrayList<MapItem> deathLoot;
 	
 	protected float height;				//Used to simulate 3D (typically only for drawing)
+	
+	protected float speedChangeFactor;	//Slow or speed up of speed for a character
+	protected int timeSinceLastSpeedParticle;
 	
 	/**
 	 * Initiates an AbstractEntity. Most important is that it adds it to the array list
@@ -54,6 +63,8 @@ public abstract class AbstractEntity extends Actor{
 	 */
 	@Override
 	public void act(float delta) {
+		updateSpeedChange();
+		spawnStatusParticles();
 		if (markForRemoval) {
 			remove();
 		}
@@ -81,6 +92,53 @@ public abstract class AbstractEntity extends Actor{
 		move(velocity.x, velocity.y);
 	}
 	
+	public abstract float getMaxSpeed();
+	public float getCurrentMaxSpeed() {
+		return getMaxSpeed() * (1.0f + speedChangeFactor);
+	}
+	public void applySpeedChangeFactor(float speedChangeFactor) {
+		this.speedChangeFactor += speedChangeFactor;
+		if (this.speedChangeFactor < -0.4f) this.speedChangeFactor = -0.4f;
+		if (this.speedChangeFactor > 3.0f) this.speedChangeFactor = 3.0f;
+	}
+	public void updateSpeedChange() {
+		if (speedChangeFactor > 0) {
+			speedChangeFactor = Math.max(speedChangeFactor - 0.0005f, 0);
+		}
+		else if (speedChangeFactor < 0) {
+			speedChangeFactor = Math.min(speedChangeFactor + 0.0005f, 0);
+		}
+	}
+	
+	public void spawnStatusParticles() {
+		//Slows and Speeds
+		if (timeSinceLastSpeedParticle > 0) timeSinceLastSpeedParticle -= 1;
+		if (speedChangeFactor > 0) {
+			if (timeSinceLastSpeedParticle == 0) {
+				//float particleSpeed = 0.2f + (speedChangeFactor * 0.2f);
+				//int particleLifetime = (int)((15f / (1.0f + (speedChangeFactor * 2.0f))) * (getSize() / 3.0f));
+				float particleSpeed = 0.3f;
+				int particleLifetime = (int)(getSize() / particleSpeed) + 3;
+				CosmeticParticle.spawnParticle(AbstractSpriteSheet.spriteSheets.get("STATUS_ARROW").getSprite("UP"),
+						getCenterX(), getCenterY() - (getSize() / 2), 0f, (getSize() / 4f), (getSize() / 8f), 0f, particleSpeed, 0.2f,
+						0.0f, 0.0f, 0.8f, 0.7f, particleLifetime, 0.2f, 1, this);
+				timeSinceLastSpeedParticle = (int)(40f / (1.0f + (speedChangeFactor * 10.0f)));
+			}
+		}
+		else if (speedChangeFactor < 0) {
+			if (timeSinceLastSpeedParticle == 0) {
+				//float particleSpeed = -0.2f + (speedChangeFactor * 0.2f);
+				//int particleLifetime = (int)((15f / (1.0f - (speedChangeFactor * 2.0f))) * (getSize() / 3.0f));
+				float particleSpeed = -0.3f;
+				int particleLifetime = (int)(getSize() / -particleSpeed) + 3;
+				CosmeticParticle.spawnParticle(AbstractSpriteSheet.spriteSheets.get("STATUS_ARROW").getSprite("DOWN"),
+						getCenterX(), getCenterY() - (getSize() / 2), getSize(), (getSize() / 4f), (getSize() / 8f), (getSize() / 4f), particleSpeed, 0.2f,
+						0.0f, 0.0f, 0.8f, 0.7f, particleLifetime, 0.2f, 1, this);
+				timeSinceLastSpeedParticle = (int)(40f / (1.0f - (speedChangeFactor * 10.0f)));
+			}
+		}
+	}
+	
 	
 	/**
 	 * Get center methods. Mainly used for getting the center of the entity's hitbox.
@@ -90,6 +148,8 @@ public abstract class AbstractEntity extends Actor{
 	public Vector2 getCenter() {
 		return new Vector2(getCenterX(), getCenterY());
 	}
+	
+	public abstract float getSize();
 	
 	public int getHP() {
 		return hp;
@@ -211,7 +271,26 @@ public abstract class AbstractEntity extends Actor{
 	 * @param knockback			The knockback force and direction
 	 * @param kbLength			How long the knockback should last
 	 */
-	public abstract void takeDamage(HitEvent event);
+	public void takeDamage(HitEvent event) {
+		if (!isInvuln()) {
+			knockbackVelocity = event.getKnockbackVelocity();
+			knockbackLength = event.getKnockbackLength();
+			modifyHP(-event.getDamage());
+			for (StatusEffectData statusEffect : event.getStatusEffects()) {
+				applyStatusEffect(statusEffect);
+			}
+			invulnLength = 40;
+		}
+	}
+	
+	public void applyStatusEffect(StatusEffectData statusEffect) {
+		if (statusEffect.getName().equals("SPEED")) {
+			applySpeedChangeFactor(statusEffect.getPotency());
+		}
+		if (statusEffect.getName().equals("SLOW")) {
+			applySpeedChangeFactor(-statusEffect.getPotency());
+		}
+	}
 	
 	/**
 	 * The following are methods for getting invuln conditions
