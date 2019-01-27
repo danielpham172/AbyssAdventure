@@ -269,6 +269,22 @@ public abstract class AbstractEntity extends Actor{
 		return getTeam().equals(other.getTeam());
 	}
 	
+	public float getAttributeValue(String name) {
+		float total = 0;
+		for (StatusEffectData statusEffect : statusEffects) {
+			total += statusEffect.getAttribute(name);
+		}
+		return total;
+	}
+	
+	public float getAttributeValue(String name, float startValue) {
+		float total = startValue;
+		for (StatusEffectData statusEffect : statusEffects) {
+			total += statusEffect.getAttribute(name);
+		}
+		return total;
+	}
+	
 	/**
 	 * Take damage method for all entities.
 	 * @param source			From where the entity took damage from

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.data.AttributeData;
 import com.abyad.data.HitEvent;
 import com.abyad.magic.AbstractMagic;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -19,6 +20,7 @@ public abstract class Relic {
 	private int cooldown;
 	private TextureRegion tex;
 	private int count;
+	private ArrayList<AttributeData> attributes;
 	
 	private String name;
 	private String desc;
@@ -39,6 +41,7 @@ public abstract class Relic {
 		this.tex = tex;
 		cooldown = 0;
 		count = 1;
+		attributes = new ArrayList<AttributeData>();
 	}
 	
 	public float getActivationRate() {
@@ -67,6 +70,20 @@ public abstract class Relic {
 	
 	public int getCount() {
 		return count;
+	}
+	
+	public float getAttribute(String name) {
+		float total = 0;
+		for (AttributeData attribute : attributes) {
+			if (attribute.getName().equals(name)) {
+				total += attribute.getValue();
+			}
+		}
+		return total;
+	}
+	
+	public void addAttribute(String name, float value) {
+		attributes.add(new AttributeData(name, value));
 	}
 	
 	public void incrementCount() {

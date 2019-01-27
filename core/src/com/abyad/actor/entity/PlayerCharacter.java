@@ -8,6 +8,7 @@ import com.abyad.actor.mapobjects.items.CarryingItem;
 import com.abyad.actor.ui.MagicCursor;
 import com.abyad.controls.PlayerController;
 import com.abyad.data.HitEvent;
+import com.abyad.data.StatusEffectData;
 import com.abyad.game.Player;
 import com.abyad.interfaces.Interactable;
 import com.abyad.magic.AbstractMagic;
@@ -222,19 +223,25 @@ public class PlayerCharacter extends HumanoidEntity{
 			else if (attacking){
 				//Sets the state into attacking
 				if (state.contains("BASIC_ATTACK")) {
-					setState("BASIC_ATTACK - " + weapon);
+					float attackSpeed = getAttributeValue("ATTACK SPEED", 1.0f);
+					if (attackSpeed < 0.25f) attackSpeed = 0.25f;
+					setState("BASIC_ATTACK - " + weapon, attackSpeed);
 					basicAttack.useAttack(this, framesSinceLast);
 					if (basicAttack.isFinishedAttacking(this, framesSinceLast)) attacking = false;		//Ends the attack after a certain amount of frames
 				}
 				else if (state.contains("SPECIAL_ATTACK")) {
-					setState("SPECIAL_ATTACK - " + specialName);
+					float attackSpeed = getAttributeValue("ATTACK SPEED", 1.0f);
+					if (attackSpeed < 0.25f) attackSpeed = 0.25f;
+					setState("SPECIAL_ATTACK - " + specialName, attackSpeed);
 					specialAttack.useAttack(this, framesSinceLast);
 					if (specialAttack.isFinishedAttacking(this, framesSinceLast)) attacking = false;	//Ends the attack after a certain amount of frames
 				}
 			}
 			else if (casting) {
+				float castSpeed = getAttributeValue("CAST SPEED", 1.0f);
+				if (castSpeed < 0.25f) castSpeed = 0.25f;
 				if (state.equals("CASTING")) {
-					setState("CASTING");
+					setState("CASTING", castSpeed);
 					if (xChange != 0 || yChange != 0) {
 						Vector2 move = new Vector2(xChange * MAX_SPEED, yChange * MAX_SPEED);
 						if (move.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);
@@ -250,7 +257,7 @@ public class PlayerCharacter extends HumanoidEntity{
 					}
 				}
 				else if (state.equals("FINISH_CASTING")) {
-					setState("FINISH_CASTING");
+					setState("FINISH_CASTING", castSpeed);
 					if (framesSinceLast > castingMagic.getAfterTime()) {
 						cursor.remove();
 						casting = false;
@@ -549,6 +556,24 @@ public class PlayerCharacter extends HumanoidEntity{
 				cursor.remove();
 			}
 		}
+	}
+	
+	@Override
+	public float getAttributeValue(String name) {
+		float total = super.getAttributeValue(name);
+		for (Relic relic : relics) {
+			total += relic.getAttribute(name);
+		}
+		return total;
+	}
+	
+	@Override
+	public float getAttributeValue(String name, float startValue) {
+		float total = super.getAttributeValue(name, startValue);
+		for (Relic relic : relics) {
+			total += relic.getAttribute(name);
+		}
+		return total;
 	}
 	
 	@Override
