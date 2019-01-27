@@ -134,7 +134,7 @@ public abstract class AbstractEntity extends Actor{
 				CosmeticParticle.spawnParticle(AbstractSpriteSheet.spriteSheets.get("STATUS_ARROW").getSprite("DOWN"),
 						getCenterX(), getCenterY() - (getSize() / 2), getSize(), (getSize() / 4f), (getSize() / 8f), (getSize() / 4f), particleSpeed, 0.2f,
 						0.0f, 0.0f, 0.8f, 0.7f, particleLifetime, 0.2f, 1, this);
-				timeSinceLastSpeedParticle = (int)(40f / (1.0f - (speedChangeFactor * 10.0f)));
+				timeSinceLastSpeedParticle = (int)(40f / (1.0f + (-speedChangeFactor / (1.0f + speedChangeFactor)) * 10.0f));
 			}
 		}
 	}
