@@ -98,8 +98,8 @@ public abstract class AbstractEntity extends Actor{
 	}
 	public void applySpeedChangeFactor(float speedChangeFactor) {
 		this.speedChangeFactor += speedChangeFactor;
-		if (this.speedChangeFactor < -0.4f) this.speedChangeFactor = -0.4f;
-		if (this.speedChangeFactor > 3.0f) this.speedChangeFactor = 3.0f;
+		if (this.speedChangeFactor < -0.25f) this.speedChangeFactor = -0.25f;
+		if (this.speedChangeFactor > 2.5f) this.speedChangeFactor = 2.5f;
 	}
 	public void updateSpeedChange() {
 		if (speedChangeFactor > 0) {

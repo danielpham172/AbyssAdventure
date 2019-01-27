@@ -163,7 +163,7 @@ public class ZombieCharacter extends HumanoidEntity{
 					knockback.setLength(4.0f);
 					int damage = 1;
 					int knockbackLength = 8;
-					entity.takeDamage(new HitEvent(this, entity, damage, knockback, knockbackLength, new StatusEffectData("SLOW", 0.2f)));
+					entity.takeDamage(new HitEvent(this, entity, damage, knockback, knockbackLength, new StatusEffectData("SLOW", 0.3f)));
 				}
 			}
 			else if (isSameTeam(entity) && isOverlapping(hitboxes, otherHitbox)) {
