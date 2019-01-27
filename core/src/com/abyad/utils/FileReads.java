@@ -2,13 +2,18 @@ package com.abyad.utils;
 
 import java.io.*;
 import java.util.*;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 public class FileReads
 {
     public static String[] readFileToArray(String address){
         String[] output = { };
         
         try {
-            BufferedReader read = new BufferedReader(new FileReader(address));
+        	FileHandle file = Gdx.files.internal(address);
+        	BufferedReader read = new BufferedReader(file.reader());
+            //BufferedReader read = new BufferedReader(new FileReader(address));
             ArrayList<String> lines = new ArrayList<String>();
             String line = null;
             
