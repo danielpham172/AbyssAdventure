@@ -1,5 +1,7 @@
 package com.abyad.relic;
 
+import java.util.ArrayList;
+
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.data.HitEvent;
@@ -17,6 +19,15 @@ public abstract class Relic {
 	
 	private String name;
 	private String desc;
+	
+	private static ArrayList<Class> relicClasses = new ArrayList<Class>();
+	
+	static {
+		relicClasses.add(TonWeightRelic.class);
+		relicClasses.add(PanicCharmRelic.class);
+		relicClasses.add(VampiricFangRelic.class);
+		relicClasses.add(ManaShieldRelic.class);
+	}
 	
 	public Relic(String name, String desc, float activationRate, TextureRegion tex) {
 		this.name = name;
@@ -68,5 +79,20 @@ public abstract class Relic {
 	
 	public void onDefense(PlayerCharacter player, HitEvent defense) {
 		//Do nothing
+	}
+	
+	public static Relic createRandomRelic() {
+		try {
+			Relic randomRelic = (Relic)relicClasses.get((int)(Math.random() * relicClasses.size())).newInstance();
+			return randomRelic;
+		} catch (InstantiationException e) {
+			// Needs a default constructor;
+			e.printStackTrace();
+			return null;
+		} catch (IllegalAccessException e) {
+			// Maybe because constructor can't be accessed?
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

@@ -15,6 +15,7 @@ import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.interfaces.Interactable;
 import com.abyad.magic.AbstractMagic;
+import com.abyad.relic.Relic;
 import com.abyad.relic.TonWeightRelic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.utils.Assets;
@@ -65,7 +66,7 @@ public class TreasureChest extends Actor implements Interactable{
 		if (choice == 0) {
 			Vector2 velocity = new Vector2(1, 0);
 			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
-			items.add(new RelicLoot(getX(), getY(), velocity, new TonWeightRelic()));
+			items.add(new RelicLoot(getX(), getY(), velocity, Relic.createRandomRelic()));
 		}
 		else if (choice == 1){
 			int heartAmount = (int)(Math.random() * 3) + 1;

@@ -513,13 +513,14 @@ public class PlayerCharacter extends HumanoidEntity{
 	public void takeDamage(HitEvent event) {
 		if (!isInvuln()) {
 			
-			super.takeDamage(event);
 			//Activate relic defense effects (modifies the event)
 			for (Relic relic : relics) {
 				if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
 					relic.onDefense(this, event);
 				}
 			}
+			
+			super.takeDamage(event);
 			if (isHoldingItem()) {
 				dropItemOnGround();
 			}

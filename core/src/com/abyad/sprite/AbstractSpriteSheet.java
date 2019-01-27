@@ -47,7 +47,7 @@ public abstract class AbstractSpriteSheet {
 		String[][] weaponIconNames = { {"SWORD", "STAFF"} };
 		spriteSheets.put("WEAPON_ICONS", new BasicSprite(Assets.manager.get(Assets.weaponIcons), weaponIconNames));
 		
-		String[][] relicNames = { {"TON_WEIGHT"} };
+		String[][] relicNames = { {"TON_WEIGHT", "PANIC_CHARM", "VAMPIRIC_FANG", "MANA_SHIELD"} };
 		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames));
 		
 		String[][] pickupsNames = { {"HEART", "GOLD", "MANA"} };
