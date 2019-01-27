@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import com.abyad.game.Player;
 import com.abyad.magic.AbstractMagic;
 import com.abyad.mapdata.MapEnvironment;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -40,6 +41,7 @@ public class Assets {
 	//Animation Stuffs/Weapons
 	public static final AssetDescriptor<Texture> deathAnim = new AssetDescriptor<Texture>("other/deathSprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> particles = new AssetDescriptor<Texture>("other/particles.png", Texture.class);
+	public static final AssetDescriptor<Texture> statusArrows = new AssetDescriptor<Texture>("other/statusArrows.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> staff = new AssetDescriptor<Texture>("weapon/staff/sprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> weaponIcons = new AssetDescriptor<Texture>("weapon/weaponIcons.png", Texture.class);
@@ -159,6 +161,7 @@ public class Assets {
 		//Animation
 		manager.load(deathAnim);
 		manager.load(particles);
+		manager.load(statusArrows);
 		//Weapon
 		manager.load(sword);
 		manager.load(staff);

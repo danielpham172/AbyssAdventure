@@ -64,6 +64,9 @@ public abstract class AbstractSpriteSheet {
 		String[][] particleNames = { {"RED", "ORANGE", "YELLOW", "GREEN"}, {"CYAN", "BLUE", "PURPLE", "PINK"} };
 		spriteSheets.put("PARTICLES",  new BasicSprite(Assets.manager.get(Assets.particles), particleNames));
 		
+		String[][] statusArrowNames = { {"DOWN", "UP"} };
+		spriteSheets.put("STATUS_ARROW",  new BasicSprite(Assets.manager.get(Assets.statusArrows), statusArrowNames));
+		
 		
 		//Magic
 		for (String magicName : Assets.magicAssets.keySet()) {
