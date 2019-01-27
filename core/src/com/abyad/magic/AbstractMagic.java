@@ -106,7 +106,7 @@ public abstract class AbstractMagic {
 		if (spawnsParticles() && Math.random() < particleDensity()) {
 			CosmeticParticle.spawnParticle(spriteSheet.getNextFrame("PARTICLE", null, 0).get(0),
 					source.getCenterX(), source.getCenterY() + CIRCLE_OFFSET_Y, 0f, 5f, 0f, 0f, particleSpeed(), 0.2f,
-					0.0f, maxParticleAngle(), 1.0f, 1.0f, particleLifetime(), 0.2f, 10, source.getStage());
+					0.0f, maxParticleAngle(), 1.0f, 1.0f, particleLifetime(), 0.2f, 1, source.getStage());
 		}
 	}
 	public boolean spawnsParticles() {
