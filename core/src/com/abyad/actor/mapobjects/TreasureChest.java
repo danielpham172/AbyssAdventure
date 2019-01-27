@@ -63,6 +63,7 @@ public class TreasureChest extends Actor implements Interactable{
 	
 	public void generateRandomLoot() {
 		int choice = (int)(Math.random() * 5);
+		choice = 0;
 		if (choice == 0) {
 			Vector2 velocity = new Vector2(1, 0);
 			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));

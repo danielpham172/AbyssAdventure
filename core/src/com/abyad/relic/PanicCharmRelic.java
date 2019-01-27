@@ -12,6 +12,11 @@ public class PanicCharmRelic extends Relic{
 
 	@Override
 	public void onDefense(PlayerCharacter player, HitEvent defense) {
-		defense.addStatusEffect("SPEED", 0.30f);
+		defense.addStatusEffect("SPEED-MAX", 0.20f + (getCount() * 0.10f));
+	}
+	
+	@Override
+	public int getPriority() {
+		return 101;
 	}
 }

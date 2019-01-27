@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.data.HitEvent;
+import com.abyad.magic.AbstractMagic;
 import com.abyad.relic.Relic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.ProjectileSprite;
@@ -81,10 +82,11 @@ public class MagicBoltProjectile extends AbstractProjectile{
 						PlayerCharacter player = (PlayerCharacter)source;
 						for (Relic relic : player.getRelics()) {
 							if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
-								relic.onHit(player, event, entity);
+								relic.onMagicHit(player, AbstractMagic.magicList.get("MAGIC BOLT"), event, entity);
 							}
 						}
 					}
+					source.applyOnHitStatusEffects(event, entity);
 					entity.takeDamage(event);
 				}
 			}

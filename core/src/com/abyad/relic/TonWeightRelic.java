@@ -12,6 +12,15 @@ public class TonWeightRelic extends Relic{
 
 	@Override
 	public void onDefense(PlayerCharacter player, HitEvent defense) {
-		defense.setKnockbackVelocity(defense.getKnockbackVelocity().scl(0.85f));
+		float kbScale = 1.0f;
+		for (int i = 0; i < getCount(); i++) {
+			kbScale *= 0.85f;
+		}
+		defense.setKnockbackVelocity(defense.getKnockbackVelocity().scl(kbScale));
+	}
+	
+	@Override
+	public int getPriority() {
+		return 100;
 	}
 }

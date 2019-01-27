@@ -301,6 +301,24 @@ public class PlayerCharacter extends HumanoidEntity{
 	}
 	
 	public void pickupRelic(Relic relic) {
+		
+		for (int i = 0; i < relics.size(); i++) {
+			Relic otherRelic = relics.get(i);
+			if (relic.getPriority() < otherRelic.getPriority()) {
+				relics.add(i, relic);
+				return;
+			}
+			else if (relic.getPriority() == otherRelic.getPriority()) {
+				if (relic.equals(otherRelic)) {
+					otherRelic.incrementCount();
+					return;
+				}
+				else if (relic.getName().compareTo(otherRelic.getName()) < 0){
+					relics.add(i, relic);
+					return;
+				}
+			}
+		}
 		relics.add(relic);
 	}
 	

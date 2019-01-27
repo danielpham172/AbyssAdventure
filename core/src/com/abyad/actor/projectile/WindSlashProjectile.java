@@ -2,6 +2,7 @@ package com.abyad.actor.projectile;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.data.HitEvent;
@@ -58,10 +59,11 @@ public class WindSlashProjectile extends AbstractProjectile{
 						PlayerCharacter player = (PlayerCharacter)source;
 						for (Relic relic : player.getRelics()) {
 							if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
-								relic.onHit(player, event, entity);
+								relic.onHit(player, AttackData.specialAttacks.get("WIND_BLADE"), event, entity);
 							}
 						}
 					}
+					source.applyOnHitStatusEffects(event, entity);
 					entity.takeDamage(event);
 				}
 			}

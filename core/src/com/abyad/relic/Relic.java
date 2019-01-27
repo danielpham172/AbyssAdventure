@@ -2,9 +2,11 @@ package com.abyad.relic;
 
 import java.util.ArrayList;
 
+import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.data.HitEvent;
+import com.abyad.magic.AbstractMagic;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -16,6 +18,7 @@ public abstract class Relic {
 	private float activationRate;
 	private int cooldown;
 	private TextureRegion tex;
+	private int count;
 	
 	private String name;
 	private String desc;
@@ -35,6 +38,7 @@ public abstract class Relic {
 		this.activationRate = activationRate;
 		this.tex = tex;
 		cooldown = 0;
+		count = 1;
 	}
 	
 	public float getActivationRate() {
@@ -61,6 +65,14 @@ public abstract class Relic {
 		return tex;
 	}
 	
+	public int getCount() {
+		return count;
+	}
+	
+	public void incrementCount() {
+		count++;
+	}
+	
 	public void update() {
 		if (cooldown > 0) cooldown--;
 	}
@@ -73,12 +85,28 @@ public abstract class Relic {
 		//Do nothing
 	}
 	
-	public void onHit(PlayerCharacter player, HitEvent attack, AbstractEntity hit) {
+	public void onHit(PlayerCharacter player, AttackData attackType, HitEvent attack, AbstractEntity hit) {
+		//Do nothing
+	}
+	
+	public void onMagicHit(PlayerCharacter player, AbstractMagic magicType, HitEvent attack, AbstractEntity hit) {
 		//Do nothing
 	}
 	
 	public void onDefense(PlayerCharacter player, HitEvent defense) {
 		//Do nothing
+	}
+	
+	public abstract int getPriority();
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this.getClass().getName().equals(o.getClass().getName())) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public static Relic createRandomRelic() {

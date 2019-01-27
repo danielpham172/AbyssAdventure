@@ -49,7 +49,7 @@ public class WindBlade extends SpecialAttackData{
 					//Activate relic hit effects (modifies the event)
 					for (Relic relic : player.getRelics()) {
 						if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
-							relic.onHit(player, event, entity);
+							relic.onHit(player, this, event, entity);
 						}
 					}
 					

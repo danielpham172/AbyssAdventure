@@ -36,6 +36,8 @@ public abstract class AbstractEntity extends Actor{
 	
 	protected float height;				//Used to simulate 3D (typically only for drawing)
 	
+	protected ArrayList<StatusEffectData> statusEffects;
+	
 	protected float speedChangeFactor;	//Slow or speed up of speed for a character
 	protected int timeSinceLastSpeedParticle;
 	
@@ -56,6 +58,7 @@ public abstract class AbstractEntity extends Actor{
 		frameFraction = 0f;
 		
 		deathLoot = new ArrayList<MapItem>();
+		statusEffects = new ArrayList<StatusEffectData>();
 	}
 	
 	/**
@@ -64,6 +67,8 @@ public abstract class AbstractEntity extends Actor{
 	@Override
 	public void act(float delta) {
 		updateSpeedChange();
+		updateStatusEffects();
+		applyOnPassiveStatusEffects();
 		spawnStatusParticles();
 		if (markForRemoval) {
 			remove();
@@ -273,6 +278,7 @@ public abstract class AbstractEntity extends Actor{
 	 */
 	public void takeDamage(HitEvent event) {
 		if (!isInvuln()) {
+			applyOnDefenseStatusEffects(event);
 			knockbackVelocity = event.getKnockbackVelocity();
 			knockbackLength = event.getKnockbackLength();
 			modifyHP(-event.getDamage());
@@ -287,8 +293,41 @@ public abstract class AbstractEntity extends Actor{
 		if (statusEffect.getName().equals("SPEED")) {
 			applySpeedChangeFactor(statusEffect.getPotency());
 		}
-		if (statusEffect.getName().equals("SLOW")) {
+		else if (statusEffect.getName().equals("SPEED-MAX")) {
+			applySpeedChangeFactor(Math.min(statusEffect.getPotency(), Math.max(0, statusEffect.getPotency() - speedChangeFactor)));
+		}
+		else if (statusEffect.getName().equals("SLOW")) {
 			applySpeedChangeFactor(-statusEffect.getPotency());
+		}
+		else if (statusEffect.getName().equals("SLOW-MAX")) {
+			applySpeedChangeFactor(Math.max(-statusEffect.getPotency(), Math.min(0, -statusEffect.getPotency() - speedChangeFactor)));
+		}
+		else {
+			statusEffects.add(statusEffect);
+		}
+	}
+	
+	public void updateStatusEffects() {
+		for (StatusEffectData statusEffect : statusEffects) {
+			statusEffect.update();
+		}
+	}
+	
+	public void applyOnHitStatusEffects(HitEvent attack, AbstractEntity hit) {
+		for (StatusEffectData statusEffect : statusEffects) {
+			statusEffect.onHit(this, attack, hit);
+		}
+	}
+	
+	public void applyOnDefenseStatusEffects(HitEvent defense) {
+		for (StatusEffectData statusEffect : statusEffects) {
+			statusEffect.onDefense(this, defense);
+		}
+	}
+	
+	public void applyOnPassiveStatusEffects() {
+		for (StatusEffectData statusEffect : statusEffects) {
+			statusEffect.onPassive(this);
 		}
 	}
 	
