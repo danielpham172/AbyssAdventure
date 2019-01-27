@@ -24,24 +24,13 @@ public class Meditate extends SpecialAttackData {
 	@Override
 	public void useAttack(PlayerCharacter player, int framesSinceLast) {
 		float particleSpeed = 0.45f;
-		float maxParticleAngle = 30f;
+		float angleRange = 30f;
 		float particleLifetime = 20f;
 		if (framesSinceLast == 31) {
 			player.addPartialMana(1);
-			for (int count = 0; count < 10; count++) {
-				Vector2 pointing = new Vector2(0, particleSpeed * (float)((Math.random() * 0.4) + 0.8f));
-				pointing.rotate(maxParticleAngle - (float)(Math.random() * maxParticleAngle * 2));
-				int lifetime = (int)(((Math.random() * 0.4) + 0.8) * particleLifetime);
-				float randomXModifier = (float)(Math.random() * 10f) - 5f;
-				float randomYModifier = (float)(Math.random() * 2f) - 1f;
-				CosmeticParticle particle = new CosmeticParticle(AbstractSpriteSheet.spriteSheets.get("PARTICLES").getSprite("RED"),
-						player.getCenterX() + randomXModifier, player.getCenterY() - 4f + randomYModifier, 0.0f,
-						new Vector2(pointing.x, 0), pointing.y, lifetime);
-				particle.setTransparency(0.5f);
-				particle.setScale(0.7f);
-				
-				player.getStage().addActor(particle);
-			}
+			CosmeticParticle.spawnParticle(AbstractSpriteSheet.spriteSheets.get("PARTICLES").getSprite("RED"),
+					player.getCenterX(), player.getCenterY() - 4f, 0f, 5f, 1f, 0f, particleSpeed, 0.2f, 0.0f, angleRange,
+					0.7f, 0.5f, particleLifetime, 0.2f, 10, player.getStage());
 		}
 	}
 

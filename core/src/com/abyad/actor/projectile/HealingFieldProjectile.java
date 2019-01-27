@@ -77,17 +77,8 @@ public class HealingFieldProjectile extends OnGroundProjectile{
 	}
 	
 	public void healParticleEffects(float x, float y, int count) {
-		for (int c = 0; c < count; c++) {
-			Vector2 pointing = new Vector2(0, 0.5f * (float)((Math.random() * 0.4) + 0.8f));
-			pointing.rotate(20 - (float)(Math.random() * 20 * 2));
-			int lifetime = (int)(((Math.random() * 0.4) + 0.8) * 40);
-			float randomXModifier = (float)(Math.random() * 16f) - 8f;
-			float randomYModifier = (float)(Math.random() * 10f) - 5f;
-			CosmeticParticle particle = new CosmeticParticle(particleTexture, x + randomXModifier, y + randomYModifier, 0.0f,
-					new Vector2(pointing.x, 0), pointing.y, lifetime);
-			
-			source.getStage().addActor(particle);
-		}
+		CosmeticParticle.spawnParticle(particleTexture, x, y, 0f, 8f, 5f, 0f,
+				0.5f, 0.2f, 0.0f, 20, 1.0f, 1.0f, 40, 0.2f, count, source.getStage());
 	}
 
 	@Override

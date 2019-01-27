@@ -104,15 +104,9 @@ public abstract class AbstractMagic {
 	
 	public void addsParticle(PlayerCharacter source) {
 		if (spawnsParticles() && Math.random() < particleDensity()) {
-			Vector2 pointing = new Vector2(0, particleSpeed() * (float)((Math.random() * 0.4) + 0.8f));
-			pointing.rotate(maxParticleAngle() - (float)(Math.random() * maxParticleAngle() * 2));
-			int lifetime = (int)(((Math.random() * 0.4) + 0.8) * particleLifetime());
-			float randomXModifier = (float)(Math.random() * 10f) - 5f;
-			CosmeticParticle particle = new CosmeticParticle(spriteSheet.getNextFrame("PARTICLE",
-					null, 0).get(0), source.getCenterX() + randomXModifier, source.getCenterY() + CIRCLE_OFFSET_Y, 0.0f,
-					new Vector2(pointing.x, 0), pointing.y, lifetime);
-			
-			source.getStage().addActor(particle);
+			CosmeticParticle.spawnParticle(spriteSheet.getNextFrame("PARTICLE", null, 0).get(0),
+					source.getCenterX(), source.getCenterY() + CIRCLE_OFFSET_Y, 0f, 5f, 0f, 0f, particleSpeed(), 0.2f,
+					0.0f, maxParticleAngle(), 1.0f, 1.0f, particleLifetime(), 0.2f, 10, source.getStage());
 		}
 	}
 	public boolean spawnsParticles() {
