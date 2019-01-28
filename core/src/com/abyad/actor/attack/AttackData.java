@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.game.Player;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class AttackData {
@@ -24,4 +25,7 @@ public abstract class AttackData {
 	public abstract ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast);
 	public abstract boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast);
 	public abstract String getName();
+	public void reset(PlayerCharacter player) {
+		//Normally don't need to do anything
+	}
 }

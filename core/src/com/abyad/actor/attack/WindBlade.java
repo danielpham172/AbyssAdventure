@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 public class WindBlade extends SpecialAttackData{
 
 	private int[] attackLengths = {6, 10, 14, 24};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
+	private ArrayList<PlayerCharacter> spawnedWindSlash = new ArrayList<PlayerCharacter>();
 	
 	@Override
 	public String getName() {
@@ -59,11 +60,12 @@ public class WindBlade extends SpecialAttackData{
 		}
 		
 		//Spawn the wind slash
-		if (framesSinceLast == 10) {
+		if (framesSinceLast >= 10 && !spawnedWindSlash.contains(player)) {
 			Vector2 velocity = new Vector2(player.getVelocity());
 			velocity.setLength(5.0f).setAngle(((int)(player.getVelocity().angle() + 45) / 90) * 90.0f);
 			WindSlashProjectile projectile = new WindSlashProjectile(player.getCenterX() + velocity.x, player.getCenterY() + velocity.y, player, velocity);
 			player.getStage().addActor(projectile);
+			spawnedWindSlash.add(player);
 		}
 	}
 	
@@ -135,6 +137,11 @@ public class WindBlade extends SpecialAttackData{
 	@Override
 	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
 		return (framesSinceLast >= 24);
+	}
+	
+	@Override
+	public void reset(PlayerCharacter player) {
+		spawnedWindSlash.remove(player);
 	}
 	
 	@Override

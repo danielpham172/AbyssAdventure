@@ -17,6 +17,6 @@ public class PanicCharmRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 101;
+		return 103;
 	}
 }

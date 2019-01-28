@@ -32,6 +32,10 @@ public abstract class Relic {
 		relicClasses.add(PanicCharmRelic.class);
 		relicClasses.add(VampiricFangRelic.class);
 		relicClasses.add(ManaShieldRelic.class);
+		relicClasses.add(GreenCloakRelic.class);
+		relicClasses.add(PocketwatchRelic.class);
+		relicClasses.add(RinasScarfRelic.class);
+		relicClasses.add(LifetapRelic.class);
 	}
 	
 	public Relic(String name, String desc, float activationRate, TextureRegion tex) {

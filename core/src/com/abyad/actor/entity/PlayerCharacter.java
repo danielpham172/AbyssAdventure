@@ -225,21 +225,30 @@ public class PlayerCharacter extends HumanoidEntity{
 				if (state.contains("BASIC_ATTACK")) {
 					float attackSpeed = getAttributeValue("ATTACK SPEED", 1.0f);
 					if (attackSpeed < 0.25f) attackSpeed = 0.25f;
+					if (attackSpeed > 3.0f) attackSpeed = 3.0f;
 					setState("BASIC_ATTACK - " + weapon, attackSpeed);
 					basicAttack.useAttack(this, framesSinceLast);
-					if (basicAttack.isFinishedAttacking(this, framesSinceLast)) attacking = false;		//Ends the attack after a certain amount of frames
+					if (basicAttack.isFinishedAttacking(this, framesSinceLast)) {
+						attacking = false;		//Ends the attack after a certain amount of frames
+						basicAttack.reset(this);
+					}
 				}
 				else if (state.contains("SPECIAL_ATTACK")) {
 					float attackSpeed = getAttributeValue("ATTACK SPEED", 1.0f);
 					if (attackSpeed < 0.25f) attackSpeed = 0.25f;
+					if (attackSpeed > 3.0f) attackSpeed = 3.0f;
 					setState("SPECIAL_ATTACK - " + specialName, attackSpeed);
 					specialAttack.useAttack(this, framesSinceLast);
-					if (specialAttack.isFinishedAttacking(this, framesSinceLast)) attacking = false;	//Ends the attack after a certain amount of frames
+					if (specialAttack.isFinishedAttacking(this, framesSinceLast)) {
+						attacking = false;	//Ends the attack after a certain amount of frames
+						specialAttack.reset(this);
+					}
 				}
 			}
 			else if (casting) {
 				float castSpeed = getAttributeValue("CAST SPEED", 1.0f);
 				if (castSpeed < 0.25f) castSpeed = 0.25f;
+				if (castSpeed > 3.0f) castSpeed = 3.0f;
 				if (state.equals("CASTING")) {
 					setState("CASTING", castSpeed);
 					if (xChange != 0 || yChange != 0) {
