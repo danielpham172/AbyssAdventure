@@ -9,6 +9,7 @@ import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.entity.ZombieCharacter;
 import com.abyad.actor.mapobjects.RareTreasureChest;
+import com.abyad.actor.mapobjects.ReviveStatue;
 import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.actor.mapobjects.items.CorpseItem;
 import com.abyad.actor.mapobjects.items.KeyItem;
@@ -153,10 +154,10 @@ public class PlayStage extends Stage{
 		treasure = new ArrayList<TreasureChest>();
 		while (!randomRooms.isEmpty()) {
 			Rectangle room = randomRooms.remove((int)(Math.random() * randomRooms.size()));
-			if (Math.random() < 1) {
+			FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
+			if (Math.random() < 0) {
 				if (Math.random() < 0.1 && (!enemies.isEmpty() || !treasure.isEmpty())) {
 					//Spawn rare treasure
-					FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
 					RareTreasureChest chest = new RareTreasureChest(center);
 					
 					double chance = (treasure.size() * 10.0) / (enemies.size() + treasure.size() * 10.0);
@@ -171,11 +172,14 @@ public class PlayStage extends Stage{
 				}
 				else {
 					//Spawn normal treasure
-					FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
 					TreasureChest chest = new TreasureChest(center);
 					treasure.add(chest);
 					addActor(chest);
 				}
+			}
+			else {
+				ReviveStatue statue = new ReviveStatue(center);
+				addActor(statue);
 			}
 		}
 		

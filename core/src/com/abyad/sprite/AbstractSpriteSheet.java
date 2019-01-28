@@ -30,6 +30,9 @@ public abstract class AbstractSpriteSheet {
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
 		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames));
 		
+		String[][] statueNames = { {"GODDESS_STATUE"} };
+		spriteSheets.put("STATUE", new BasicSprite(Assets.manager.get(Assets.goddessStatue), statueNames));
+		
 		String[][] houseNames = { {"CLOSED", "OPEN", "ROOF"} };
 		spriteSheets.put("HOUSE", new BasicSprite(Assets.manager.get(Assets.house), houseNames));
 		

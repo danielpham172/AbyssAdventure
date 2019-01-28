@@ -297,8 +297,8 @@ public class PlayerCharacter extends HumanoidEntity{
 		attacking = false;
 		casting = false;
 		knockbackLength = 0;
-		invulnLength = 0;
 		velocity.setToRandomDirection();
+		invulnLength = 180;
 		updateHitbox();
 	}
 	
@@ -573,6 +573,9 @@ public class PlayerCharacter extends HumanoidEntity{
 				CorpseItem corpse = getCorpse(event.getKnockbackVelocity());
 				getStage().addActor(corpse);
 				corpse.spawn();
+				if (player.isRingMenuActive()) {
+					player.toggleRingMenu();
+				}
 				markForRemoval(true);
 			}
 		}

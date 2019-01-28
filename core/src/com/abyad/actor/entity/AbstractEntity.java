@@ -347,6 +347,12 @@ public abstract class AbstractEntity extends Actor{
 		}
 	}
 	
+	public void clearEffects() {
+		statusEffects.clear();
+		speedChangeFactor = 0;
+		invulnLength = 0;
+	}
+	
 	/**
 	 * The following are methods for getting invuln conditions
 	 */
