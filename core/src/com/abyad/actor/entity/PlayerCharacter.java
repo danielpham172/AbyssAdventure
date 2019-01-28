@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.attack.SpecialAttackData;
 import com.abyad.actor.mapobjects.items.CarryingItem;
+import com.abyad.actor.mapobjects.items.CorpseItem;
 import com.abyad.actor.ui.MagicCursor;
 import com.abyad.controls.PlayerController;
 import com.abyad.data.HitEvent;
@@ -302,6 +303,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	}
 	
 	public void resetCharacter() {
+		markForRemoval = false;
 		relics.clear();
 		magicSpells.clear();
 		magicSpells.add(startingSpell);
@@ -480,8 +482,10 @@ public class PlayerCharacter extends HumanoidEntity{
 		super.draw(batch, a);
 		if (inView()) {
 			if (isHoldingItem()) {
-				batch.draw(heldItem.getTexture(), getX() - getOriginX(), getY() + (getOriginY() / 4),
-						getOriginX(), getOriginY(), heldItem.getTexture().getRegionWidth(), heldItem.getTexture().getRegionHeight(),
+				heldItem.updateTexture(velocity);
+				Vector2 drawOffset = heldItem.getOffsetDraw(velocity);
+				batch.draw(heldItem.getTexture(), getX() - heldItem.getOriginX() + drawOffset.x, getY() - heldItem.getOriginY() + drawOffset.y,
+						heldItem.getOriginX(), heldItem.getOriginY(), heldItem.getTexture().getRegionWidth(), heldItem.getTexture().getRegionHeight(),
 						getScaleX(), getScaleY(), getRotation());
 			}
 		}
@@ -564,7 +568,19 @@ public class PlayerCharacter extends HumanoidEntity{
 				casting = false;
 				cursor.remove();
 			}
+			
+			if (isDead()) {
+				CorpseItem corpse = getCorpse(event.getKnockbackVelocity());
+				getStage().addActor(corpse);
+				corpse.spawn();
+				markForRemoval(true);
+			}
 		}
+	}
+	
+	public CorpseItem getCorpse(Vector2 velocity) {
+		CorpseItem corpse = new CorpseItem(getX(), getY(), velocity, this);
+		return corpse;
 	}
 	
 	@Override

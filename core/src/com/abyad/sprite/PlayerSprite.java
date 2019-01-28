@@ -43,7 +43,7 @@ public class PlayerSprite extends EntitySprite{
 	}
 	
 	private static final int SHEET_ROWS = 4;
-	private static final int SHEET_COLS = 14;
+	private static final int SHEET_COLS = 15;
 	
 	/**
 	 * Constructor for creating the sprite for a player.
@@ -67,6 +67,9 @@ public class PlayerSprite extends EntitySprite{
 			for (int c = 12; c < 14; c++) {
 				sprites.put("char_" + rowNames[r] + "_" + staffColNames[c - 8], charRegions[r][c]);
 			}
+		}
+		for (int r = 0; r < 4; r++) {
+			sprites.put("char_" + rowNames[r] + "_dead", charRegions[r][14]);
 		}
 		TextureRegion[][] iconRegions = TextureRegion.split(icons, icons.getWidth() / 2, icons.getHeight());
 		sprites.put("head", iconRegions[0][0]);

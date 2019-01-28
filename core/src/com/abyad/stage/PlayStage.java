@@ -10,6 +10,7 @@ import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.entity.ZombieCharacter;
 import com.abyad.actor.mapobjects.RareTreasureChest;
 import com.abyad.actor.mapobjects.TreasureChest;
+import com.abyad.actor.mapobjects.items.CorpseItem;
 import com.abyad.actor.mapobjects.items.KeyItem;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.projectile.OnGroundProjectile;
@@ -115,10 +116,26 @@ public class PlayStage extends Stage{
 			player.setPosition(tileMap[row][col].getCenter().x, tileMap[row][col].getCenter().y);
 			player.getVelocity().setLength(0);
 			player.removeHeldItem();
-			addActor(player);
+			
+			if (!player.isDead()) {
+				addActor(player);
+			}
+			else {
+				Vector2 randomDirection = (new Vector2(0.01f, 0)).setToRandomDirection();
+				CorpseItem corpse = player.getCorpse(randomDirection);
+				addActor(corpse);
+				corpse.spawn();
+			}
 			
 			if (rooms.contains(playerSpawnRoom)) {
 				roomTiles.remove(tileMap[row][col]);
+			}
+		}
+		
+		for (int i = 0; i < PlayerCharacter.getPlayers().size(); i++) {
+			if (PlayerCharacter.getPlayers().get(i).isDead()) {
+				PlayerCharacter.getPlayers().remove(i);
+				i--;
 			}
 		}
 		
