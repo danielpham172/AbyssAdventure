@@ -155,7 +155,7 @@ public class PlayStage extends Stage{
 		while (!randomRooms.isEmpty()) {
 			Rectangle room = randomRooms.remove((int)(Math.random() * randomRooms.size()));
 			FloorTile center = (FloorTile)tileMap[(int)(room.getX() + room.getWidth() / 2)][(int)(room.getY() + room.getHeight() / 2)];
-			if (Math.random() < 0) {
+			if (Math.random() < 0.9) {
 				if (Math.random() < 0.1 && (!enemies.isEmpty() || !treasure.isEmpty())) {
 					//Spawn rare treasure
 					RareTreasureChest chest = new RareTreasureChest(center);
