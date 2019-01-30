@@ -11,6 +11,7 @@ import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.mapobjects.items.RelicLoot;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
+import com.abyad.relic.Relic;
 import com.abyad.relic.TonWeightRelic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -99,6 +100,11 @@ public class RareTreasureChest extends TreasureChest{
 				isOpen = true;
 				source.removeHeldItem();
 				interactBox.clear();
+				for (Relic relic : source.getRelics()) {
+					if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
+						relic.onChestOpen(source, this);
+					}
+				}
 				for (MapItem item : items) {
 					if (item instanceof LootItem) ((LootItem)item).spawn();
 					getStage().addActor(item);

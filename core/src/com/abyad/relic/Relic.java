@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.mapobjects.TreasureChest;
 import com.abyad.data.AttributeData;
 import com.abyad.data.HitEvent;
 import com.abyad.magic.AbstractMagic;
@@ -98,6 +99,10 @@ public abstract class Relic {
 		if (cooldown > 0) cooldown--;
 	}
 	
+	public void onPickup(PlayerCharacter player) {
+		//Do nothing
+	}
+	
 	public void onPassive(PlayerCharacter player) {
 		//Do nothing
 	}
@@ -115,6 +120,14 @@ public abstract class Relic {
 	}
 	
 	public void onDefense(PlayerCharacter player, HitEvent defense) {
+		//Do nothing
+	}
+	
+	public void onKill(PlayerCharacter player, AbstractEntity hit) {
+		//Do nothing
+	}
+	
+	public void onChestOpen(PlayerCharacter player, TreasureChest chest) {
 		//Do nothing
 	}
 	

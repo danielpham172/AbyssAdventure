@@ -145,6 +145,11 @@ public class TreasureChest extends Actor implements Interactable{
 			isOpen = true;
 			interactBox.clear();
 			
+			for (Relic relic : source.getRelics()) {
+				if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
+					relic.onChestOpen(source, this);
+				}
+			}
 			for (MapItem item : items) {
 				if (item instanceof LootItem) ((LootItem)item).spawn();
 				getStage().addActor(item);

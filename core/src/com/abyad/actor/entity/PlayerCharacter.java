@@ -324,15 +324,18 @@ public class PlayerCharacter extends HumanoidEntity{
 			Relic otherRelic = relics.get(i);
 			if (relic.getPriority() < otherRelic.getPriority()) {
 				relics.add(i, relic);
+				relic.onPickup(this);
 				return;
 			}
 			else if (relic.getPriority() == otherRelic.getPriority()) {
 				if (relic.equals(otherRelic)) {
 					otherRelic.incrementCount();
+					otherRelic.onPickup(this);
 					return;
 				}
 				else if (relic.getName().compareTo(otherRelic.getName()) < 0){
 					relics.add(i, relic);
+					relic.onPickup(this);
 					return;
 				}
 			}

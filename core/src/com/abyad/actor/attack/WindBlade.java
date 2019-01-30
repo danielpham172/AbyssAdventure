@@ -55,6 +55,15 @@ public class WindBlade extends SpecialAttackData{
 					}
 					
 					entity.takeDamage(event);
+					
+					//Activate kill effects if killed entity
+					if (entity.isDead()) {
+						for (Relic relic : player.getRelics()) {
+							if (!relic.isOnCooldown() && Math.random() < relic.getActivationRate()) {
+								relic.onKill(player, entity);
+							}
+						}
+					}
 				}
 			}
 		}
