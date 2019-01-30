@@ -1,9 +1,11 @@
 package com.abyad.actor.attack;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.projectile.WindSlashProjectile;
 import com.abyad.data.HitEvent;
 import com.abyad.relic.Relic;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,6 +14,8 @@ import com.badlogic.gdx.math.Vector2;
 public class SpinSlash extends SpecialAttackData{
 
 	private int[] attackLengths = {4, 10, 16, 22, 28, 34};
+	private LinkedHashMap<PlayerCharacter, PlayerCharacter> windSpinSlash = new LinkedHashMap<PlayerCharacter, PlayerCharacter>();
+	private LinkedHashMap<PlayerCharacter, boolean[]> windSpinSlashActivations = new LinkedHashMap<PlayerCharacter, boolean[]>();
 	
 	@Override
 	public String getName() {
@@ -76,6 +80,36 @@ public class SpinSlash extends SpecialAttackData{
 		player.setHeight((-(float)Math.pow((2 - frame), 2) + 9) * 0.25f);
 		if (frame == 5) player.setHeight(0);
 		
+		if (windSpinSlash.containsKey(player)) {
+			activateWindSpinSlash(player, framesSinceLast);
+		}
+	}
+	
+	private void activateWindSpinSlash(PlayerCharacter player, int framesSinceLast) {
+		int dir = (int)((player.getVelocity().angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
+		int frame = 0;
+		while (frame < attackLengths.length && framesSinceLast >= attackLengths[frame]) {
+			frame++;	//This figures out what frame the player is in
+		}
+		
+		if (frame > 0 && frame < 5) {
+			boolean[] activations = windSpinSlashActivations.get(player);
+			
+			for (int count = 0; count < frame; count++) {
+				if (!activations[count]) {
+					dir = (dir + (count - 1)) % 4;
+					Vector2 velocity = (new Vector2(5, 0)).setAngle(dir * 90f);
+					WindSlashProjectile projectile = new WindSlashProjectile(player.getCenterX() + velocity.x, player.getCenterY() + velocity.y, player, velocity);
+					player.getStage().addActor(projectile);
+					activations[count] = true;
+				}
+			}
+		}
+	}
+	
+	public void addDualTech(PlayerCharacter doer, PlayerCharacter activator) {
+		windSpinSlash.put(doer, activator);
+		windSpinSlashActivations.put(doer, new boolean[] {false, false, false, false});
 	}
 	
 	/**

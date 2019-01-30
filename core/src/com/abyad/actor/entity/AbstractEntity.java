@@ -188,6 +188,10 @@ public abstract class AbstractEntity extends Actor{
 		return state;
 	}
 	
+	public int getFramesSinceLast() {
+		return framesSinceLast;
+	}
+	
 	public EntitySprite getSprite() {
 		return sprite;
 	}

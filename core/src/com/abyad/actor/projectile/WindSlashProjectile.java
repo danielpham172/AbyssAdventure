@@ -3,6 +3,7 @@ package com.abyad.actor.projectile;
 import java.util.ArrayList;
 
 import com.abyad.actor.attack.AttackData;
+import com.abyad.actor.attack.SpinSlash;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.data.HitEvent;
@@ -76,6 +77,15 @@ public class WindSlashProjectile extends AbstractProjectile{
 								}
 							}
 						}
+					}
+				}
+			}
+			else if (source instanceof PlayerCharacter && entity instanceof PlayerCharacter) {
+				ArrayList<Rectangle> otherHitbox = entity.getHitbox();
+				if (isOverlapping(hurtboxes, otherHitbox)) {
+					if (entity.getState().equals("SPECIAL_ATTACK - SPIN_SLASH") && entity.getFramesSinceLast() < 10) {
+						isHit = true;
+						((SpinSlash)AttackData.specialAttacks.get("SPIN_SLASH")).addDualTech((PlayerCharacter)entity, (PlayerCharacter)source);
 					}
 				}
 			}
