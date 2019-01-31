@@ -25,6 +25,6 @@ public class ManaShieldRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 102;
+		return 103;
 	}
 }

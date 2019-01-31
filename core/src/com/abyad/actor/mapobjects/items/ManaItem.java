@@ -8,8 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 public class ManaItem extends AutoItem{
 
 	private int framesPassed;
+	
+	public ManaItem() {
+		super(AbstractSpriteSheet.spriteSheets.get("PICKUPS").getSprite("MANA"), 60, false);
+	}
+	
 	public ManaItem(float x, float y, Vector2 velocity) {
-		super(AbstractSpriteSheet.spriteSheets.get("PICKUPS").getSprite("MANA"), 50, false);
+		this();
 		this.velocity = velocity;
 		setX(x);
 		setY(y);

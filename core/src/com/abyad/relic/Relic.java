@@ -17,14 +17,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public abstract class Relic {
 
-	private float activationRate;
-	private int cooldown;
-	private TextureRegion tex;
-	private int count;
-	private ArrayList<AttributeData> attributes;
+	protected float activationRate;
+	protected int cooldown;
+	protected TextureRegion tex;
+	protected int count;
+	protected ArrayList<AttributeData> attributes;
 	
-	private String name;
-	private String desc;
+	protected String name;
+	protected String desc;
 	
 	private static ArrayList<Class> relicClasses = new ArrayList<Class>();
 	
@@ -37,6 +37,10 @@ public abstract class Relic {
 		relicClasses.add(PocketwatchRelic.class);
 		relicClasses.add(RinasScarfRelic.class);
 		relicClasses.add(LifetapRelic.class);
+		relicClasses.add(LockpickRelic.class);
+		relicClasses.add(LifeRingRelic.class);
+		relicClasses.add(SavingsWalletRelic.class);
+		relicClasses.add(PowerMagnetRelic.class);
 	}
 	
 	public Relic(String name, String desc, float activationRate, TextureRegion tex) {

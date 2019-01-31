@@ -23,7 +23,7 @@ public class GreenCloakRelic extends Relic{
 			defense.setDamage(0);
 			defense.setKnockbackLength(0);
 			Vector2 upVelocity = new Vector2(0, 1.25f);
-			BattleText text = new BattleText("EVADE!", player.getCenterX(), player.getCenterY(), upVelocity.cpy(), 0.98f, 25, true);
+			BattleText text = new BattleText("EVADE!", player.getCenterX(), player.getCenterY(), upVelocity.cpy(), 0.98f, 30, true);
 			text.setScale(0.2f);
 			player.getStage().addActor(text);
 		}

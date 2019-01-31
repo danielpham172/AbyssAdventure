@@ -51,7 +51,8 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("WEAPON_ICONS", new BasicSprite(Assets.manager.get(Assets.weaponIcons), weaponIconNames));
 		
 		String[][] relicNames = { 	{"TON_WEIGHT", "PANIC_CHARM", "VAMPIRIC_FANG", "MANA_SHIELD"},
-									{"GREEN_CLOAK", "POCKETWATCH", "RINA'S_SCARF", "LIFETAP"} };
+									{"GREEN_CLOAK", "POCKETWATCH", "RINA'S_SCARF", "LIFETAP"},
+									{"LOCKPICK", "LIFE_RING", "SAVINGS_WALLET", "POWER_MAGNET"}};
 		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames));
 		
 		String[][] pickupsNames = { {"HEART", "GOLD", "MANA"} };

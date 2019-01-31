@@ -6,8 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class GoldItem extends AutoItem{
 
-	public GoldItem(float x, float y, Vector2 velocity) {
+	public GoldItem() {
 		super(AbstractSpriteSheet.spriteSheets.get("PICKUPS").getSprite("GOLD"), 50, false);
+	}
+	public GoldItem(float x, float y, Vector2 velocity) {
+		this();
 		this.velocity = velocity;
 		setX(x);
 		setY(y);

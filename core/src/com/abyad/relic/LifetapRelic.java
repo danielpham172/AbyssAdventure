@@ -22,6 +22,6 @@ public class LifetapRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 105;
+		return 104;
 	}
 }

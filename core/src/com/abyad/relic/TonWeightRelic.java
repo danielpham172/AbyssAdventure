@@ -21,6 +21,6 @@ public class TonWeightRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 101;
+		return 105;
 	}
 }
