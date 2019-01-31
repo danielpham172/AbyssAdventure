@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.attack.SpinSlash;
+import com.abyad.actor.cosmetic.BattleText;
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.data.HitEvent;
@@ -80,12 +81,17 @@ public class WindSlashProjectile extends AbstractProjectile{
 					}
 				}
 			}
-			else if (source instanceof PlayerCharacter && entity instanceof PlayerCharacter) {
+			else if (source instanceof PlayerCharacter && entity instanceof PlayerCharacter && source != entity) {
 				ArrayList<Rectangle> otherHitbox = entity.getHitbox();
 				if (isOverlapping(hurtboxes, otherHitbox)) {
 					if (entity.getState().equals("SPECIAL_ATTACK - SPIN_SLASH") && entity.getFramesSinceLast() < 10) {
 						isHit = true;
 						((SpinSlash)AttackData.specialAttacks.get("SPIN_SLASH")).addDualTech((PlayerCharacter)entity, (PlayerCharacter)source);
+						
+						Vector2 upVelocity = new Vector2(0, 1.3f);
+						BattleText nameText = new BattleText("WIND SPIN BLADE!", getX(), getY(), upVelocity.cpy(), 0.98f, 40, true);
+						nameText.setScale(0.3f);
+						getStage().addActor(nameText);
 					}
 				}
 			}

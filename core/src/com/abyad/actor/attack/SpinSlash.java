@@ -97,8 +97,8 @@ public class SpinSlash extends SpecialAttackData{
 			
 			for (int count = 0; count < frame; count++) {
 				if (!activations[count]) {
-					dir = (dir + (count - 1)) % 4;
-					Vector2 velocity = (new Vector2(5, 0)).setAngle(dir * 90f);
+					int newDir = (dir + (count)) % 4;
+					Vector2 velocity = (new Vector2(5, 0)).setAngle(newDir * 90f);
 					WindSlashProjectile projectile = new WindSlashProjectile(player.getCenterX() + velocity.x, player.getCenterY() + velocity.y, player, velocity);
 					player.getStage().addActor(projectile);
 					activations[count] = true;
