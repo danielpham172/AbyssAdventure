@@ -34,11 +34,7 @@ public class MagicRingMenu extends RingMenu<AbstractMagic>{
 		magicDesc = new GlyphLayout();
 		
 		if (!player.getCharacter().getMagicSpells().isEmpty()) {
-			AbstractMagic magic = player.getCharacter().getMagicSpells().get(selection);
-			font.getData().setScale(FONT_SCALE);
-			magicName.setText(font, magic.getName());
-			magicDesc.setText(font, "Cost: " + getManaCostText(magic.getManaCost(), magic.getPartialManaCost()));
-			font.getData().setScale(1.0f);
+			setSelection(0);
 		}
 	}
 	
@@ -72,6 +68,11 @@ public class MagicRingMenu extends RingMenu<AbstractMagic>{
 	@Override
 	public void rotate(int direction) {
 		super.rotate(direction);
+	}
+	
+	@Override
+	public void setSelection(int selection) {
+		super.setSelection(selection);
 		AbstractMagic magic = getList().get(selection);
 		font.getData().setScale(FONT_SCALE);
 		magicName.setText(font, magic.getName());

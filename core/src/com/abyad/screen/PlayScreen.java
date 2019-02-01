@@ -5,6 +5,7 @@ import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.game.AbyssAdventureGame;
 import com.abyad.game.Player;
 import com.abyad.stage.CharacterSelectStage;
+import com.abyad.stage.MagicSelectStage;
 import com.abyad.stage.PlayHUD;
 import com.abyad.stage.PlayStage;
 import com.abyad.stage.TownStage;
@@ -23,6 +24,7 @@ public class PlayScreen implements Screen{
 	
 	private CharacterSelectStage characterSelectStage;
 	private WeaponSelectStage weaponSelectStage;
+	private MagicSelectStage magicSelectStage;
 	private boolean noPlayerHUD;
 	
 	public PlayScreen(AbyssAdventureGame game) {
@@ -32,6 +34,7 @@ public class PlayScreen implements Screen{
 		playHUD = new PlayHUD(game);
 		characterSelectStage = new CharacterSelectStage(game);
 		weaponSelectStage = new WeaponSelectStage(game);
+		magicSelectStage = new MagicSelectStage(game);
 		floor = 1;
 	}
 	
@@ -103,44 +106,13 @@ public class PlayScreen implements Screen{
 				}
 				
 				if (((TownStage)playStage).openCharacterMenu()){
-					characterSelectStage.getViewport().apply();
-					characterSelectStage.act();
-					characterSelectStage.draw();
-					noPlayerHUD = true;
-					
-					if (characterSelectStage.allIsReady()) {
-						noPlayerHUD = false;
-						((TownStage)playStage).flagCharacterMenu(false);
-						for (Player player : game.getPlayers()) {
-							if (player.isActive()) {
-								PlayerCharacter.getPlayers().add(player.getCharacter());
-								AbstractEntity.getEntities().add(player.getCharacter());
-								player.getCharacter().markForRemoval(false);
-								playStage.addActor(player.getCharacter());
-							}
-						}
-						characterSelectStage.resetStatus();
-					}
+					openedCharacterMenu();
 				}
 				if (((TownStage)playStage).openWeaponMenu()){
-					weaponSelectStage.getViewport().apply();
-					weaponSelectStage.act();
-					weaponSelectStage.draw();
-					noPlayerHUD = true;
-					
-					if (weaponSelectStage.allIsReady()) {
-						noPlayerHUD = false;
-						((TownStage)playStage).flagWeaponMenu(false);
-						for (Player player : game.getPlayers()) {
-							if (player.isActive()) {
-								PlayerCharacter.getPlayers().add(player.getCharacter());
-								AbstractEntity.getEntities().add(player.getCharacter());
-								player.getCharacter().markForRemoval(false);
-								playStage.addActor(player.getCharacter());
-							}
-						}
-						weaponSelectStage.resetStatus();
-					}
+					openedWeaponMenu();
+				}
+				if (((TownStage)playStage).openMagicMenu()){
+					openedMagicMenu();
 				}
 			}
 			else if (playersAreDead()) {
@@ -160,6 +132,69 @@ public class PlayScreen implements Screen{
 		}
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+	}
+	
+	public void openedCharacterMenu() {
+		characterSelectStage.getViewport().apply();
+		characterSelectStage.act();
+		characterSelectStage.draw();
+		noPlayerHUD = true;
+		
+		if (characterSelectStage.allIsReady()) {
+			noPlayerHUD = false;
+			((TownStage)playStage).flagCharacterMenu(false);
+			for (Player player : game.getPlayers()) {
+				if (player.isActive()) {
+					PlayerCharacter.getPlayers().add(player.getCharacter());
+					AbstractEntity.getEntities().add(player.getCharacter());
+					player.getCharacter().markForRemoval(false);
+					playStage.addActor(player.getCharacter());
+				}
+			}
+			characterSelectStage.resetStatus();
+		}
+	}
+	
+	public void openedWeaponMenu() {
+		weaponSelectStage.getViewport().apply();
+		weaponSelectStage.act();
+		weaponSelectStage.draw();
+		noPlayerHUD = true;
+		
+		if (weaponSelectStage.allIsReady()) {
+			noPlayerHUD = false;
+			((TownStage)playStage).flagWeaponMenu(false);
+			for (Player player : game.getPlayers()) {
+				if (player.isActive()) {
+					PlayerCharacter.getPlayers().add(player.getCharacter());
+					AbstractEntity.getEntities().add(player.getCharacter());
+					player.getCharacter().markForRemoval(false);
+					playStage.addActor(player.getCharacter());
+				}
+			}
+			weaponSelectStage.resetStatus();
+		}
+	}
+	
+	public void openedMagicMenu() {
+		magicSelectStage.getViewport().apply();
+		magicSelectStage.act();
+		magicSelectStage.draw();
+		noPlayerHUD = true;
+		
+		if (magicSelectStage.allIsReady()) {
+			noPlayerHUD = false;
+			((TownStage)playStage).flagMagicMenu(false);
+			for (Player player : game.getPlayers()) {
+				if (player.isActive()) {
+					PlayerCharacter.getPlayers().add(player.getCharacter());
+					AbstractEntity.getEntities().add(player.getCharacter());
+					player.getCharacter().markForRemoval(false);
+					playStage.addActor(player.getCharacter());
+				}
+			}
+			magicSelectStage.resetStatus();
+		}
 	}
 	
 	public boolean playersAreDead() {

@@ -85,6 +85,11 @@ public class PlayerCharacter extends HumanoidEntity{
 	 */
 	@Override
 	public void act(float delta) {
+		if (markForRemoval) {
+			if (player.isRingMenuActive()) {
+				player.toggleRingMenu();
+			}
+		}
 		super.act(delta);
 		if (!markForRemoval) {
 			PlayerController controller = player.getController();
@@ -546,6 +551,16 @@ public class PlayerCharacter extends HumanoidEntity{
 	public void changeSpecial(String specialName) {
 		this.specialName = specialName;
 		specialAttack = AttackData.specialAttacks.get(specialName);
+	}
+	
+	public AbstractMagic getStartingSpell() {
+		return startingSpell;
+	}
+	
+	public void changeStartingSpell(AbstractMagic startingSpell) {
+		magicSpells.remove(this.startingSpell);
+		this.startingSpell = startingSpell;
+		magicSpells.add(startingSpell);
 	}
 	
 	/**

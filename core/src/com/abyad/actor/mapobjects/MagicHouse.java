@@ -3,6 +3,7 @@ package com.abyad.actor.mapobjects;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.sprite.AbstractSpriteSheet;
+import com.abyad.stage.TownStage;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -25,7 +26,7 @@ public class MagicHouse extends AbstractHouse{
 	@Override
 	public boolean interact(PlayerCharacter source) {
 		super.interact(source);
-		//((TownStage)getStage()).flagCharacterMenu(true);
+		((TownStage)getStage()).flagMagicMenu(true);
 		return true;
 	}
 

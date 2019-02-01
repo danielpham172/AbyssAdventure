@@ -9,6 +9,7 @@ import com.abyad.controls.DisabledController;
 import com.abyad.controls.GamepadController;
 import com.abyad.controls.KeyboardController;
 import com.abyad.controls.PlayerController;
+import com.abyad.magic.AbstractMagic;
 
 public class Player {
 
@@ -117,5 +118,14 @@ public class Player {
 	
 	public String getSpecial() {
 		return character.getSpecial();
+	}
+
+	public void changeStartingSpell(AbstractMagic magic) {
+		character.changeStartingSpell(magic);
+		resetRingMenu();
+	}
+	
+	public AbstractMagic getStartingSpell(AbstractMagic magic) {
+		return character.getStartingSpell();
 	}
 }

@@ -2,6 +2,7 @@ package com.abyad.actor.ui;
 
 import java.util.ArrayList;
 
+import com.abyad.game.Player;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -30,7 +31,6 @@ public abstract class ScrollSelectionMenu<E> extends Actor {
 	public ScrollSelectionMenu(float iconScale, float arrowsDistance) {
 		ICON_SCALE = iconScale;
 		ARROWS_DISTANCE = arrowsDistance;
-		
 	}
 	
 	@Override
@@ -104,4 +104,6 @@ public abstract class ScrollSelectionMenu<E> extends Actor {
 	public int getSelection() {
 		return selection;
 	}
+	
+	public abstract void resetStatus();
 }
