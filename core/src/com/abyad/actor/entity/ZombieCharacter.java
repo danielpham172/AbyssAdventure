@@ -36,6 +36,7 @@ public class ZombieCharacter extends HumanoidEntity{
 
 		wanderDirection.rotate((float)(Math.random() * 360));		//Randomly set a direction for the zombie to wander
 		
+		maxHP = 1;
 		hp = 1;
 		
 		setDeathLoot();
