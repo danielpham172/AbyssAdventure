@@ -33,7 +33,7 @@ public abstract class MapItem extends Actor{
 			
 			for (PlayerCharacter player : players) {
 				Vector2 distance = new Vector2(player.getCenterX() - getX(), player.getY() - getY());
-				distance.scl(1.0f / player.getAttributeValue("PICKUP RANGE", 1.0f));
+				distance.scl((float)Math.pow(1.2, -player.getAttributeValue("PICKUP RANGE")));
 				if (distance.len() < followRadius) {
 					distance.setLength(((followRadius - distance.len()) / followRadius) * 5.0f);
 					velocity.add(distance);

@@ -55,6 +55,7 @@ public class Assets {
 	public static final AssetDescriptor<Texture> goddessStatue = new AssetDescriptor<Texture>("object/goddessStatue.png", Texture.class);
 	public static final AssetDescriptor<Texture> house = new AssetDescriptor<Texture>("object/house.png", Texture.class);
 	public static final AssetDescriptor<Texture> blacksmith = new AssetDescriptor<Texture>("object/blacksmith.png", Texture.class);
+	public static final AssetDescriptor<Texture> magicShop = new AssetDescriptor<Texture>("object/magicShop.png", Texture.class);
 	
 	//UI things
 	public static final AssetDescriptor<Texture> buttons = new AssetDescriptor<Texture>("ui/buttons.png", Texture.class);
@@ -172,6 +173,7 @@ public class Assets {
 		manager.load(goddessStatue);
 		manager.load(house);
 		manager.load(blacksmith);
+		manager.load(magicShop);
 		for (String key : tileAssets.keySet()) {
 			for (String imageKey : tileAssets.get(key).keySet()) {
 				manager.load(tileAssets.get(key).get(imageKey));

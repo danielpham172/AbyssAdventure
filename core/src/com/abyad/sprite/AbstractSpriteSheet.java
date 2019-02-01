@@ -39,6 +39,9 @@ public abstract class AbstractSpriteSheet {
 		String[][] blacksmithNames = { {"CLOSED", "OPEN"} };
 		spriteSheets.put("BLACKSMITH", new BasicSprite(Assets.manager.get(Assets.blacksmith), blacksmithNames));
 		
+		String[][] magicShopNames = { {"CLOSED", "OPEN"} };
+		spriteSheets.put("MAGIC_SHOP", new BasicSprite(Assets.manager.get(Assets.magicShop), magicShopNames));
+		
 		String[][] buttonNames = { {"A", "B"}, {"X", "Y"} };
 		spriteSheets.put("UI_BUTTONS", new BasicSprite(Assets.manager.get(Assets.buttons), buttonNames));
 		String[][] selectionArrowNames = { {"LEFT", "RIGHT"} };
