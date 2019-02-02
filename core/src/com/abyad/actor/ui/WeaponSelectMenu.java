@@ -30,7 +30,7 @@ public class WeaponSelectMenu extends ScrollSelectionMenu<String>{
 		
 		weapons.add("SPEAR");
 		weaponsToSpecials.put("SPEAR", new ArrayList<String>());
-		weaponsToSpecials.get("SPEAR").add("SPIN_SLASH");
+		weaponsToSpecials.get("SPEAR").add("PIERCE_CHARGE");
 	}
 	
 	private Player player;

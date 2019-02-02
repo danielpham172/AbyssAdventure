@@ -38,7 +38,7 @@ public class Player {
 			}
 		}
 		if (num == 1) isActive = true;
-		selectedName = num % characterNames.size();
+		selectedName = (num - 1) % characterNames.size();
 		character = new PlayerCharacter(this, 0, 0);
 		display = new PlayerDisplay(this);
 		ringMenu = new MagicRingMenu(this);

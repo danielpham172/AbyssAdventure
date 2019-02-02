@@ -285,6 +285,25 @@ public class PlayerSprite extends EntitySprite{
 				frames.add(weapon);
 			}
 		}
+		if (state.contains("PIERCE_CHARGE")) {
+			int frame = 0;
+			int[] attackLengths = {30, 120, 140, 150};				//The frame thresholds for the attack
+			String dir = getDirection(direction);
+			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
+				frame++;
+			}
+			if (frame >= 4) frame = 3;
+			TextureRegion weapon = spearSprites.get("weapon_" + dir + "_" + spearColNames[frame]);
+			TextureRegion character = sprites.get("char_" + dir + "_" + spearColNames[frame]);
+			if (isWeaponBehind(dir, frame, "SPEAR")) {
+				frames.add(weapon);
+				frames.add(character);
+			}
+			else {
+				frames.add(character);
+				frames.add(weapon);
+			}
+		}
 		return frames;
 	}
 	

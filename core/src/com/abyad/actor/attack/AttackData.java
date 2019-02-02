@@ -19,6 +19,7 @@ public abstract class AttackData {
 		specialAttacks.put("SPIN_SLASH", new SpinSlash());
 		specialAttacks.put("WIND_BLADE", new WindBlade());
 		specialAttacks.put("MEDITATE", new Meditate());
+		specialAttacks.put("PIERCE_CHARGE", new PierceCharge());
 	}
 	
 	public abstract void initiateAttack(PlayerCharacter player);

@@ -9,30 +9,52 @@ import com.abyad.relic.Relic;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class BasicSpearAttack extends AttackData{
+public class PierceCharge extends SpecialAttackData{
 
-	private int[] attackLengths = {7, 15, 20, 24};		//The frame thresholds for each sprite. Only the second frame are attack frames
+	private int[] attackLengths = {30, 120, 140, 150};		//The frame thresholds for each sprite. Only the second frame are attack frames
 	
 	@Override
 	public String getName() {
-		return "SPEAR";
+		return "PIERCE CHARGE";
 	}
 	@Override
 	public void initiateAttack(PlayerCharacter player) {
-		if (player.getState().equals("IDLE")) {
-			//If the player was in idle, give a small forward movement. May remove or lower this.
-			player.getVelocity().setAngle(((int)(player.getVelocity().angle() + 45) / 90) * 90.0f);
-			player.getVelocity().setLength(0.1f);
-		}
-		else if (player.getState().equals("MOVE")) {
-			player.getVelocity().scl(1.2f);
-		}
+		player.getVelocity().setAngle(((int)(player.getVelocity().angle() + 45) / 90) * 90.0f).setLength(4.5f);
 	}
 	
 	@Override
 	public void useAttack(PlayerCharacter player, int framesSinceLast) {
-		player.getVelocity().setLength(player.getVelocity().len() / 1.10f);
-		player.move(player.getVelocity());
+		int frame = 0;
+		while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
+			frame++;	//This figures out what frame the player is in
+		}
+		if (frame >= 4) frame = 3;
+		if (frame == 1) {
+			float xChange = (float)Math.pow(player.getPlayer().getController().rightPressed(), 2)
+					- (float)Math.pow(player.getPlayer().getController().leftPressed(), 2);
+			float yChange = (float)Math.pow(player.getPlayer().getController().upPressed(), 2)
+					- (float)Math.pow(player.getPlayer().getController().downPressed(), 2);
+			Vector2 newVelocity = new Vector2(xChange * 0.4f, yChange * 0.4f).add(player.getVelocity()).setLength(4.5f);
+	
+			float oldX = player.getX();
+			float oldY = player.getY();
+			player.move(newVelocity);
+			Vector2 posChange = new Vector2(oldX - player.getX(), oldY - player.getY());
+			if (posChange.len() < 2.0f) {
+				if (framesSinceLast < attackLengths[1] - 1) player.setFramesSinceLast(attackLengths[1] - 1);
+			}
+			
+			
+			player.setHeight(1.0f);
+			if (player.getPlayer().getController().attackPressed()) {
+				if (framesSinceLast < attackLengths[1] - 1) player.setFramesSinceLast(attackLengths[1] - 1);
+			}
+		}
+		else if (frame > 1) {
+			player.getVelocity().setLength(player.getVelocity().len() / 1.06f);
+			player.move(player.getVelocity());
+			player.setHeight(0.0f);
+		}
 		ArrayList<Rectangle> hurtboxes = getHurtboxes(player, framesSinceLast);
 		ArrayList<AbstractEntity> entities = AbstractEntity.getEntities();
 		for (AbstractEntity entity : entities) {
@@ -45,7 +67,6 @@ public class BasicSpearAttack extends AttackData{
 					int kbLength = 8;
 					int damage = 1;
 					HitEvent event = new HitEvent(player, entity, damage, knockback, kbLength);
-					player.addPartialMana(1);
 					
 					//Activate relic hit effects (modifies the event)
 					for (Relic relic : player.getRelics()) {
@@ -144,7 +165,11 @@ public class BasicSpearAttack extends AttackData{
 
 	@Override
 	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
-		return (framesSinceLast >= 24);
+		return (framesSinceLast >= attackLengths[attackLengths.length - 1]);
 	}
-
+	
+	@Override
+	public int getRequiredMana() {
+		return 1;
+	}
 }

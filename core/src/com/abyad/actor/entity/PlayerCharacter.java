@@ -291,6 +291,9 @@ public class PlayerCharacter extends HumanoidEntity{
 		return MAX_SPEED;
 	}
 	
+	/**
+	 * -----SPAWNING IN THINGS-----
+	 */
 	public void setSpawnInLength(int length) {
 		spawnInLength = length;
 	}
@@ -323,6 +326,9 @@ public class PlayerCharacter extends HumanoidEntity{
 		return spawnInLength > 0;
 	}
 	
+	/**
+	 * -----RELICS AND ITEMS-----
+	 */
 	public void pickupRelic(Relic relic) {
 		
 		for (int i = 0; i < relics.size(); i++) {
@@ -385,6 +391,9 @@ public class PlayerCharacter extends HumanoidEntity{
 		heldItem = null;
 	}
 	
+	/**
+	 * -----MANA THINGS-----
+	 */
 	public int getMana() {
 		return mp;
 	}
@@ -436,14 +445,6 @@ public class PlayerCharacter extends HumanoidEntity{
 		if (partialMP < 0) partialMP = 0;
 	}
 	
-	public boolean isCursorActive() {
-		return (cursor.getStage() != null);
-	}
-	
-	public Vector2 getCursorPosition() {
-		return new Vector2(cursor.getX(), cursor.getY());
-	}
-	
 	public Vector2 getVisionCenter() {
 		if (!isSpawningIn()) {
 			Vector2 facing = new Vector2(velocity);
@@ -453,6 +454,14 @@ public class PlayerCharacter extends HumanoidEntity{
 		else {
 			return getCenter();
 		}
+	}
+	
+	public boolean isCursorActive() {
+		return (cursor.getStage() != null);
+	}
+	
+	public Vector2 getCursorPosition() {
+		return new Vector2(cursor.getX(), cursor.getY());
 	}
 	
 	public ArrayList<AbstractMagic> getMagicSpells(){
@@ -529,6 +538,10 @@ public class PlayerCharacter extends HumanoidEntity{
 	@Override
 	public String getTeam() {
 		return "PLAYERS";
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 	
 	public void updateSpriteSheet() {

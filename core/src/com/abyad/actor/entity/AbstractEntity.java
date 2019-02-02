@@ -192,6 +192,10 @@ public abstract class AbstractEntity extends Actor{
 		return framesSinceLast;
 	}
 	
+	public void setFramesSinceLast(int framesSinceLast) {
+		this.framesSinceLast = framesSinceLast;
+	}
+	
 	public EntitySprite getSprite() {
 		return sprite;
 	}
