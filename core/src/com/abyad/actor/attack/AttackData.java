@@ -14,6 +14,7 @@ public abstract class AttackData {
 	static {
 		basicAttacks.put("SWORD", new BasicSwordAttack());
 		basicAttacks.put("STAFF", new BasicStaffAttack());
+		basicAttacks.put("SPEAR", new BasicSpearAttack());
 		
 		specialAttacks.put("SPIN_SLASH", new SpinSlash());
 		specialAttacks.put("WIND_BLADE", new WindBlade());

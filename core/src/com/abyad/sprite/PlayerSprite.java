@@ -16,9 +16,11 @@ public class PlayerSprite extends EntitySprite{
 	private static String[] rowNames = {"f", "r", "l", "b"};															//The row names for the weapon
 	
 	private static String[] staffColNames = {"start", "swing", "follow", "end", "low-hold", "high-hold"};
+	private static String[] spearColNames = {"start-stab", "stab", "follow-stab", "end-stab"};
 	
 	public static LinkedHashMap<String, TextureRegion> swordSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the sword sprites
-	public static LinkedHashMap<String, TextureRegion> staffSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the sword sprites
+	public static LinkedHashMap<String, TextureRegion> staffSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the staff sprites
+	public static LinkedHashMap<String, TextureRegion> spearSprites = new LinkedHashMap<String, TextureRegion>();	//The hashmap for the spear sprites
 	static {
 		//Splicing and adding sword sprites
 		int swordRows = 4;
@@ -40,10 +42,21 @@ public class PlayerSprite extends EntitySprite{
 				staffSprites.put("weapon_" + rowNames[r] + "_" + staffColNames[c], staffRegions[r][c]);
 			}
 		}
+		
+		//Splicing and adding spear sprites
+		int spearRows = 4;
+		int spearCols = 4;
+		Texture spear = Assets.manager.get(Assets.spear);
+		TextureRegion[][] spearRegions = TextureRegion.split(spear, spear.getWidth() / spearCols, spear.getHeight() / spearRows);
+		for (int r = 0; r < spearRows; r++) {
+			for (int c = 0; c < spearCols; c++) {
+				spearSprites.put("weapon_" + rowNames[r] + "_" + spearColNames[c], spearRegions[r][c]);
+			}
+		}
 	}
 	
 	private static final int SHEET_ROWS = 4;
-	private static final int SHEET_COLS = 15;
+	private static final int SHEET_COLS = 19;
 	
 	/**
 	 * Constructor for creating the sprite for a player.
@@ -64,12 +77,17 @@ public class PlayerSprite extends EntitySprite{
 			}
 		}
 		for (int r = 0; r < 4; r++) {
-			for (int c = 12; c < 14; c++) {
-				sprites.put("char_" + rowNames[r] + "_" + staffColNames[c - 8], charRegions[r][c]);
+			for (int c = 12; c < 16; c++) {
+				sprites.put("char_" + rowNames[r] + "_" + spearColNames[c - 12], charRegions[r][c]);
 			}
 		}
 		for (int r = 0; r < 4; r++) {
-			sprites.put("char_" + rowNames[r] + "_dead", charRegions[r][14]);
+			for (int c = 16; c < 18; c++) {
+				sprites.put("char_" + rowNames[r] + "_" + staffColNames[c - 16], charRegions[r][c]);
+			}
+		}
+		for (int r = 0; r < 4; r++) {
+			sprites.put("char_" + rowNames[r] + "_dead", charRegions[r][18]);
 		}
 		TextureRegion[][] iconRegions = TextureRegion.split(icons, icons.getWidth() / 2, icons.getHeight());
 		sprites.put("head", iconRegions[0][0]);
@@ -162,6 +180,25 @@ public class PlayerSprite extends EntitySprite{
 			TextureRegion weapon = staffSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
 			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
 			if (isWeaponBehind(dir, frame, "STAFF")) {
+				frames.add(weapon);
+				frames.add(character);
+			}
+			else {
+				frames.add(character);
+				frames.add(weapon);
+			}
+		}
+		else if (state.contains("SPEAR")) {
+			int frame = 0;
+			int[] attackLengths = {7, 15, 20, 24};				//The frame thresholds for the attack
+			String dir = getDirection(direction);
+			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
+				frame++;
+			}
+			if (frame >= 4) frame = 3;
+			TextureRegion weapon = spearSprites.get("weapon_" + dir + "_" + spearColNames[frame]);
+			TextureRegion character = sprites.get("char_" + dir + "_" + spearColNames[frame]);
+			if (isWeaponBehind(dir, frame, "SPEAR")) {
 				frames.add(weapon);
 				frames.add(character);
 			}
@@ -267,6 +304,9 @@ public class PlayerSprite extends EntitySprite{
 			if (dir.equals("b")) return true;
 			else if (dir.equals("r") && frame >= 2) return true;
 			else if (dir.equals("l") && frame <= 1) return true;
+		}
+		else if (type.equals("SPEAR")) {
+			if (dir.equals("b") || dir.equals("l")) return true;
 		}
 		else if (type.equals("SPIN_SLASH")) {
 			if (dir.equals("b") || dir.equals("l")) return true;

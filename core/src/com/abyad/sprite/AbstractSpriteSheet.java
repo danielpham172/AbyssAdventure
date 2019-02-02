@@ -50,7 +50,7 @@ public abstract class AbstractSpriteSheet {
 		spriteSheets.put("HEALTH_CELL", new BarSprite(Assets.manager.get(Assets.healthCell), 5, 11));
 		spriteSheets.put("MANA_CELL", new BarSprite(Assets.manager.get(Assets.manaCell), 5, 11));
 		
-		String[][] weaponIconNames = { {"SWORD", "STAFF"} };
+		String[][] weaponIconNames = { {"SWORD", "STAFF", "SPEAR"} };
 		spriteSheets.put("WEAPON_ICONS", new BasicSprite(Assets.manager.get(Assets.weaponIcons), weaponIconNames));
 		
 		String[][] relicNames = { 	{"TON_WEIGHT", "PANIC_CHARM", "VAMPIRIC_FANG", "MANA_SHIELD"},

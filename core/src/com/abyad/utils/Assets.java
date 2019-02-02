@@ -44,6 +44,7 @@ public class Assets {
 	public static final AssetDescriptor<Texture> statusArrows = new AssetDescriptor<Texture>("other/statusArrows.png", Texture.class);
 	public static final AssetDescriptor<Texture> sword = new AssetDescriptor<Texture>("weapon/sword/sprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> staff = new AssetDescriptor<Texture>("weapon/staff/sprite.png", Texture.class);
+	public static final AssetDescriptor<Texture> spear = new AssetDescriptor<Texture>("weapon/spear/sprite.png", Texture.class);
 	public static final AssetDescriptor<Texture> weaponIcons = new AssetDescriptor<Texture>("weapon/weaponIcons.png", Texture.class);
 	
 	//Tiles
@@ -167,6 +168,7 @@ public class Assets {
 		//Weapon
 		manager.load(sword);
 		manager.load(staff);
+		manager.load(spear);
 		manager.load(weaponIcons);
 		//Dungeon Tiles and Objects
 		manager.load(treasureChest);
