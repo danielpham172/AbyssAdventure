@@ -73,7 +73,7 @@ public class CharacterSelectMenu extends ScrollSelectionMenu<String>{
 			else if (player.getController().attackPressed() && !attackHeld) {
 				isReady = !isReady;
 			}
-			else if (player.getController().specialPressed() && !specialHeld) {
+			else if (player.getController().specialPressed() && !specialHeld && !isReady) {
 				player.setActive(false);
 			}
 		}
