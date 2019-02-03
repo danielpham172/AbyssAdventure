@@ -46,6 +46,8 @@ public abstract class AbstractHouse extends Actor implements Interactable{
 	protected static final float FONT_SCALE = 0.25f;
 	protected static BitmapFont font = Assets.manager.get(Assets.font);
 	
+	private static final float FONT_SPACING = 24;
+	
 	public AbstractHouse(FloorTile floor) {
 		this.floor = floor;
 		
@@ -92,7 +94,7 @@ public abstract class AbstractHouse extends Actor implements Interactable{
 		if (isInteractable) {
 			font.getData().setScale(FONT_SCALE);
 			float fontX = floor.getCenter().x - (getText().width / 2);
-			float fontY = floor.getCenter().y + (AbstractTile.TILE_SIZE / 2) - (getText().height / 2);
+			float fontY = floor.getCenter().y + FONT_SPACING - (getText().height / 2);
 			font.draw(batch, getText(), fontX, fontY);
 			font.getData().setScale(1.0f);
 		}
