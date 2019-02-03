@@ -7,6 +7,54 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class DungeonGenerator {
 
+	private class Node {
+		int row;
+		int col;
+		
+		int color1;
+		int color2;
+		
+		private ArrayList<int[]> randomDirections;
+		
+		public Node(int row, int col) {
+			this.row = row;
+			this.col = col;
+			randomDirections = new ArrayList<int[]>();
+			randomDirections.add(new int[] {1, 0});
+			randomDirections.add(new int[] {-1, 0});
+			randomDirections.add(new int[] {0, 1});
+			randomDirections.add(new int[] {0, -1});
+		}
+		
+		public Node(int row, int col, int c1, int c2) {
+			this.row = row;
+			this.col = col;
+			color1 = Math.min(c1, c2);
+			color2 = Math.max(c1, c2);
+			randomDirections = new ArrayList<int[]>();
+			randomDirections.add(new int[] {1, 0});
+			randomDirections.add(new int[] {-1, 0});
+			randomDirections.add(new int[] {0, 1});
+			randomDirections.add(new int[] {0, -1});
+		}
+		
+		public boolean hasNextDirection() {
+			return !randomDirections.isEmpty();
+		}
+		
+		public int[] getNextDirection() {
+			return randomDirections.remove((int)(Math.random() * randomDirections.size()));
+		}
+		
+		public boolean connectsTo(int color) {
+			return (color1 == color || color2 == color);
+		}
+		
+		public boolean connectsTo(int c1, int c2) {
+			return ((color1 == c1 && color2 == c2) || (color1 == c2 && color2 == c1));
+		}
+	}
+	
 	private int[][] dungeon;
 	private int[][] colorMapDungeon;
 	private int color;
@@ -549,53 +597,5 @@ public class DungeonGenerator {
 	
 	public boolean inBounds(int row, int col) {
 		return (row >= 0 && row < rows && col >= 0 && col < cols);
-	}
-}
-
-class Node {
-	int row;
-	int col;
-	
-	int color1;
-	int color2;
-	
-	private ArrayList<int[]> randomDirections;
-	
-	public Node(int row, int col) {
-		this.row = row;
-		this.col = col;
-		randomDirections = new ArrayList<int[]>();
-		randomDirections.add(new int[] {1, 0});
-		randomDirections.add(new int[] {-1, 0});
-		randomDirections.add(new int[] {0, 1});
-		randomDirections.add(new int[] {0, -1});
-	}
-	
-	public Node(int row, int col, int c1, int c2) {
-		this.row = row;
-		this.col = col;
-		color1 = Math.min(c1, c2);
-		color2 = Math.max(c1, c2);
-		randomDirections = new ArrayList<int[]>();
-		randomDirections.add(new int[] {1, 0});
-		randomDirections.add(new int[] {-1, 0});
-		randomDirections.add(new int[] {0, 1});
-		randomDirections.add(new int[] {0, -1});
-	}
-	
-	public boolean hasNextDirection() {
-		return !randomDirections.isEmpty();
-	}
-	
-	public int[] getNextDirection() {
-		return randomDirections.remove((int)(Math.random() * randomDirections.size()));
-	}
-	
-	public boolean connectsTo(int color) {
-		return (color1 == color || color2 == color);
-	}
-	
-	public boolean connectsTo(int c1, int c2) {
-		return ((color1 == c1 && color2 == c2) || (color1 == c2 && color2 == c1));
 	}
 }
