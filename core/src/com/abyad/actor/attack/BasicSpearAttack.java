@@ -11,7 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class BasicSpearAttack extends AttackData{
 
-	private int[] attackLengths = {7, 15, 20, 24};		//The frame thresholds for each sprite. Only the second frame are attack frames
+	private static int[] attackLengths = {10, 18, 24, 30};		//The frame thresholds for each sprite. Only the second frame are attack frames
+	
+	public BasicSpearAttack() {
+		super(BasicSpearAttack.attackLengths);
+	}
 	
 	@Override
 	public String getName() {
@@ -88,14 +92,10 @@ public class BasicSpearAttack extends AttackData{
 	@Override
 	public ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast) {
 		ArrayList<Rectangle> hurtboxes = new ArrayList<Rectangle>();
-		int frame = 0;
+		int frame = getFrame(framesSinceLast);
 		int dir = (int)((player.getVelocity().angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
 		float xOffset = 0;	//Offsets to set the hurtbox
 		float yOffset = 0;	//Offsets to set the hurtbox correctly
-		while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
-		}
-		if (frame >= 4) frame = 3;
 		
 		if (frame == 1) {
 			//This is the main stab
@@ -140,11 +140,6 @@ public class BasicSpearAttack extends AttackData{
 			hurtboxes.add(headHurtbox);
 		}
 		return hurtboxes;
-	}
-
-	@Override
-	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
-		return (framesSinceLast >= 24);
 	}
 
 }

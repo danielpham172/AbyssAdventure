@@ -22,11 +22,26 @@ public abstract class AttackData {
 		specialAttacks.put("PIERCE_CHARGE", new PierceCharge());
 	}
 	
+	private int[] attackLengths;
+	
+	public AttackData(int[] attackLengths) {
+		this.attackLengths = attackLengths;
+	}
 	public abstract void initiateAttack(PlayerCharacter player);
 	public abstract void useAttack(PlayerCharacter player, int framesSinceLast);
 	public abstract ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast);
-	public abstract boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast);
+	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
+		return (framesSinceLast >= attackLengths[attackLengths.length - 1]);
+	}
 	public abstract String getName();
+	public int getFrame(int framesSinceLast) {
+		int frame = 0;
+		while (frame < attackLengths.length && framesSinceLast >= attackLengths[frame]) {
+			frame++;
+		}
+		if (frame >= attackLengths.length) frame = attackLengths.length - 1;
+		return frame;
+	}
 	public void reset(PlayerCharacter player) {
 		//Normally don't need to do anything
 	}

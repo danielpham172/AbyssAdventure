@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.abyad.actor.entity.AbstractEntity;
 import com.abyad.actor.entity.PlayerCharacter;
-import com.abyad.actor.projectile.MagicBoltProjectile;
 import com.abyad.actor.projectile.WindSlashProjectile;
 import com.abyad.data.HitEvent;
 import com.abyad.relic.Relic;
@@ -13,8 +12,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class WindBlade extends SpecialAttackData{
 
-	private int[] attackLengths = {6, 10, 14, 24};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
+	private static int[] attackLengths = {6, 10, 14, 24};		//The frame thresholds for each sprite. Only the second and third frame are attack frames
 	private ArrayList<PlayerCharacter> spawnedWindSlash = new ArrayList<PlayerCharacter>();
+	
+	public WindBlade() {
+		super (WindBlade.attackLengths);
+	}
 	
 	@Override
 	public String getName() {
@@ -69,7 +72,7 @@ public class WindBlade extends SpecialAttackData{
 		}
 		
 		//Spawn the wind slash
-		if (framesSinceLast >= 10 && !spawnedWindSlash.contains(player)) {
+		if (framesSinceLast >= attackLengths[1] && !spawnedWindSlash.contains(player)) {
 			Vector2 velocity = new Vector2(player.getVelocity());
 			velocity.setLength(5.0f).setAngle(((int)(player.getVelocity().angle() + 45) / 90) * 90.0f);
 			WindSlashProjectile projectile = new WindSlashProjectile(player.getCenterX() + velocity.x, player.getCenterY() + velocity.y, player, velocity);
@@ -96,14 +99,10 @@ public class WindBlade extends SpecialAttackData{
 	@Override
 	public ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast) {
 		ArrayList<Rectangle> hurtboxes = new ArrayList<Rectangle>();
-		int frame = 0;
+		int frame = getFrame(framesSinceLast);
 		int dir = (int)((player.getVelocity().angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
 		float xOffset = 0;	//Offsets to set the hurtbox
 		float yOffset = 0;	//Offsets to set the hurtbox correctly
-		while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
-		}
-		if (frame >= 4) frame = 3;
 		
 		if (frame == 1) {
 			//This is the initial side swing
@@ -141,11 +140,6 @@ public class WindBlade extends SpecialAttackData{
 			hurtboxes.add(hurtbox);
 		}
 		return hurtboxes;
-	}
-
-	@Override
-	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
-		return (framesSinceLast >= 24);
 	}
 	
 	@Override

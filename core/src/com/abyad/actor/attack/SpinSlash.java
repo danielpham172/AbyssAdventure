@@ -13,9 +13,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SpinSlash extends SpecialAttackData{
 
-	private int[] attackLengths = {4, 10, 16, 22, 28, 34};
+	private static int[] attackLengths = {4, 10, 16, 22, 28, 34};
 	private LinkedHashMap<PlayerCharacter, PlayerCharacter> windSpinSlash = new LinkedHashMap<PlayerCharacter, PlayerCharacter>();
 	private LinkedHashMap<PlayerCharacter, boolean[]> windSpinSlashActivations = new LinkedHashMap<PlayerCharacter, boolean[]>();
+	
+	public SpinSlash() {
+		super(SpinSlash.attackLengths);
+	}
 	
 	@Override
 	public String getName() {
@@ -72,11 +76,7 @@ public class SpinSlash extends SpecialAttackData{
 			}
 		}
 		
-		int frame = 0;
-		while (frame < attackLengths.length && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
-		}
-		if (frame >= attackLengths.length) frame = attackLengths.length - 1;
+		int frame = getFrame(framesSinceLast);
 		player.setHeight((-(float)Math.pow((2 - frame), 2) + 9) * 0.25f);
 		if (frame == 5) player.setHeight(0);
 		
@@ -87,10 +87,7 @@ public class SpinSlash extends SpecialAttackData{
 	
 	private void activateWindSpinSlash(PlayerCharacter player, int framesSinceLast) {
 		int dir = (int)((player.getVelocity().angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
-		int frame = 0;
-		while (frame < attackLengths.length && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
-		}
+		int frame = getFrame(framesSinceLast);
 		
 		if (frame > 0 && frame < 5) {
 			boolean[] activations = windSpinSlashActivations.get(player);
@@ -130,14 +127,10 @@ public class SpinSlash extends SpecialAttackData{
 	@Override
 	public ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast) {
 		ArrayList<Rectangle> hurtboxes = new ArrayList<Rectangle>();
-		int frame = 0;
+		int frame = getFrame(framesSinceLast);
 		int dir = (int)((player.getVelocity().angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
 		float xOffset = 0;	//Offsets to set the hurtbox
 		float yOffset = 0;	//Offsets to set the hurtbox correctly
-		while (frame < attackLengths.length && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
-		}
-		if (frame >= attackLengths.length) frame = attackLengths.length - 1;
 		
 		if (frame != 5) dir = (dir + frame) % 4;
 		
@@ -172,11 +165,6 @@ public class SpinSlash extends SpecialAttackData{
 			hurtboxes.add(hurtbox);
 		}
 		return hurtboxes;
-	}
-
-	@Override
-	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
-		return (framesSinceLast >= 34);
 	}
 	
 	@Override

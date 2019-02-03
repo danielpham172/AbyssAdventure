@@ -3,6 +3,7 @@ package com.abyad.sprite;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import com.abyad.actor.attack.AttackData;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -83,7 +84,7 @@ public class PlayerSprite extends EntitySprite{
 		}
 		for (int r = 0; r < 4; r++) {
 			for (int c = 16; c < 18; c++) {
-				sprites.put("char_" + rowNames[r] + "_" + staffColNames[c - 16], charRegions[r][c]);
+				sprites.put("char_" + rowNames[r] + "_" + staffColNames[c - 12], charRegions[r][c]);
 			}
 		}
 		for (int r = 0; r < 4; r++) {
@@ -151,13 +152,8 @@ public class PlayerSprite extends EntitySprite{
 	public ArrayList<TextureRegion> getNextFrameBasicAttack(String state, Vector2 direction, int framesSinceLast){
 		ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
 		if (state.contains("SWORD")) {
-			int frame = 0;
-			int[] attackLengths = {6, 10, 14, 24};				//The frame thresholds for the attack
+			int frame = AttackData.basicAttacks.get("SWORD").getFrame(framesSinceLast);
 			String dir = getDirection(direction);
-			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 4) frame = 3;
 			TextureRegion weapon = swordSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
 			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
 			if (isWeaponBehind(dir, frame, "SWORD")) {
@@ -170,13 +166,8 @@ public class PlayerSprite extends EntitySprite{
 			}
 		}
 		else if (state.contains("STAFF")) {
-			int frame = 0;
-			int[] attackLengths = {10, 16, 22, 34};				//The frame thresholds for the attack
+			int frame = AttackData.basicAttacks.get("STAFF").getFrame(framesSinceLast);
 			String dir = getDirection(direction);
-			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 4) frame = 3;
 			TextureRegion weapon = staffSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
 			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
 			if (isWeaponBehind(dir, frame, "STAFF")) {
@@ -189,13 +180,8 @@ public class PlayerSprite extends EntitySprite{
 			}
 		}
 		else if (state.contains("SPEAR")) {
-			int frame = 0;
-			int[] attackLengths = {7, 15, 20, 24};				//The frame thresholds for the attack
+			int frame = AttackData.basicAttacks.get("SPEAR").getFrame(framesSinceLast);
 			String dir = getDirection(direction);
-			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 4) frame = 3;
 			TextureRegion weapon = spearSprites.get("weapon_" + dir + "_" + spearColNames[frame]);
 			TextureRegion character = sprites.get("char_" + dir + "_" + spearColNames[frame]);
 			if (isWeaponBehind(dir, frame, "SPEAR")) {
@@ -213,12 +199,7 @@ public class PlayerSprite extends EntitySprite{
 	public ArrayList<TextureRegion> getNextFrameSpecialAttack(String state, Vector2 direction, int framesSinceLast){
 		ArrayList<TextureRegion> frames = new ArrayList<TextureRegion>();
 		if (state.contains("SPIN_SLASH")) {
-			int frame = 0;
-			int[] attackLengths = {4, 10, 16, 22, 28, 34};				//The frame thresholds for the attack
-			while (frame < 6 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 6) frame = 5;
+			int frame = AttackData.specialAttacks.get("SPIN_SLASH").getFrame(framesSinceLast);
 			Vector2 newDirection = new Vector2(direction);
 			if (frame != 5) newDirection.rotate(frame * 90f);
 			String dir = getDirection(newDirection);
@@ -248,13 +229,8 @@ public class PlayerSprite extends EntitySprite{
 			}
 		}
 		if (state.contains("WIND_BLADE")) {
-			int frame = 0;
-			int[] attackLengths = {6, 10, 14, 24};				//The frame thresholds for the attack
+			int frame = AttackData.specialAttacks.get("WIND_BLADE").getFrame(framesSinceLast);
 			String dir = getDirection(direction);
-			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 4) frame = 3;
 			TextureRegion weapon = swordSprites.get("weapon_" + dir + "_" + weaponColNames[frame]);
 			TextureRegion character = sprites.get("char_" + dir + "_" + weaponColNames[frame]);
 			if (isWeaponBehind(dir, frame, "SWORD")) {
@@ -267,13 +243,8 @@ public class PlayerSprite extends EntitySprite{
 			}
 		}
 		if (state.contains("MEDITATE")) {
-			int frame = 0;
-			int[] attackLengths = {30, 40};				//The frame thresholds for the attack
+			int frame = AttackData.specialAttacks.get("MEDITATE").getFrame(framesSinceLast);
 			String dir = getDirection(direction);
-			while (frame < 2 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 2) frame = 1;
 			TextureRegion weapon = staffSprites.get("weapon_" + dir + "_" + staffColNames[frame + 4]);
 			TextureRegion character = sprites.get("char_" + dir + "_" + staffColNames[frame + 4]);
 			if (isWeaponBehind(dir, frame, "STAFF")) {
@@ -286,13 +257,8 @@ public class PlayerSprite extends EntitySprite{
 			}
 		}
 		if (state.contains("PIERCE_CHARGE")) {
-			int frame = 0;
-			int[] attackLengths = {30, 120, 140, 150};				//The frame thresholds for the attack
+			int frame = AttackData.specialAttacks.get("PIERCE_CHARGE").getFrame(framesSinceLast);
 			String dir = getDirection(direction);
-			while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-				frame++;
-			}
-			if (frame >= 4) frame = 3;
 			TextureRegion weapon = spearSprites.get("weapon_" + dir + "_" + spearColNames[frame]);
 			TextureRegion character = sprites.get("char_" + dir + "_" + spearColNames[frame]);
 			if (isWeaponBehind(dir, frame, "SPEAR")) {

@@ -11,7 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class PierceCharge extends SpecialAttackData{
 
-	private int[] attackLengths = {30, 120, 140, 150};		//The frame thresholds for each sprite. Only the second frame are attack frames
+	private static int[] attackLengths = {30, 120, 140, 150};		//The frame thresholds for each sprite. Only the second frame are attack frames
+	
+	public PierceCharge() {
+		super(PierceCharge.attackLengths);
+	}
 	
 	@Override
 	public String getName() {
@@ -24,11 +28,8 @@ public class PierceCharge extends SpecialAttackData{
 	
 	@Override
 	public void useAttack(PlayerCharacter player, int framesSinceLast) {
-		int frame = 0;
-		while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
-		}
-		if (frame >= 4) frame = 3;
+		int frame = getFrame(framesSinceLast);
+		
 		if (frame == 1) {
 			float xChange = (float)Math.pow(player.getPlayer().getController().rightPressed(), 2)
 					- (float)Math.pow(player.getPlayer().getController().leftPressed(), 2);
@@ -109,14 +110,10 @@ public class PierceCharge extends SpecialAttackData{
 	@Override
 	public ArrayList<Rectangle> getHurtboxes(PlayerCharacter player, int framesSinceLast) {
 		ArrayList<Rectangle> hurtboxes = new ArrayList<Rectangle>();
-		int frame = 0;
+		int frame = getFrame(framesSinceLast);
 		int dir = (int)((player.getVelocity().angle() + 45) / 90) % 4; //0 - Right, 1 - Back, 2 - Left, 3 - Front
 		float xOffset = 0;	//Offsets to set the hurtbox
 		float yOffset = 0;	//Offsets to set the hurtbox correctly
-		while (frame < 4 && framesSinceLast >= attackLengths[frame]) {
-			frame++;	//This figures out what frame the player is in
-		}
-		if (frame >= 4) frame = 3;
 		
 		if (frame == 1) {
 			//This is the main stab
@@ -161,11 +158,6 @@ public class PierceCharge extends SpecialAttackData{
 			hurtboxes.add(headHurtbox);
 		}
 		return hurtboxes;
-	}
-
-	@Override
-	public boolean isFinishedAttacking(PlayerCharacter player, int framesSinceLast) {
-		return (framesSinceLast >= attackLengths[attackLengths.length - 1]);
 	}
 	
 	@Override
