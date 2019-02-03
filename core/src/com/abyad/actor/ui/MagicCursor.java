@@ -3,6 +3,7 @@ package com.abyad.actor.ui;
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.stage.PlayStage;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +22,18 @@ public class MagicCursor extends Actor{
 	private Rectangle collideBox;
 	private Rectangle tempCollideBox;
 	
+	private static final int TOTAL_TIME_MARKS = 16;
+	private static final float TIME_MARK_RADIUS = 9.5f;
+	private static final float TIME_MARK_SCALE = 0.2f;
+	
+	private static TextureRegion emptyMark = AbstractSpriteSheet.spriteSheets.get("CURSOR_TIME_MARKS").getSprite("EMPTY");
+	private static TextureRegion filledMark = AbstractSpriteSheet.spriteSheets.get("CURSOR_TIME_MARKS").getSprite("FILLED");
+	private static float markOriginX = emptyMark.getRegionWidth() / 2;
+	private static float markOriginY = emptyMark.getRegionHeight() / 2;
+	
+	private int timeMarks;
+	private boolean useTimeMarks;
+	
 	public MagicCursor(PlayerCharacter player) {
 		this.player = player;
 		cursor = player.getSprite().getSprite("magic_cursor");
@@ -30,6 +43,7 @@ public class MagicCursor extends Actor{
 		collideBox = new Rectangle(baseBox);
 		collideBox.setCenter(player.getCenterX(), player.getCenterY());
 		tempCollideBox = new Rectangle(collideBox);
+		useTimeMarks = true;
 	}
 	
 	
@@ -153,11 +167,44 @@ public class MagicCursor extends Actor{
 		return minimumYChange;
 	}
 	
+	public void updateTimeMarks(float fraction) {
+		timeMarks = (int)(TOTAL_TIME_MARKS * fraction);
+		if (fraction >= 1.0f) timeMarks = TOTAL_TIME_MARKS;
+	}
+	
+	public void updateTimeMarks(float count, float total) {
+		updateTimeMarks(count / total);
+	}
+	
+	public void useTimeMarks(boolean use) {
+		useTimeMarks = use;
+	}
+	
 	@Override
 	public void draw(Batch batch, float a) {
 		cursor = player.getSprite().getSprite("magic_cursor");
 		batch.draw(cursor, getX() - getOriginX(), getY() - getOriginY(),
 				getOriginX(), getOriginY(), cursor.getRegionWidth(), cursor.getRegionHeight(),
 				CURSOR_SCALE, CURSOR_SCALE, getRotation());
+		if (useTimeMarks) {
+			Vector2 spacing = new Vector2(0, TIME_MARK_RADIUS);
+			float angle = 360f / TOTAL_TIME_MARKS;
+			spacing.rotate(-angle);
+			for (int i = 0; i < TOTAL_TIME_MARKS; i++) {
+				float markX = getX() + spacing.x;
+				float markY = getY() + spacing.y;
+				if (i < timeMarks) {
+					batch.draw(filledMark, markX - markOriginX, markY - markOriginY,
+							markOriginX, markOriginY, filledMark.getRegionWidth(), filledMark.getRegionHeight(),
+							TIME_MARK_SCALE, TIME_MARK_SCALE, getRotation());
+				}
+				else {
+					batch.draw(emptyMark, markX - markOriginX, markY - markOriginY,
+							markOriginX, markOriginY, emptyMark.getRegionWidth(), emptyMark.getRegionHeight(),
+							TIME_MARK_SCALE, TIME_MARK_SCALE, getRotation());
+				}
+				spacing.rotate(-angle);
+			}
+		}
 	}
 }

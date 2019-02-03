@@ -78,7 +78,7 @@ public class HealingFieldProjectile extends OnGroundProjectile{
 	
 	public void healParticleEffects(float x, float y, int count) {
 		CosmeticParticle.spawnParticle(particleTexture, x, y, 0f, 8f, 5f, 0f,
-				0.5f, 0.2f, 0.0f, 20, 1.0f, 1.0f, 40, 0.2f, count, source.getStage());
+				0.5f, 0.2f, 0.0f, 20, 1.0f, 1.0f, 40, 0.2f, count, getStage());
 	}
 
 	@Override

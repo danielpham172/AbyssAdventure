@@ -25,6 +25,7 @@ public class Assets {
 	
 	//Magic List
 	public static final LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>> magicAssets = new LinkedHashMap<String, LinkedHashMap<String, AssetDescriptor<Texture>>>();
+	public static final AssetDescriptor<Texture> cursorTimeMarks = new AssetDescriptor<Texture>("magic/magicTimeMarks.png", Texture.class); 
 	
 	//Projectiles
 	public static final AssetDescriptor<Texture> windSlash = new AssetDescriptor<Texture>("projectile/windSlash/sprite.png", Texture.class);
@@ -151,6 +152,7 @@ public class Assets {
 				manager.load(magicAssets.get(key).get(imageKey));
 			}
 		}
+		manager.load(cursorTimeMarks);
 		//Projectiles
 		manager.load(windSlash);
 		manager.load(magicBoltProjectile);

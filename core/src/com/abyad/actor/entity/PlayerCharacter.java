@@ -257,6 +257,7 @@ public class PlayerCharacter extends HumanoidEntity{
 				if (castSpeed > 3.0f) castSpeed = 3.0f;
 				if (state.equals("CASTING")) {
 					setState("CASTING", castSpeed);
+					cursor.updateTimeMarks(framesSinceLast + frameFraction, castingMagic.getCastTime());
 					if (xChange != 0 || yChange != 0) {
 						Vector2 move = new Vector2(xChange * MAX_SPEED, yChange * MAX_SPEED);
 						if (move.len() > MAX_SPEED) velocity.setLength(MAX_SPEED);
@@ -275,6 +276,7 @@ public class PlayerCharacter extends HumanoidEntity{
 					setState("FINISH_CASTING", castSpeed);
 					if (framesSinceLast > castingMagic.getAfterTime()) {
 						cursor.remove();
+						cursor.updateTimeMarks(0);
 						casting = false;
 					}
 				}

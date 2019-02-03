@@ -75,6 +75,9 @@ public abstract class AbstractSpriteSheet {
 		String[][] statusArrowNames = { {"DOWN", "UP"} };
 		spriteSheets.put("STATUS_ARROW",  new BasicSprite(Assets.manager.get(Assets.statusArrows), statusArrowNames));
 		
+		String[][] timeMarkNames = { {"EMPTY", "FILLED"} };
+		spriteSheets.put("CURSOR_TIME_MARKS", new BasicSprite(Assets.manager.get(Assets.cursorTimeMarks), timeMarkNames));
+		
 		
 		//Magic
 		for (String magicName : Assets.magicAssets.keySet()) {
