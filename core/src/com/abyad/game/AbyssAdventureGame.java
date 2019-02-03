@@ -19,7 +19,6 @@ public class AbyssAdventureGame extends Game {
 	private InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	private HashMap<String, Screen> screens = new HashMap<String, Screen>();
 	private ArrayList<Player> players = new ArrayList<Player>();
-	public static final int controllerType = 1;	//0 for keyboard, 1 for controller, ...
 	
 	@Override
 	public void create() {

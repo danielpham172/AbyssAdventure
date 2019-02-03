@@ -50,7 +50,7 @@ public abstract class AbstractEntity extends Actor{
 		setX(x);
 		setY(y);
 		
-		velocity = new Vector2();
+		velocity = new Vector2(0f, -10f);
 		invulnLength = 0;
 		
 		state = "IDLE";

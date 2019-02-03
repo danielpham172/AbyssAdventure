@@ -105,7 +105,7 @@ public class TownStage extends PlayStage{
 		for (Player player : game.getPlayers()) {
 				PlayerCharacter character = player.getCharacter();
 				character.setPosition(tileMap[spawnRow][spawnCol].getCenter().x, tileMap[spawnRow][spawnCol].getCenter().y);
-				character.getVelocity().setLength(0);
+				character.getVelocity().setLength(1.0f);
 				character.removeHeldItem();
 			if (player.isActive()) {
 				addActor(character);
