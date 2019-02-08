@@ -59,6 +59,9 @@ public abstract class AbstractSpriteSheet {
 									{"GHOST_SHIELD", "RUBY_PENDANT", "SAPPHIRE_PENDANT", "BLACK_BELT"}};
 		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames));
 		
+		String[][] inventoryItemNames = { 	{"PUDDING", "DELUXE_PUDDING", "ULTIMATE_PUDDING"} };
+		spriteSheets.put("INVENTORY_ITEMS", new BasicSprite(Assets.manager.get(Assets.inventoryItems), inventoryItemNames));
+		
 		String[][] pickupsNames = { {"HEART", "GOLD", "MANA"} };
 		spriteSheets.put("PICKUPS", new BasicSprite(Assets.manager.get(Assets.pickups), pickupsNames));
 		

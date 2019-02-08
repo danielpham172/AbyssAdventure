@@ -92,6 +92,12 @@ public class GamepadController extends PlayerController{
 		KeyControl magic = keyMap.get("MAGIC");
 		return getPressed(magic);
 	}
+	
+	@Override
+	public boolean itemsPressed() {
+		KeyControl items = keyMap.get("ITEMS");
+		return getPressed(items);
+	}
 
 	@Override
 	public boolean rightSwapPressed() {

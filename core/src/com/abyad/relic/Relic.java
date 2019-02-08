@@ -27,7 +27,6 @@ public abstract class Relic {
 	protected String desc;
 	
 	protected static ArrayList<Class> relicClasses = new ArrayList<Class>();
-	protected static int priorityNumber = -1;
 	
 	static {
 		//Attribute Relics

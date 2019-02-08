@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.mapobjects.items.carrying.KeyItem;
+import com.abyad.actor.mapobjects.items.loot.InventoryLoot;
 import com.abyad.actor.mapobjects.items.loot.LootItem;
 import com.abyad.actor.mapobjects.items.loot.MagicScroll;
 import com.abyad.actor.mapobjects.items.loot.RelicLoot;
@@ -18,6 +19,7 @@ import com.abyad.magic.AbstractMagic;
 import com.abyad.relic.Relic;
 import com.abyad.relic.TonWeightRelic;
 import com.abyad.sprite.AbstractSpriteSheet;
+import com.abyad.usables.InventoryItem;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -56,8 +58,6 @@ public class TreasureChest extends Actor implements Interactable{
 		
 		items = new ArrayList<MapItem>();
 		generateRandomLoot();
-		generateRandomLoot();
-		generateRandomLoot();
 		if (Math.random() < 0.2) generateRandomLoot();
 		
 		interactables.add(this);
@@ -65,19 +65,15 @@ public class TreasureChest extends Actor implements Interactable{
 	
 	public void generateRandomLoot() {
 		int choice = (int)(Math.random() * 5);
-		choice = 0;
 		if (choice == 0) {
 			Vector2 velocity = new Vector2(1, 0);
 			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
 			items.add(new RelicLoot(getX(), getY(), velocity, Relic.createRandomRelic()));
 		}
-		else if (choice == 1){
-			int heartAmount = (int)(Math.random() * 3) + 1;
-			for (int i = 0; i < heartAmount; i++) {
-				Vector2 velocity = new Vector2(1, 0);
-				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
-				items.add(new HeartItem(getX(), getY(), velocity));
-			}
+		else if (choice == 1) {
+			Vector2 velocity = new Vector2(1, 0);
+			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
+			items.add(new InventoryLoot(getX(), getY(), velocity, InventoryItem.createRandomItem()));
 		}
 		else if (choice == 2) {
 			int manaAmount = (int)(Math.random() * 5) + 4;
@@ -109,7 +105,6 @@ public class TreasureChest extends Actor implements Interactable{
 				items.add(new GoldItem(getX(), getY(), velocity));
 			}
 		}
-		//return new KeyItem(getX(), getY(), velocity);
 	}
 	
 	@Override

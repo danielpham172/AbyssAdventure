@@ -21,6 +21,7 @@ import com.abyad.actor.tile.StairTile;
 import com.abyad.actor.tile.WallTile;
 import com.abyad.actor.ui.MagicCursor;
 import com.abyad.actor.ui.MagicRingMenu;
+import com.abyad.actor.ui.RingMenu;
 import com.abyad.game.AbyssAdventureGame;
 import com.abyad.mapdata.MapEnvironment;
 import com.abyad.utils.DungeonGenerator;
@@ -37,6 +38,91 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
  */
 public class PlayStage extends Stage{
 
+	private static class ActorComparator implements Comparator<Actor>{
+
+		public void quicksortActorArray(Array<Actor> actors) {
+			quicksortActorArray(actors, 0, actors.size - 1);
+		}
+		
+		public void quicksortActorArray(Array<Actor> actors, int lo, int hi) {
+			if (lo < hi) {
+				int p = partitionArray(actors, lo, hi);
+				quicksortActorArray(actors, lo, p);
+				quicksortActorArray(actors, p + 1, hi);
+			}
+		}
+		
+		public int partitionArray(Array<Actor> actors, int lo, int hi) {
+			Actor pivot = actors.get((lo + hi) / 2);
+			int lower = lo - 1;
+			int higher = hi + 1;
+			
+			while (true) {
+				do {
+					lower++;
+				} while (compare(actors.get(lower), pivot) < 0);
+				
+				do {
+					higher--;
+				} while (compare(actors.get(higher), pivot) > 0);
+				
+				if (lower >= higher) {
+					return higher;
+				}
+				else {
+					actors.swap(lower, higher);
+				}
+			}
+		}
+		
+		@Override
+		public int compare(Actor o1, Actor o2) {
+			if (o1.getClass().getName().equals(o2.getClass().getName()) &&
+					!(o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) &&
+					!(o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) &&
+					!(o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) &&
+					!(o2 instanceof WallTile && !((WallTile)o2).isFrontWall())) {
+				return (int)((o2.getY() - o1.getY()));
+			}
+			
+			if (o1 instanceof BattleText) return 1;
+			if (o2 instanceof BattleText) return -1;
+			if (o1 instanceof MagicCursor) return 1;
+			if (o2 instanceof MagicCursor) return -1;
+			if (o1 instanceof RingMenu) return 1;
+			if (o2 instanceof RingMenu) return -1;
+			if (o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) {
+				if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn())
+					return (int)((o2.getY() - o1.getY())); 
+				else return 1;
+			}
+			if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) return -1;
+			if (o1 instanceof DeathAnimation) return 1;
+			if (o2 instanceof DeathAnimation) return -1;
+			if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) {
+				if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) {
+					return (int)((o2.getY() - o1.getY())); 
+				}
+				return 1;
+			}
+			if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
+			
+			if (o1 instanceof FloorTile) return -1;
+			if (o2 instanceof FloorTile) return 1;
+			if (o1 instanceof StairTile) return -1;
+			if (o2 instanceof StairTile) return 1;
+			if (o1 instanceof MapItem) return -1;
+			if (o2 instanceof MapItem) return 1;
+			if (o1 instanceof OnGroundProjectile) return -1;
+			if (o2 instanceof OnGroundProjectile) return 1;
+			
+			else {
+				return (int)((o2.getY() - o1.getY()));
+			}
+		}
+		
+	}
+	
 	protected AbyssAdventureGame game;				//The game object
 	
 	protected int[][] map;							//The int array map
@@ -357,89 +443,4 @@ public class PlayStage extends Stage{
 		}
 		super.dispose();
 	}
-}
-
-class ActorComparator implements Comparator<Actor>{
-
-	public void quicksortActorArray(Array<Actor> actors) {
-		quicksortActorArray(actors, 0, actors.size - 1);
-	}
-	
-	public void quicksortActorArray(Array<Actor> actors, int lo, int hi) {
-		if (lo < hi) {
-			int p = partitionArray(actors, lo, hi);
-			quicksortActorArray(actors, lo, p);
-			quicksortActorArray(actors, p + 1, hi);
-		}
-	}
-	
-	public int partitionArray(Array<Actor> actors, int lo, int hi) {
-		Actor pivot = actors.get((lo + hi) / 2);
-		int lower = lo - 1;
-		int higher = hi + 1;
-		
-		while (true) {
-			do {
-				lower++;
-			} while (compare(actors.get(lower), pivot) < 0);
-			
-			do {
-				higher--;
-			} while (compare(actors.get(higher), pivot) > 0);
-			
-			if (lower >= higher) {
-				return higher;
-			}
-			else {
-				actors.swap(lower, higher);
-			}
-		}
-	}
-	
-	@Override
-	public int compare(Actor o1, Actor o2) {
-		if (o1.getClass().getName().equals(o2.getClass().getName()) &&
-				!(o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) &&
-				!(o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) &&
-				!(o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) &&
-				!(o2 instanceof WallTile && !((WallTile)o2).isFrontWall())) {
-			return (int)((o2.getY() - o1.getY()));
-		}
-		
-		if (o1 instanceof BattleText) return 1;
-		if (o2 instanceof BattleText) return -1;
-		if (o1 instanceof MagicCursor) return 1;
-		if (o2 instanceof MagicCursor) return -1;
-		if (o1 instanceof MagicRingMenu) return 1;
-		if (o2 instanceof MagicRingMenu) return -1;
-		if (o1 instanceof PlayerCharacter && ((PlayerCharacter)o1).isSpawningIn()) {
-			if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn())
-				return (int)((o2.getY() - o1.getY())); 
-			else return 1;
-		}
-		if (o2 instanceof PlayerCharacter && ((PlayerCharacter)o2).isSpawningIn()) return -1;
-		if (o1 instanceof DeathAnimation) return 1;
-		if (o2 instanceof DeathAnimation) return -1;
-		if (o1 instanceof WallTile && !((WallTile)o1).isFrontWall()) {
-			if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) {
-				return (int)((o2.getY() - o1.getY())); 
-			}
-			return 1;
-		}
-		if (o2 instanceof WallTile && !((WallTile)o2).isFrontWall()) return -1;
-		
-		if (o1 instanceof FloorTile) return -1;
-		if (o2 instanceof FloorTile) return 1;
-		if (o1 instanceof StairTile) return -1;
-		if (o2 instanceof StairTile) return 1;
-		if (o1 instanceof MapItem) return -1;
-		if (o2 instanceof MapItem) return 1;
-		if (o1 instanceof OnGroundProjectile) return -1;
-		if (o2 instanceof OnGroundProjectile) return 1;
-		
-		else {
-			return (int)((o2.getY() - o1.getY()));
-		}
-	}
-	
 }

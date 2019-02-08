@@ -36,6 +36,11 @@ public class DisabledController extends PlayerController{
 	public boolean magicPressed() {
 		return false;
 	}
+	
+	@Override
+	public boolean itemsPressed() {
+		return false;
+	}
 
 	@Override
 	public boolean rightSwapPressed() {

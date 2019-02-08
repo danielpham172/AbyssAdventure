@@ -46,6 +46,11 @@ public class KeyboardController extends PlayerController{
 	public boolean magicPressed() {
 		return keyPressedBool("MAGIC");
 	}
+	
+	@Override
+	public boolean itemsPressed() {
+		return keyPressedBool("ITEMS");
+	}
 
 	@Override
 	public boolean rightSwapPressed() {

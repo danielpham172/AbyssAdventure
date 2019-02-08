@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.attack.SpecialAttackData;
+import com.abyad.actor.cosmetic.BattleText;
 import com.abyad.actor.mapobjects.items.carrying.CarryingItem;
 import com.abyad.actor.mapobjects.items.carrying.CorpseItem;
 import com.abyad.actor.ui.MagicCursor;
@@ -16,6 +17,7 @@ import com.abyad.magic.AbstractMagic;
 import com.abyad.relic.Relic;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.sprite.EntitySprite;
+import com.abyad.usables.InventoryItem;
 import com.abyad.utils.Assets;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
@@ -37,6 +39,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
 	private ArrayList<Relic> relics = new ArrayList<Relic>();
+	private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
+	private boolean inventoryHeld = false;
 	private CarryingItem heldItem;
 	
 	private AbstractMagic startingSpell;
@@ -86,9 +90,8 @@ public class PlayerCharacter extends HumanoidEntity{
 	@Override
 	public void act(float delta) {
 		if (markForRemoval) {
-			if (player.isRingMenuActive()) {
-				player.toggleRingMenu();
-			}
+			player.closeMagicMenu();
+			player.closeInventoryMenu();
 		}
 		super.act(delta);
 		if (!markForRemoval) {
@@ -121,7 +124,7 @@ public class PlayerCharacter extends HumanoidEntity{
 			else if (!attacking && !casting) {
 				
 				interactableObjects.clear();
-				if (!player.isRingMenuActive()) {
+				if (!player.anyMenuActive()) {
 					for (Interactable interactable : Interactable.interactables) {
 						if (!(interactable instanceof CarryingItem) || !isHoldingItem()) {
 							if (isOverlapping(interactable.getInteractBox(), getCollideBox())) {
@@ -134,7 +137,7 @@ public class PlayerCharacter extends HumanoidEntity{
 				
 				//If not in an attack animation
 				if (controller.attackPressed() && !attackHeld) {
-					if (!player.isRingMenuActive()) {
+					if (!player.anyMenuActive()) {
 						//This checks to see if the player has pressed the attack button
 						//First see if the player can interact with something
 						boolean interactedWithSomething = false;
@@ -158,23 +161,36 @@ public class PlayerCharacter extends HumanoidEntity{
 						}
 					}
 					else {
-						int selection = player.getSelectedMagic();
-						castingMagic = magicSpells.get(selection);
-						if ((getMana() * 4) + getPartialMana() >= (castingMagic.getManaCost() * 4) + castingMagic.getPartialManaCost()) {
-							removeMana(castingMagic.getManaCost());
-							removePartialMana(castingMagic.getPartialManaCost());
-							setState("CASTING");
-							casting = true;
-							if (castingMagic.usesCursor()) {
-								cursor.spawnInCursor();
+						if (player.isMagicMenuActive()) {
+							//Use magic
+							int selection = player.getSelectedMagic();
+							castingMagic = magicSpells.get(selection);
+							if ((getMana() * 4) + getPartialMana() >= (castingMagic.getManaCost() * 4) + castingMagic.getPartialManaCost()) {
+								removeMana(castingMagic.getManaCost());
+								removePartialMana(castingMagic.getPartialManaCost());
+								setState("CASTING");
+								casting = true;
+								if (castingMagic.usesCursor()) {
+									cursor.spawnInCursor();
+								}
+								player.closeMagicMenu();
 							}
-							player.toggleRingMenu();
+						}
+						else if (player.isInventoryMenuActive()) {
+							//Use item
+							int selection = player.getSelectedItem();
+							InventoryItem item = items.get(selection);
+							if (item.canUse(this)) {
+								item.use(this);
+								item.decrementCount();
+								player.closeInventoryMenu();
+							}
 						}
 					}
 				}
 				else if (controller.specialPressed() && (!specialHeld || specialAttack.isHold()) && !isHoldingItem() &&
 						(getMana() * 4) + getPartialMana() >= (specialAttack.getRequiredMana() * 4) + specialAttack.getRequiredPartialMana() &&
-						!player.isRingMenuActive()) {
+						!player.anyMenuActive()) {
 					//This checks to see if the player has pressed the special button
 					attacking = true;
 					specialAttack.initiateAttack(this);
@@ -214,14 +230,34 @@ public class PlayerCharacter extends HumanoidEntity{
 					}
 					
 					if (controller.magicPressed() && !magicHeld && !isHoldingItem()) {
-						player.toggleRingMenu();
+						player.toggleMagicMenu();
+						player.closeInventoryMenu();
 					}
-					if (player.isRingMenuActive()) {
+					if (controller.itemsPressed() && !inventoryHeld && !isHoldingItem()) {
+						if (!items.isEmpty()) {
+							player.toggleInventoryMenu();
+							player.closeMagicMenu();
+						}
+						else {
+							BattleText noItemsText = new BattleText("NO ITEMS!", getCenterX(), getCenterY(), new Vector2(0, 1.0f), 1.0f, 20);
+							noItemsText.setScale(0.15f);
+							getStage().addActor(noItemsText);
+						}
+					}
+					if (player.isMagicMenuActive()) {
 						if (controller.rightSwapPressed() && !rSwapHeld) {
-							player.rotateRingMenu(1);
+							player.rotateMagicMenu(1);
 						}
 						if (controller.leftSwapPressed() && !lSwapHeld) {
-							player.rotateRingMenu(-1);
+							player.rotateMagicMenu(-1);
+						}
+					}
+					if (player.isInventoryMenuActive()) {
+						if (controller.rightSwapPressed() && !rSwapHeld) {
+							player.rotateInventoryMenu(1);
+						}
+						if (controller.leftSwapPressed() && !lSwapHeld) {
+							player.rotateInventoryMenu(-1);
 						}
 					}
 				}
@@ -284,6 +320,7 @@ public class PlayerCharacter extends HumanoidEntity{
 			attackHeld = controller.attackPressed();
 			specialHeld = controller.specialPressed();
 			magicHeld = controller.magicPressed();
+			inventoryHeld = controller.itemsPressed();
 			rSwapHeld = controller.rightSwapPressed();
 			lSwapHeld = controller.leftSwapPressed();
 		}
@@ -317,11 +354,13 @@ public class PlayerCharacter extends HumanoidEntity{
 		relics.clear();
 		magicSpells.clear();
 		magicSpells.add(startingSpell);
+		items.clear();
 		modifyMaxHP(3 - getMaxHP());
 		modifyMaxMana(3 - getMaxMana());
 		gold = 0;
 		speedChangeFactor = 0;
-		player.resetRingMenu();
+		player.resetMagicMenu();
+		player.resetInventoryMenu();
 	}
 	
 	public boolean isSpawningIn() {
@@ -358,6 +397,32 @@ public class PlayerCharacter extends HumanoidEntity{
 	
 	public ArrayList<Relic> getRelics(){
 		return relics;
+	}
+	
+	public void pickupItem(InventoryItem newItem) {
+		for (InventoryItem item : items) {
+			if (item.getName().equals(newItem.getName())) {
+				item.incrementCount();
+				return;
+			}
+		}
+		items.add(newItem);
+	}
+	
+	public ArrayList<InventoryItem> getItems(){
+		return items;
+	}
+	
+	public void updateItemsList(){
+		int index = 0;
+		while (index < items.size()) {
+			if (items.get(index).getCount() == 0) {
+				items.remove(index);
+			}
+			else {
+				index += 1;
+			}
+		}
 	}
 	
 	public boolean carryItem(CarryingItem carry) {
@@ -606,9 +671,7 @@ public class PlayerCharacter extends HumanoidEntity{
 				CorpseItem corpse = getCorpse(event.getKnockbackVelocity());
 				getStage().addActor(corpse);
 				corpse.spawn();
-				if (player.isRingMenuActive()) {
-					player.toggleRingMenu();
-				}
+				player.closeMagicMenu();
 				markForRemoval(true);
 			}
 		}

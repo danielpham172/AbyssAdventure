@@ -3,6 +3,7 @@ package com.abyad.actor.mapobjects;
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.actor.mapobjects.items.carrying.KeyItem;
+import com.abyad.actor.mapobjects.items.loot.InventoryLoot;
 import com.abyad.actor.mapobjects.items.loot.LifeCapsuleItem;
 import com.abyad.actor.mapobjects.items.loot.LootItem;
 import com.abyad.actor.mapobjects.items.loot.ManaCapsuleItem;
@@ -14,6 +15,7 @@ import com.abyad.actor.tile.FloorTile;
 import com.abyad.relic.Relic;
 import com.abyad.relic.TonWeightRelic;
 import com.abyad.sprite.AbstractSpriteSheet;
+import com.abyad.usables.InventoryItem;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -41,12 +43,9 @@ public class RareTreasureChest extends TreasureChest{
 	public void generateRareLoot() {
 		int choice = (int)(Math.random() * 4);
 		if (choice == 0){
-			int heartAmount = (int)(Math.random() * 6) + 5;
-			for (int i = 0; i <= heartAmount; i++) {
-				Vector2 velocity = new Vector2(1, 0);
-				velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
-				items.add(new HeartItem(getX(), getY(), velocity));
-			}
+			Vector2 velocity = new Vector2(1, 0);
+			velocity.setLength((float)(Math.random() * 2.0f) + 3.0f).setAngle((float)(Math.random() * 360.0f));
+			items.add(new InventoryLoot(getX(), getY(), velocity, InventoryItem.createRandomRareItem()));
 		}
 		else if (choice == 1){
 			Vector2 velocity = new Vector2(1, 0);

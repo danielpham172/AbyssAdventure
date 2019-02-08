@@ -127,6 +127,17 @@ public abstract class RingMenu<E> extends Actor{
 							iconScaling, iconScaling, 0);
 					batch.setColor(1.0f, 1.0f, 1.0f, 0.75f);
 				}
+				
+				if (usesCount()) {
+					GlyphLayout number = new GlyphLayout();
+					int count = getCount(obj);
+					font.getData().setScale(Math.max(FONT_SCALE * iconScaling, 0.001f));
+					number.setText(font, "" + count);
+					float fontX = center.x + drawOffsets.x - (number.width / 2);
+					float fontY = center.y + drawOffsets.y - ((icon.getRegionHeight() / 2) * iconScaling) + (number.height / 2);
+					font.draw(batch, number, fontX, fontY);
+					font.getData().setScale(1.0f);
+				}
 				drawOffsets.rotate(angleSpacing);
 			}
 			//Draws cursor
@@ -160,8 +171,15 @@ public abstract class RingMenu<E> extends Actor{
 		return true;
 	}
 	
+	public boolean usesCount() {
+		return false;
+	}
+	
 	public abstract String getMainText();
 	public abstract String getSubText();
+	public int getCount(E obj) {
+		 return 0;
+	}
 	
 	public void updateText() {
 		font.getData().setScale(FONT_SCALE);
@@ -207,6 +225,7 @@ public abstract class RingMenu<E> extends Actor{
 	public void beginExpanding() {
 		closing = false;
 		expanding = EXPANDING_TIME;
+		updateText();
 	}
 	
 	public boolean isMenuActive() {

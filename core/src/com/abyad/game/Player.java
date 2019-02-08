@@ -3,6 +3,7 @@ package com.abyad.game;
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.ui.InventoryRingMenu;
 import com.abyad.actor.ui.MagicRingMenu;
 import com.abyad.actor.ui.PlayerDisplay;
 import com.abyad.controls.DisabledController;
@@ -17,7 +18,8 @@ public class Player {
 	private PlayerController controller;			//The controller the player is using
 	private PlayerCharacter character;				//The player character that this player controls
 	private PlayerDisplay display;
-	private MagicRingMenu ringMenu;
+	private MagicRingMenu magicMenu;
+	private InventoryRingMenu inventoryMenu;
 	private int number;								//The player number
 	private int selectedName;
 	private boolean isActive;
@@ -41,7 +43,8 @@ public class Player {
 		selectedName = (num - 1) % characterNames.size();
 		character = new PlayerCharacter(this, 0, 0);
 		display = new PlayerDisplay(this);
-		ringMenu = new MagicRingMenu(this);
+		magicMenu = new MagicRingMenu(this);
+		inventoryMenu = new InventoryRingMenu(this);
 	}
 	
 	public boolean isActive() {
@@ -73,32 +76,96 @@ public class Player {
 		return number;
 	}
 	
-	public void toggleRingMenu() {
-		if (ringMenu.getStage() == null) {
-			ringMenu.beginExpanding();
-			character.getStage().addActor(ringMenu);
+	/**
+	 * --MAGIC MENU METHODS---
+	 */
+	public void openMagicMenu() {
+		if (magicMenu.getStage() == null) {
+			magicMenu.beginExpanding();
+			character.getStage().addActor(magicMenu);
 		}
-		else {
-			ringMenu.closeMenu();
-		}
-	}
-	
-	public boolean isRingMenuActive() {
-		return ringMenu.isMenuActive();
 	}
 
-	public void rotateRingMenu(int direction) {
-		ringMenu.rotate(direction);
+	public void closeMagicMenu() {
+		if (magicMenu.getStage() != null) {
+			magicMenu.closeMenu();
+		}
 	}
 	
-	public void resetRingMenu() {
-		ringMenu.setSelection(0);
+	public void toggleMagicMenu() {
+		if (magicMenu.getStage() == null) {
+			openMagicMenu();
+		}
+		else {
+			closeMagicMenu();
+		}
+	}
+	
+	public boolean isMagicMenuActive() {
+		return magicMenu.isMenuActive();
+	}
+
+	public void rotateMagicMenu(int direction) {
+		magicMenu.rotate(direction);
+	}
+	
+	public void resetMagicMenu() {
+		magicMenu.setSelection(0);
 	}
 
 	public int getSelectedMagic() {
-		return ringMenu.getSelection();
+		return magicMenu.getSelection();
 	}
 	
+	/**
+	 * --INVENTORY MENU METHODS--
+	 */
+	public void openInventoryMenu() {
+		if (inventoryMenu.getStage() == null) {
+			inventoryMenu.beginExpanding();
+			character.getStage().addActor(inventoryMenu);
+		}
+	}
+
+	public void closeInventoryMenu() {
+		if (inventoryMenu.getStage() != null) {
+			inventoryMenu.closeMenu();
+		}
+	}
+	
+	public void toggleInventoryMenu() {
+		if (inventoryMenu.getStage() == null) {
+			openInventoryMenu();
+		}
+		else {
+			closeInventoryMenu();
+		}
+	}
+	
+	public boolean isInventoryMenuActive() {
+		return inventoryMenu.isMenuActive();
+	}
+
+	public void rotateInventoryMenu(int direction) {
+		inventoryMenu.rotate(direction);
+	}
+	
+	public void resetInventoryMenu() {
+		inventoryMenu.setSelection(0);
+	}
+
+	public int getSelectedItem() {
+		return inventoryMenu.getSelection();
+	}
+	
+	public boolean anyMenuActive() {
+		return isInventoryMenuActive() || isMagicMenuActive();
+	}
+	
+	
+	/**
+	 * --CUSTOMIZATION METHODS--
+	 */
 	public void changeSelectedCharacter(int newSelectedName) {
 		selectedName = newSelectedName;
 		character.updateSpriteSheet();
@@ -122,7 +189,7 @@ public class Player {
 
 	public void changeStartingSpell(AbstractMagic magic) {
 		character.changeStartingSpell(magic);
-		resetRingMenu();
+		resetMagicMenu();
 	}
 	
 	public AbstractMagic getStartingSpell(AbstractMagic magic) {

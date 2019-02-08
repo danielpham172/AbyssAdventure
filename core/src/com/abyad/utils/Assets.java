@@ -34,6 +34,7 @@ public class Assets {
 	
 	//Items
 	public static final AssetDescriptor<Texture> relics = new AssetDescriptor<Texture>("items/relics.png", Texture.class); 
+	public static final AssetDescriptor<Texture> inventoryItems = new AssetDescriptor<Texture>("items/inventoryItems.png", Texture.class); 
 	public static final AssetDescriptor<Texture> pickups = new AssetDescriptor<Texture>("items/pickups.png", Texture.class); 
 	public static final AssetDescriptor<Texture> carrying = new AssetDescriptor<Texture>("items/carrying.png", Texture.class); 
 	public static final AssetDescriptor<Texture> capsules = new AssetDescriptor<Texture>("items/capsules.png", Texture.class);
@@ -159,6 +160,7 @@ public class Assets {
 		manager.load(healingFieldProjectile);
 		//Items
 		manager.load(relics);
+		manager.load(inventoryItems);
 		manager.load(pickups);
 		manager.load(carrying);
 		manager.load(capsules);
