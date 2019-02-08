@@ -23,6 +23,7 @@ public abstract class MapItem extends Actor{
 		setOriginX(tex.getRegionWidth() / 2);
 		setOriginY(tex.getRegionHeight() / 2);
 		this.followRadius = followRadius;
+		velocity = new Vector2(0, 0.01f);
 	}
 	
 	@Override

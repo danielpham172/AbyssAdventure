@@ -5,6 +5,12 @@ import com.abyad.sprite.AbstractSpriteSheet;
 
 public class SavingsWalletRelic extends Relic{
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(SavingsWalletRelic.class);
+	}
+	
+	
 	public SavingsWalletRelic() {
 		super("SAVINGS WALLET", "Gain gold at a slow constant rate", 1.0f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("SAVINGS_WALLET"));
 	}
@@ -21,11 +27,10 @@ public class SavingsWalletRelic extends Relic{
 		player.modifyGold(1);
 		goOnCooldown();
 	}
-	
+
 	@Override
 	public int getPriority() {
-		// TODO Auto-generated method stub
-		return 200;
+		return priorityNumber;
 	}
 
 }

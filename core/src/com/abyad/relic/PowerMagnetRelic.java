@@ -4,6 +4,12 @@ import com.abyad.sprite.AbstractSpriteSheet;
 
 public class PowerMagnetRelic extends Relic {
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(PowerMagnetRelic.class);
+	}
+	
+	
 	public PowerMagnetRelic() {
 		super("POWER MAGNET", "Increases pickup range of Hearts, Crystals, and Gold", 1.0f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("POWER_MAGNET"));
 		addAttribute("PICKUP RANGE", 0.08f);
@@ -16,6 +22,6 @@ public class PowerMagnetRelic extends Relic {
 
 	@Override
 	public int getPriority() {
-		return 0;
+		return priorityNumber;
 	}
 }

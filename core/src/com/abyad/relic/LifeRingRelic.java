@@ -9,6 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 public class LifeRingRelic extends Relic{
 
 	private int charges;
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(LifeRingRelic.class);
+	}
 	
 	public LifeRingRelic() {
 		super("LIFE RING", "Saves yourself from a fatal hit", 1.0f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("LIFE_RING"));
@@ -33,6 +37,6 @@ public class LifeRingRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 102;
+		return priorityNumber;
 	}
 }

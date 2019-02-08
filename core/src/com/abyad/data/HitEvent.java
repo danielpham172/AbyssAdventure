@@ -15,6 +15,7 @@ public class HitEvent {
 	private Vector2 knockbackVelocity;
 	private int knockbackLength;
 	private ArrayList<StatusEffectData> statusEffects;
+	private float invulnModifier;
 	
 	public HitEvent(Actor source, AbstractEntity victim, int damage, Vector2 knockbackVelocity, int knockbackLength) {
 		this.source = source;
@@ -23,6 +24,7 @@ public class HitEvent {
 		this.knockbackVelocity = knockbackVelocity;
 		this.knockbackLength = knockbackLength;
 		this.statusEffects = new ArrayList<StatusEffectData>();
+		invulnModifier = 1.0f;
 	}
 	
 	public HitEvent(Actor source, AbstractEntity victim, int damage, Vector2 knockbackVelocity, int knockbackLength, StatusEffectData...statusEffects) {
@@ -52,6 +54,10 @@ public class HitEvent {
 		return knockbackLength;
 	}
 	
+	public float getInvulnModifier() {
+		return invulnModifier;
+	}
+	
 	public ArrayList<StatusEffectData> getStatusEffects(){
 		return statusEffects;
 	}
@@ -66,6 +72,10 @@ public class HitEvent {
 	
 	public void setKnockbackLength(int knockbackLength) {
 		this.knockbackLength = knockbackLength;
+	}
+	
+	public void setInvulnModifier(float invulnModifier) {
+		this.invulnModifier =  invulnModifier;
 	}
 	
 	public void addStatusEffect(StatusEffectData data) {

@@ -8,6 +8,11 @@ import com.abyad.sprite.AbstractSpriteSheet;
 
 public class VampiricFangRelic extends Relic{
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(VampiricFangRelic.class);
+	}
+	
 	public VampiricFangRelic() {
 		super("VAMPIRIC FANG", "Chance to heal when attacking", 0.04f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("VAMPIRIC_FANG"));
 	}
@@ -21,9 +26,10 @@ public class VampiricFangRelic extends Relic{
 	public void onHit(PlayerCharacter player, AttackData attackType, HitEvent attack, AbstractEntity hit) {
 		player.restoreHealth(1);
 	}
-	
+
 	@Override
 	public int getPriority() {
-		return 1;
+		return priorityNumber;
 	}
+	
 }

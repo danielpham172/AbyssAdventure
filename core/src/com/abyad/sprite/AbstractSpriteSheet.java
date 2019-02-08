@@ -55,7 +55,8 @@ public abstract class AbstractSpriteSheet {
 		
 		String[][] relicNames = { 	{"TON_WEIGHT", "PANIC_CHARM", "VAMPIRIC_FANG", "MANA_SHIELD"},
 									{"GREEN_CLOAK", "POCKETWATCH", "RINA'S_SCARF", "LIFETAP"},
-									{"LOCKPICK", "LIFE_RING", "SAVINGS_WALLET", "POWER_MAGNET"}};
+									{"LOCKPICK", "LIFE_RING", "SAVINGS_WALLET", "POWER_MAGNET"},
+									{"GHOST_SHIELD", "RUBY_PENDANT", "SAPPHIRE_PENDANT", "BLACK_BELT"}};
 		spriteSheets.put("RELICS", new BasicSprite(Assets.manager.get(Assets.relics), relicNames));
 		
 		String[][] pickupsNames = { {"HEART", "GOLD", "MANA"} };
@@ -69,7 +70,7 @@ public abstract class AbstractSpriteSheet {
 		
 		spriteSheets.put("SCROLL", new BasicSprite(Assets.manager.get(Assets.scroll),  new String[][]{{ "SCROLL"}}));
 		
-		String[][] particleNames = { {"RED", "ORANGE", "YELLOW", "GREEN"}, {"CYAN", "BLUE", "PURPLE", "PINK"} };
+		String[][] particleNames = { {"RED", "ORANGE", "YELLOW", "GREEN", "WHITE"}, {"CYAN", "BLUE", "PURPLE", "PINK", "BLACK"} };
 		spriteSheets.put("PARTICLES",  new BasicSprite(Assets.manager.get(Assets.particles), particleNames));
 		
 		String[][] statusArrowNames = { {"DOWN", "UP"} };

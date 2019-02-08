@@ -26,21 +26,31 @@ public abstract class Relic {
 	protected String name;
 	protected String desc;
 	
-	private static ArrayList<Class> relicClasses = new ArrayList<Class>();
+	protected static ArrayList<Class> relicClasses = new ArrayList<Class>();
+	protected static int priorityNumber = -1;
 	
 	static {
-		relicClasses.add(TonWeightRelic.class);
-		relicClasses.add(PanicCharmRelic.class);
-		relicClasses.add(VampiricFangRelic.class);
-		relicClasses.add(ManaShieldRelic.class);
-		relicClasses.add(GreenCloakRelic.class);
+		//Attribute Relics
 		relicClasses.add(PocketwatchRelic.class);
 		relicClasses.add(RinasScarfRelic.class);
-		relicClasses.add(LifetapRelic.class);
-		relicClasses.add(LockpickRelic.class);
-		relicClasses.add(LifeRingRelic.class);
-		relicClasses.add(SavingsWalletRelic.class);
 		relicClasses.add(PowerMagnetRelic.class);
+		//Passive Relics
+		relicClasses.add(SavingsWalletRelic.class);
+		relicClasses.add(RubyPendantRelic.class);
+		relicClasses.add(SapphirePendantRelic.class);
+		//Attack Relics
+		relicClasses.add(BlackBeltRelic.class);
+		relicClasses.add(VampiricFangRelic.class);
+		//Defense Relics
+		relicClasses.add(GreenCloakRelic.class);
+		relicClasses.add(PanicCharmRelic.class);
+		relicClasses.add(ManaShieldRelic.class);
+		relicClasses.add(LifetapRelic.class);
+		relicClasses.add(TonWeightRelic.class);
+		relicClasses.add(GhostShieldRelic.class);
+		relicClasses.add(LifeRingRelic.class);
+		//Other Relics
+		relicClasses.add(LockpickRelic.class);
 	}
 	
 	public Relic(String name, String desc, float activationRate, TextureRegion tex) {
@@ -160,5 +170,14 @@ public abstract class Relic {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	protected static int findPriorityNumber(Class<?> relic) {
+		for (int i = 0; i < relicClasses.size(); i++) {
+			if (relic == relicClasses.get(i)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }

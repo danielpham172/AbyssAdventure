@@ -6,6 +6,11 @@ import com.abyad.sprite.AbstractSpriteSheet;
 
 public class LifetapRelic extends Relic{
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(LifetapRelic.class);
+	}
+	
 	public LifetapRelic() {
 		super("LIFETAP", "Occasionally restore Mana when taking damage", 0.15f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("LIFETAP"));
 	}
@@ -22,6 +27,6 @@ public class LifetapRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 104;
+		return priorityNumber;
 	}
 }

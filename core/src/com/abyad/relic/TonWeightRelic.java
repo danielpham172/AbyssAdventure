@@ -6,6 +6,11 @@ import com.abyad.sprite.AbstractSpriteSheet;
 
 public class TonWeightRelic extends Relic{
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(TonWeightRelic.class);
+	}
+	
 	public TonWeightRelic() {
 		super("TON WEIGHT", "Lowers knockback by 15%", 1.0f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("TON_WEIGHT"));
 	}
@@ -18,9 +23,10 @@ public class TonWeightRelic extends Relic{
 		}
 		defense.setKnockbackVelocity(defense.getKnockbackVelocity().scl(kbScale));
 	}
-	
+
 	@Override
 	public int getPriority() {
-		return 105;
+		return priorityNumber;
 	}
+	
 }

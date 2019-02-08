@@ -7,6 +7,12 @@ import com.abyad.sprite.AbstractSpriteSheet;
 
 public class LockpickRelic extends Relic{
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(LockpickRelic.class);
+	}
+	
+	
 	public LockpickRelic() {
 		super("LOCKPICK", "Occasionally gain additional gold from chests", 1.0f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("LOCKPICK"));
 	}
@@ -20,8 +26,9 @@ public class LockpickRelic extends Relic{
 			}
 		}
 	}
+	
 	@Override
 	public int getPriority() {
-		return 300;
+		return priorityNumber;
 	}
 }

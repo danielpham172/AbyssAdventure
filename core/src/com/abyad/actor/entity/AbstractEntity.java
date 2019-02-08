@@ -309,7 +309,7 @@ public abstract class AbstractEntity extends Actor{
 			for (StatusEffectData statusEffect : event.getStatusEffects()) {
 				applyStatusEffect(statusEffect);
 			}
-			invulnLength = 40;
+			invulnLength = (int)(40 * event.getInvulnModifier());
 		}
 	}
 	

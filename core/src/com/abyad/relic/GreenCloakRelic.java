@@ -8,6 +8,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class GreenCloakRelic extends Relic{
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(GreenCloakRelic.class);
+	}
+	
 	public GreenCloakRelic() {
 		super("GREEN CLOAK", "Very rarely evade an attack", 0.02f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("GREEN_CLOAK"));
 	}
@@ -31,6 +36,6 @@ public class GreenCloakRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 100;
+		return priorityNumber;
 	}
 }

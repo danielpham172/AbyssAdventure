@@ -6,6 +6,11 @@ import com.abyad.sprite.AbstractSpriteSheet;
 
 public class ManaShieldRelic extends Relic{
 
+	private static int priorityNumber = -1;
+	static {
+		priorityNumber = findPriorityNumber(ManaShieldRelic.class);
+	}
+	
 	public ManaShieldRelic() {
 		super("MANA SHIELD", "Chance to take one damage as mana when hit", 0.1f, AbstractSpriteSheet.spriteSheets.get("RELICS").getSprite("MANA_SHIELD"));
 	}
@@ -25,6 +30,6 @@ public class ManaShieldRelic extends Relic{
 	
 	@Override
 	public int getPriority() {
-		return 103;
+		return priorityNumber;
 	}
 }
