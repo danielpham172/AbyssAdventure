@@ -3,10 +3,10 @@ package com.abyad.actor.entity;
 import java.util.ArrayList;
 
 import com.abyad.actor.cosmetic.DeathAnimation;
-import com.abyad.actor.mapobjects.items.GoldItem;
-import com.abyad.actor.mapobjects.items.HeartItem;
-import com.abyad.actor.mapobjects.items.LootItem;
 import com.abyad.actor.mapobjects.items.MapItem;
+import com.abyad.actor.mapobjects.items.loot.LootItem;
+import com.abyad.actor.mapobjects.items.pickups.GoldItem;
+import com.abyad.actor.mapobjects.items.pickups.HeartItem;
 import com.abyad.data.HitEvent;
 import com.abyad.data.StatusEffectData;
 import com.abyad.sprite.AbstractSpriteSheet;

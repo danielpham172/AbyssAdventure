@@ -1,14 +1,14 @@
 package com.abyad.actor.mapobjects;
 
 import com.abyad.actor.entity.PlayerCharacter;
-import com.abyad.actor.mapobjects.items.GoldItem;
-import com.abyad.actor.mapobjects.items.HeartItem;
-import com.abyad.actor.mapobjects.items.KeyItem;
-import com.abyad.actor.mapobjects.items.LifeCapsuleItem;
-import com.abyad.actor.mapobjects.items.LootItem;
-import com.abyad.actor.mapobjects.items.ManaCapsuleItem;
 import com.abyad.actor.mapobjects.items.MapItem;
-import com.abyad.actor.mapobjects.items.RelicLoot;
+import com.abyad.actor.mapobjects.items.carrying.KeyItem;
+import com.abyad.actor.mapobjects.items.loot.LifeCapsuleItem;
+import com.abyad.actor.mapobjects.items.loot.LootItem;
+import com.abyad.actor.mapobjects.items.loot.ManaCapsuleItem;
+import com.abyad.actor.mapobjects.items.loot.RelicLoot;
+import com.abyad.actor.mapobjects.items.pickups.GoldItem;
+import com.abyad.actor.mapobjects.items.pickups.HeartItem;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.relic.Relic;

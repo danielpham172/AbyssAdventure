@@ -1,13 +1,12 @@
-package com.abyad.actor.mapobjects.items;
+package com.abyad.actor.mapobjects.items.carrying;
 
 import java.util.ArrayList;
 
-import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class LifeCapsuleItem extends LootItem{
+public class KeyItem extends CarryingItem{
 
 	private ArrayList<Rectangle> interactBox;
 	private ArrayList<Rectangle> temporaryCollideBox;
@@ -16,8 +15,8 @@ public class LifeCapsuleItem extends LootItem{
 	
 	private boolean markForRemoval;
 	
-	public LifeCapsuleItem(float x, float y, Vector2 velocity) {
-		super(x, y, velocity, AbstractSpriteSheet.spriteSheets.get("CAPSULES").getSprite("LIFE_CAPSULE"));
+	public KeyItem(float x, float y, Vector2 velocity) {
+		super(x, y, velocity, AbstractSpriteSheet.spriteSheets.get("CARRY").getSprite("KEY"), 1.0f);
 		
 		interactBox = new ArrayList<Rectangle>();
 		temporaryCollideBox = new ArrayList<Rectangle>();
@@ -30,32 +29,16 @@ public class LifeCapsuleItem extends LootItem{
 		
 		updateCollideAndInteractBox();
 	}
-	
+
 	@Override
 	public void act(float delta) {
 		super.act(delta);
 		if (markForRemoval) remove();
 	}
-
+	
 	@Override
 	public ArrayList<Rectangle> getInteractBox() {
 		return interactBox;
-	}
-
-	@Override
-	public boolean interact(PlayerCharacter source) {
-		if (!markForRemoval) {
-			if (source.getMaxHP() < 20) {
-				source.modifyMaxHP(1);
-				source.modifyHP(1);
-			}
-			else {
-				source.modifyHP(source.getMaxHP());
-			}
-			markForRemoval = true;
-			return true;
-		}
-		return false;
 	}
 
 	@Override

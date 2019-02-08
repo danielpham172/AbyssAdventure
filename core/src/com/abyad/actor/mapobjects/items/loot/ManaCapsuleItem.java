@@ -1,4 +1,4 @@
-package com.abyad.actor.mapobjects.items;
+package com.abyad.actor.mapobjects.items.loot;
 
 import java.util.ArrayList;
 

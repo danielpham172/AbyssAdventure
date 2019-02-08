@@ -2,7 +2,7 @@ package com.abyad.relic;
 
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.actor.mapobjects.TreasureChest;
-import com.abyad.actor.mapobjects.items.GoldItem;
+import com.abyad.actor.mapobjects.items.pickups.GoldItem;
 import com.abyad.sprite.AbstractSpriteSheet;
 
 public class LockpickRelic extends Relic{

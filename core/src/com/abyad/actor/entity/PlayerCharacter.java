@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.abyad.actor.attack.AttackData;
 import com.abyad.actor.attack.SpecialAttackData;
-import com.abyad.actor.mapobjects.items.CarryingItem;
-import com.abyad.actor.mapobjects.items.CorpseItem;
+import com.abyad.actor.mapobjects.items.carrying.CarryingItem;
+import com.abyad.actor.mapobjects.items.carrying.CorpseItem;
 import com.abyad.actor.ui.MagicCursor;
 import com.abyad.controls.PlayerController;
 import com.abyad.data.HitEvent;

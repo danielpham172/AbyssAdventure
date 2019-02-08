@@ -1,6 +1,7 @@
-package com.abyad.actor.mapobjects.items;
+package com.abyad.actor.mapobjects.items.carrying;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.mapobjects.items.loot.LootItem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 

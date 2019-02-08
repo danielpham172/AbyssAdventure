@@ -3,7 +3,7 @@ package com.abyad.actor.tile;
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
-import com.abyad.actor.mapobjects.items.KeyItem;
+import com.abyad.actor.mapobjects.items.carrying.KeyItem;
 import com.abyad.interfaces.Interactable;
 import com.abyad.sprite.AbstractSpriteSheet;
 import com.abyad.stage.PlayStage;

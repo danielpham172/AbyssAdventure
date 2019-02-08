@@ -1,4 +1,4 @@
-package com.abyad.actor.mapobjects.items;
+package com.abyad.actor.mapobjects.items.pickups;
 
 import com.abyad.actor.entity.PlayerCharacter;
 import com.abyad.sprite.AbstractSpriteSheet;

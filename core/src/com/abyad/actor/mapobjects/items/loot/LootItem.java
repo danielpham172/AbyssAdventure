@@ -1,5 +1,6 @@
-package com.abyad.actor.mapobjects.items;
+package com.abyad.actor.mapobjects.items.loot;
 
+import com.abyad.actor.mapobjects.items.MapItem;
 import com.abyad.interfaces.Interactable;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

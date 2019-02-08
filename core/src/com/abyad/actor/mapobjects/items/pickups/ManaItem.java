@@ -1,4 +1,4 @@
-package com.abyad.actor.mapobjects.items;
+package com.abyad.actor.mapobjects.items.pickups;
 
 import com.abyad.actor.cosmetic.CosmeticParticle;
 import com.abyad.actor.entity.PlayerCharacter;

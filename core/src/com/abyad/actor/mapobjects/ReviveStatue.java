@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.abyad.actor.cosmetic.BattleText;
 import com.abyad.actor.cosmetic.CosmeticParticle;
 import com.abyad.actor.entity.PlayerCharacter;
-import com.abyad.actor.mapobjects.items.CorpseItem;
+import com.abyad.actor.mapobjects.items.carrying.CorpseItem;
 import com.abyad.actor.tile.AbstractTile;
 import com.abyad.actor.tile.FloorTile;
 import com.abyad.interfaces.Interactable;

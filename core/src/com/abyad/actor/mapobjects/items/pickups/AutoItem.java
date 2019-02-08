@@ -1,8 +1,9 @@
-package com.abyad.actor.mapobjects.items;
+package com.abyad.actor.mapobjects.items.pickups;
 
 import java.util.ArrayList;
 
 import com.abyad.actor.entity.PlayerCharacter;
+import com.abyad.actor.mapobjects.items.MapItem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
