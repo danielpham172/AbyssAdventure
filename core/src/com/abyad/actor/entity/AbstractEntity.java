@@ -103,8 +103,8 @@ public abstract class AbstractEntity extends Actor{
 	}
 	public void applySpeedChangeFactor(float speedChangeFactor) {
 		this.speedChangeFactor += speedChangeFactor;
-		if (this.speedChangeFactor < -0.25f) this.speedChangeFactor = -0.25f;
-		if (this.speedChangeFactor > 2.5f) this.speedChangeFactor = 2.5f;
+		if (this.speedChangeFactor < -0.75f) this.speedChangeFactor = -0.75f;
+		if (this.speedChangeFactor > 1.5f) this.speedChangeFactor = 1.5f;
 	}
 	public void updateSpeedChange() {
 		if (speedChangeFactor > 0) {
@@ -127,7 +127,7 @@ public abstract class AbstractEntity extends Actor{
 				CosmeticParticle.spawnParticle(AbstractSpriteSheet.spriteSheets.get("STATUS_ARROW").getSprite("UP"),
 						getCenterX(), getCenterY() - (getSize() / 2), 0f, (getSize() / 4f), (getSize() / 8f), 0f, particleSpeed, 0.2f,
 						0.0f, 0.0f, 0.8f, 0.7f, particleLifetime, 0.2f, 1, this);
-				timeSinceLastSpeedParticle = (int)(40f / (1.0f + (speedChangeFactor * 10.0f)));
+				timeSinceLastSpeedParticle = (int)(60f / (1.0f + (speedChangeFactor * 3.0f)));
 			}
 		}
 		else if (speedChangeFactor < 0) {
@@ -139,7 +139,7 @@ public abstract class AbstractEntity extends Actor{
 				CosmeticParticle.spawnParticle(AbstractSpriteSheet.spriteSheets.get("STATUS_ARROW").getSprite("DOWN"),
 						getCenterX(), getCenterY() - (getSize() / 2), getSize(), (getSize() / 4f), (getSize() / 8f), (getSize() / 4f), particleSpeed, 0.2f,
 						0.0f, 0.0f, 0.8f, 0.7f, particleLifetime, 0.2f, 1, this);
-				timeSinceLastSpeedParticle = (int)(40f / (1.0f + (-speedChangeFactor / (1.0f + speedChangeFactor)) * 10.0f));
+				timeSinceLastSpeedParticle = (int)(60f / (1.0f + (-speedChangeFactor / (1.0f + speedChangeFactor)) * 3.0f));
 			}
 		}
 	}

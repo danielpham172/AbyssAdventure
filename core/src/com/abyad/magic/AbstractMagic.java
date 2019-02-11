@@ -16,6 +16,7 @@ public abstract class AbstractMagic {
 	static {
 		magicList.put("MAGIC BOLT", new MagicBolt());
 		magicList.put("HEALING FIELD", new HealingField());
+		magicList.put("SLOW FIELD", new SlowField());
 	}
 	
 	private String name;

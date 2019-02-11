@@ -173,7 +173,7 @@ public class ZombieCharacter extends HumanoidEntity{
 				//If it is on the same team and colliding, do a small collision to shift it out of each other
 				//This is mostly for anti-clumping together
 				Vector2 smallCollision = new Vector2(entity.getCenterX() - getCenterX(), entity.getCenterY() - getCenterY());
-				smallCollision.setLength(Math.min(0.2f / smallCollision.len(), 0.1f));
+				smallCollision.setLength(Math.min(0.2f / smallCollision.len(), getCurrentMaxSpeed() * 0.7f));
 				entity.move(smallCollision);
 				move(smallCollision.rotate(180));
 			}
