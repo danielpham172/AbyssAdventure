@@ -99,7 +99,7 @@ public class SlowFieldProjectile extends OnGroundProjectile{
 
 	@Override
 	public Rectangle getViewbox() {
-		return new Rectangle(getX() - 16, getY() - 16, 32, 32);
+		return new Rectangle(getX() - 32, getY() - 32, 64, 64);
 	}
 
 }
