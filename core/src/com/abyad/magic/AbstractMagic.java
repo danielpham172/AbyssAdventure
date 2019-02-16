@@ -18,6 +18,7 @@ public abstract class AbstractMagic {
 		magicList.put("ROCK SCATTER", new RockScatter());
 		magicList.put("FLAME WHEEL", new FlameWheel());
 		magicList.put("HEALING FIELD", new HealingField());
+		magicList.put("DARK SPIRAL", new DarkSpiral());
 		magicList.put("SLOW FIELD", new SlowField());
 	}
 	
@@ -109,7 +110,7 @@ public abstract class AbstractMagic {
 		if (spawnsParticles() && Math.random() < particleDensity()) {
 			CosmeticParticle.spawnParticle(spriteSheet.getNextFrame("PARTICLE", null, 0).get(0),
 					source.getCenterX(), source.getCenterY() + CIRCLE_OFFSET_Y, 0f, 5f, 0f, 0f, particleSpeed(), 0.2f,
-					0.0f, maxParticleAngle(), 1.0f, 1.0f, particleLifetime(), 0.2f, 1, source.getStage());
+					0.0f, maxParticleAngle(), 1.0f, particleScale(), particleLifetime(), 0.2f, 1, source.getStage());
 		}
 	}
 	public boolean spawnsParticles() {
@@ -132,6 +133,9 @@ public abstract class AbstractMagic {
 	}
 	public int particleLifetime() {
 		return 18;
+	}
+	public float particleScale() {
+		return 1.0f;
 	}
 	
 }
