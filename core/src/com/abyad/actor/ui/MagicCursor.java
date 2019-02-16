@@ -31,6 +31,8 @@ public class MagicCursor extends Actor{
 	private static float markOriginX = emptyMark.getRegionWidth() / 2;
 	private static float markOriginY = emptyMark.getRegionHeight() / 2;
 	
+	private boolean useCursor;
+	
 	private int timeMarks;
 	private boolean useTimeMarks;
 	
@@ -180,19 +182,31 @@ public class MagicCursor extends Actor{
 		useTimeMarks = use;
 	}
 	
+	public void useCursor(boolean use) {
+		useCursor = use;
+	}
+	
+	public boolean usesCursor() {
+		return useCursor;
+	}
+	
 	@Override
 	public void draw(Batch batch, float a) {
-		cursor = player.getSprite().getSprite("magic_cursor");
-		batch.draw(cursor, getX() - getOriginX(), getY() - getOriginY(),
-				getOriginX(), getOriginY(), cursor.getRegionWidth(), cursor.getRegionHeight(),
-				CURSOR_SCALE, CURSOR_SCALE, getRotation());
+		if (useCursor) {
+			cursor = player.getSprite().getSprite("magic_cursor");
+			batch.draw(cursor, getX() - getOriginX(), getY() - getOriginY(),
+					getOriginX(), getOriginY(), cursor.getRegionWidth(), cursor.getRegionHeight(),
+					CURSOR_SCALE, CURSOR_SCALE, getRotation());
+		}
 		if (useTimeMarks) {
 			Vector2 spacing = new Vector2(0, TIME_MARK_RADIUS);
 			float angle = 360f / TOTAL_TIME_MARKS;
 			spacing.rotate(-angle);
+			float centerX = (useCursor) ? getX() : player.getX();
+			float centerY = (useCursor) ? getY() : player.getY();
 			for (int i = 0; i < TOTAL_TIME_MARKS; i++) {
-				float markX = getX() + spacing.x;
-				float markY = getY() + spacing.y;
+				float markX = centerX + spacing.x;
+				float markY = centerY + spacing.y;
 				if (i < timeMarks) {
 					batch.draw(filledMark, markX - markOriginX, markY - markOriginY,
 							markOriginX, markOriginY, filledMark.getRegionWidth(), filledMark.getRegionHeight(),

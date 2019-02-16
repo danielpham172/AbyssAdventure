@@ -170,9 +170,9 @@ public class PlayerCharacter extends HumanoidEntity{
 								removePartialMana(castingMagic.getPartialManaCost());
 								setState("CASTING");
 								casting = true;
-								if (castingMagic.usesCursor()) {
-									cursor.spawnInCursor();
-								}
+								cursor.useCursor(castingMagic.usesCursor());
+								cursor.useTimeMarks(true);
+								cursor.spawnInCursor();
 								player.closeMagicMenu();
 							}
 						}
@@ -524,7 +524,7 @@ public class PlayerCharacter extends HumanoidEntity{
 	}
 	
 	public boolean isCursorActive() {
-		return (cursor.getStage() != null);
+		return (cursor.getStage() != null && cursor.usesCursor());
 	}
 	
 	public Vector2 getCursorPosition() {
