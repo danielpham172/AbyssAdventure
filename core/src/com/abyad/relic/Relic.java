@@ -33,6 +33,8 @@ public abstract class Relic {
 		relicClasses.add(PocketwatchRelic.class);
 		relicClasses.add(RinasScarfRelic.class);
 		relicClasses.add(PowerMagnetRelic.class);
+		relicClasses.add(PowerGloveRelic.class);
+		relicClasses.add(MaskingPerfumeRelic.class);
 		//Passive Relics
 		relicClasses.add(SavingsWalletRelic.class);
 		relicClasses.add(RubyPendantRelic.class);
@@ -40,6 +42,10 @@ public abstract class Relic {
 		//Attack Relics
 		relicClasses.add(BlackBeltRelic.class);
 		relicClasses.add(VampiricFangRelic.class);
+		//Magic Attack Relics
+		relicClasses.add(ArcaneBatteryRelic.class);
+		//Kill Relics
+		relicClasses.add(ThiefsKnifeRelic.class);
 		//Defense Relics
 		relicClasses.add(GreenCloakRelic.class);
 		relicClasses.add(PanicCharmRelic.class);

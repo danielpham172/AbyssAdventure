@@ -220,7 +220,9 @@ public class PlayerCharacter extends HumanoidEntity{
 						}
 						else {
 							//If carrying an item, slow by weight, a set correct state
-							float slowedSpeed =  getCurrentMaxSpeed() / (heldItem.getWeight() + 1.0f);
+							float carryStrength = getAttributeValue("CARRY STRENGTH");
+							float carryFactor = (5.0f) / (5.0f + carryStrength);
+							float slowedSpeed =  getCurrentMaxSpeed() / ((heldItem.getWeight() * carryFactor) + 1.0f);
 							velocity.x = xChange * slowedSpeed;
 							velocity.y = yChange * slowedSpeed;
 							if (velocity.len() > slowedSpeed) velocity.setLength(slowedSpeed);

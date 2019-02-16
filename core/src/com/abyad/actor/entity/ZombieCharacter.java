@@ -121,6 +121,7 @@ public class ZombieCharacter extends HumanoidEntity{
 			if (!player.isSpawningIn()) {
 				float distance = (float)Math.pow(player.getCenterX() - getCenterX(), 2) +
 						(float)Math.pow(player.getCenterY() - getCenterY(), 2);
+				distance /= Math.max(player.getAttributeValue("TAUNT RANGE", 1.0f), 0.2f);
 				if (distance <= closest) {
 					nearest = player;
 					closest = distance;
