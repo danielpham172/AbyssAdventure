@@ -67,10 +67,10 @@ public abstract class ScrollSelectionMenu<E> extends Actor {
 	
 	public void select(int direction) {
 		int listSize = getList().size();
-		if (direction < 0) {
+		if (direction > 0) {
 			setSelection((selection + 1) % listSize);
 		}
-		else if (direction > 0) {
+		else if (direction < 0) {
 			setSelection((selection + listSize - 1) % listSize);
 		}
 	}

@@ -25,8 +25,10 @@ public abstract class AbstractSpriteSheet {
 		
 		spriteSheets.put("WIND_SLASH", new ProjectileSprite(Assets.manager.get(Assets.windSlash), 4, 1, 6));
 		spriteSheets.put("MAGIC_BOLT_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.magicBoltProjectile), 1, 2, 6, true));
+		spriteSheets.put("FLAME_WHEEL_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.flameWheelProjectile), 1, 2, 4, true));
 		spriteSheets.put("HEALING_FIELD_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.healingFieldProjectile), 1, 2, 6, true));
 		spriteSheets.put("SLOW_FIELD_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.slowFieldProjectile), 1, 2, 6, true));
+		spriteSheets.put("ROCK_SCATTER_PROJECTILE", new ProjectileSprite(Assets.manager.get(Assets.rockProjectile), 1, 1, 6, true));
 		
 		String[][] chestNames = { {"NORMAL_CLOSED", "NORMAL_OPEN"}, {"RARE_CLOSED", "RARE_OPEN"} };
 		spriteSheets.put("CHEST", new BasicSprite(Assets.manager.get(Assets.treasureChest), chestNames));

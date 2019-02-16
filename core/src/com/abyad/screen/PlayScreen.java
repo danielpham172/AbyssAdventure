@@ -27,6 +27,8 @@ public class PlayScreen implements Screen{
 	private MagicSelectStage magicSelectStage;
 	private boolean noPlayerHUD;
 	
+	private int frameCount;
+	
 	public PlayScreen(AbyssAdventureGame game) {
 		this.game = game;
 		//playStage = new PlayStage(game);		//Creates a play stage
@@ -132,6 +134,7 @@ public class PlayScreen implements Screen{
 		}
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+		frameCount = (frameCount + 1) % 360000;
 	}
 	
 	public void openedCharacterMenu() {

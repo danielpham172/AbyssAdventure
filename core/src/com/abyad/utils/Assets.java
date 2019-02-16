@@ -32,6 +32,8 @@ public class Assets {
 	public static final AssetDescriptor<Texture> magicBoltProjectile = new AssetDescriptor<Texture>("projectile/magicBolt/projectile.png", Texture.class);
 	public static final AssetDescriptor<Texture> healingFieldProjectile = new AssetDescriptor<Texture>("projectile/healingField/projectile.png", Texture.class);
 	public static final AssetDescriptor<Texture> slowFieldProjectile = new AssetDescriptor<Texture>("projectile/slowField/projectile.png", Texture.class);
+	public static final AssetDescriptor<Texture> flameWheelProjectile = new AssetDescriptor<Texture>("projectile/flameWheel/projectile.png", Texture.class);
+	public static final AssetDescriptor<Texture> rockProjectile = new AssetDescriptor<Texture>("projectile/rockProjectile/projectile.png", Texture.class);
 	
 	//Items
 	public static final AssetDescriptor<Texture> relics = new AssetDescriptor<Texture>("items/relics.png", Texture.class); 
@@ -160,6 +162,8 @@ public class Assets {
 		manager.load(magicBoltProjectile);
 		manager.load(healingFieldProjectile);
 		manager.load(slowFieldProjectile);
+		manager.load(flameWheelProjectile);
+		manager.load(rockProjectile);
 		//Items
 		manager.load(relics);
 		manager.load(inventoryItems);

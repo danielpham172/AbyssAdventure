@@ -15,6 +15,7 @@ public abstract class AbstractMagic {
 	public static LinkedHashMap<String, AbstractMagic> magicList = new LinkedHashMap<String, AbstractMagic>();
 	static {
 		magicList.put("MAGIC BOLT", new MagicBolt());
+		magicList.put("ROCK SCATTER", new RockScatter());
 		magicList.put("HEALING FIELD", new HealingField());
 		magicList.put("SLOW FIELD", new SlowField());
 	}
