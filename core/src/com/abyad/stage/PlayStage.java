@@ -111,10 +111,10 @@ public class PlayStage extends Stage{
 			if (o2 instanceof FloorTile) return 1;
 			if (o1 instanceof StairTile) return -1;
 			if (o2 instanceof StairTile) return 1;
-			if (o1 instanceof MapItem) return -1;
-			if (o2 instanceof MapItem) return 1;
 			if (o1 instanceof OnGroundProjectile) return -1;
 			if (o2 instanceof OnGroundProjectile) return 1;
+			if (o1 instanceof MapItem) return -1;
+			if (o2 instanceof MapItem) return 1;
 			
 			else {
 				return (int)((o2.getY() - o1.getY()));
